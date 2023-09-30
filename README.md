@@ -4,4 +4,4 @@ Este repositorio contiene todos los **entregables y preentregas** del proyecto f
 
 ## Autor: Mario Aguilar
 
-[LinkedIn: mario-r-aguilar] (https://www.linkedin.com/in/mario-r-aguilar/)
+LinkedIn: mario-r-aguilar (https://www.linkedin.com/in/mario-r-aguilar/)
