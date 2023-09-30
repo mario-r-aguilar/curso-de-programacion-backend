@@ -4,9 +4,9 @@ class ProductManager {
 	}
 
 	/**
-	 * Permite generar una id autoincrementable. Para ello guarda la longitud del array,
-	 * con ella ubica el último producto agregado y finalmente le suma 1
-	 * al atributo id de dicho producto.
+	 * Permite generar una id autoincrementable. Para ello guarda la longitud
+	 * del array, con ella ubica el último producto agregado
+	 * y finalmente le suma 1 al atributo id de dicho producto.
 	 * @returns {number} id del último producto agregado a products + 1
 	 */
 	#getNewID = () => {
