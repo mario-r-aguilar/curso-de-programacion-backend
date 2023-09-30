@@ -20,4 +20,4 @@
 
 4. Debe contar con un método **“getProducts”** el cual debe devolver el arreglo con todos los productos creados hasta ese momento
 
-5. Debe contar con un método **“getProductById”** el cual debe buscar en el arreglo el producto que coincida con el id. **En caso de no coincidir** ningún id, **mostrar** en consola **un error _“Not found”_**
+5. Debe contar con un método **“getProductById”** el cual debe buscar en el arreglo el producto que coincida con el id. **En caso de no coincidir** con ningún id, **mostrar** en consola **un error _“Not found”_**
