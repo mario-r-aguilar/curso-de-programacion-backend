@@ -4,7 +4,9 @@ class ProductManager {
 	}
 
 	/**
-	 * Permite generar una id autoincrementable. Para ello guarda la longitud del array, con ella ubica el último producto agregado y finalmente le suma 1 al atributo id de dicho producto.
+	 * Permite generar una id autoincrementable. Para ello guarda la longitud del array,
+	 * con ella ubica el último producto agregado y finalmente le suma 1
+	 * al atributo id de dicho producto.
 	 * @returns {number} id del último producto agregado a products + 1
 	 */
 	#getNewID = () => {
@@ -23,7 +25,9 @@ class ProductManager {
 	}
 
 	/**
-	 * Busca productos mediante su atributo code. Esto lo logra buscando el código del producto con el método find y luego haciendo una validación con if del resultado de la búsqueda.
+	 * Busca productos mediante su atributo code.
+	 * Esto lo logra buscando el código del producto con el método find
+	 * y luego haciendo una validación con if del resultado de la búsqueda.
 	 * @param {number} Código del producto
 	 * @returns {Object} Producto búscado
 	 */
@@ -42,7 +46,12 @@ class ProductManager {
 	}
 
 	/**
-	 * Permite agregar productos. Primero realiza las validaciones para que todos los campos sean obligatorios y no se repita el atributo code, luego genera la id mediante el método privado #getNewID, después agrega el producto al listado a través del método push y finalmente muestra el resultado al usuario y retorna el producto agregado.
+	 * Permite agregar productos.
+	 * Primero realiza las validaciones para que todos los campos sean obligatorios
+	 * y para que no se repita el atributo code.
+	 * Luego genera la id mediante el método privado #getNewID,
+	 * después agrega el producto al listado a través del método push
+	 * y finalmente muestra el resultado al usuario y retorna el producto agregado.
 	 * @param {Object} Producto para agregar
 	 * @returns {Object} Producto agregado
 	 */
