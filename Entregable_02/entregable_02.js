@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { title } = require('process');
 
 class ProductManager {
 	constructor(path) {
@@ -19,20 +18,20 @@ class ProductManager {
 		}
 	}
 
-	async getProductById(productCode) {
+	async getProductById(productID) {
 		try {
 			const productList = await this.getProducts();
 
 			const productSearch = productList.find(
-				(prod) => prod.code === productCode
+				(prod) => prod.id === productID
 			);
 
 			if (productSearch) {
 				console.info('Producto encontrado!');
 				return productSearch;
 			} else {
-				console.error(`Code ${productCode} not found`);
-				return 'Intente nuevamente';
+				console.error(`ID ${productID} not found`);
+				return 'Intente con otra ID';
 			}
 		} catch {
 			console.error(
@@ -95,6 +94,53 @@ class ProductManager {
 			);
 		}
 	}
+
+	async deleteProduct(productID) {
+		const productList = await this.getProducts();
+		const newProductList = productList.filter(
+			(product) => product.id != productID
+		);
+		await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
+		console.info(`El producto con la ID ${productID} fue eliminado`);
+		return newProductList;
+	}
+
+	async updateProduct(productID, productToChanged) {
+		try {
+			const { title, description, price, thumbnail, code, stock } =
+				productToChanged;
+			const productList = await this.getProducts();
+
+			const updatedProductList = productList.map((product) => {
+				if (product.id === productID) {
+					return {
+						...product,
+						title,
+						description,
+						price,
+						thumbnail,
+						code,
+						stock,
+					};
+				} else {
+					return product;
+				}
+			});
+
+			await fs.promises.writeFile(
+				this.path,
+				JSON.stringify(updatedProductList)
+			);
+
+			console.info(`El producto con ID ${productID} fue actualizado`);
+			return updatedProductList;
+		} catch (err) {
+			console.error(
+				`No es posible actualizar el producto. \n 
+	Error: ${err}`
+			);
+		}
+	}
 }
 
 //Testing
@@ -133,9 +179,9 @@ const testing = async () => {
 			stock: 25,
 		});
 		// producto con código existente
-		console.log(await productManager.getProductById('abc123'));
+		console.log(await productManager.getProductById(1));
 		// producto con código inexistente
-		console.log(await productManager.getProductById('code123'));
+		console.log(await productManager.getProductById(3));
 		// producto con campos faltantes
 		await productManager.addProduct({
 			title: 'prueba 3',
@@ -143,6 +189,16 @@ const testing = async () => {
 			price: 300,
 			thumbnail: 'Sin imagen',
 			code: 'abc789',
+		});
+		await productManager.deleteProduct(2);
+		console.log(await productManager.getProducts());
+		await productManager.updateProduct(1, {
+			title: 'prueba updated',
+			description: 'Este es un producto prueba',
+			price: 500,
+			thumbnail: 'Sin imagen',
+			code: 'abc123',
+			stock: 50,
 		});
 	} catch (err) {
 		console.log(
