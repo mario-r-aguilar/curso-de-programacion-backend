@@ -1,14 +1,18 @@
 const fs = require('fs');
 
 class ProductManager {
+	/**
+	 * Crea el archivo una vez que el usuario proporciona la ubicación
+	 * del archivo en la instancia.
+	 */
 	constructor(path) {
 		this.path = path;
-		// Crea el archivo una vez que el usuario proporciona la ubicación del archivo en la instancia.
 		fs.writeFileSync(this.path, JSON.stringify([]));
 	}
 
 	/**
-	 * Lee el contenido del archivo donde se encuentra la lista de productos y lo retorna como un Array
+	 * Lee el contenido del archivo donde se encuentra la lista de productos
+	 * y lo retorna como un Array
 	 * @returns {Array} Listado de productos
 	 */
 	async getProducts() {
