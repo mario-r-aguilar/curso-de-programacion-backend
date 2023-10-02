@@ -104,6 +104,8 @@ productManager.addProduct({
 	stock: 30,
 });
 console.log(productManager.getProducts());
+
+// producto ya agregado (mismo código)
 productManager.addProduct({
 	title: 'prueba',
 	description: 'Este es un producto prueba',
