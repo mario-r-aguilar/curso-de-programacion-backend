@@ -25,22 +25,20 @@ class ProductManager {
 	}
 
 	/**
-	 * Busca productos mediante su atributo code.
+	 * Busca productos mediante su atributo id.
 	 * Esto lo logra buscando el código del producto con el método find
 	 * y luego haciendo una validación con if del resultado de la búsqueda.
 	 * @param {number} Código del producto
 	 * @returns {Object} Producto búscado
 	 */
-	getProductById(productCode) {
-		const productSearch = this.products.find(
-			(prod) => prod.code === productCode
-		);
+	getProductById(productID) {
+		const productSearch = this.products.find((prod) => prod.id === productID);
 
 		if (productSearch) {
 			console.info('Producto encontrado!');
 			return productSearch;
 		} else {
-			console.error(`Code ${productCode} not found`);
+			console.error(`ID ${productID} not found`);
 			return 'Intente nuevamente';
 		}
 	}
@@ -115,9 +113,9 @@ productManager.addProduct({
 	stock: 25,
 });
 // producto con código existente
-console.log(productManager.getProductById('abc123'));
+console.log(productManager.getProductById(1));
 // producto con código inexistente
-console.log(productManager.getProductById('code123'));
+console.log(productManager.getProductById(3));
 // producto con campos faltantes
 productManager.addProduct({
 	title: 'prueba 3',
