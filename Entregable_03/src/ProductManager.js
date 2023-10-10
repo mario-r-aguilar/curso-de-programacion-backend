@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 class ProductManager {
 	/**
@@ -24,6 +24,7 @@ class ProductManager {
 				`No es posible leer el archivo.\n 
             Error: ${err}`
 			);
+			return;
 		}
 	}
 
@@ -47,13 +48,14 @@ class ProductManager {
 				return productSearch;
 			} else {
 				console.error(`ID ${productID} not found`);
-				return 'Intente con otra ID';
+				return;
 			}
 		} catch {
 			console.error(
 				`No es posible agregar el producto. \n 
             Error: ${err}`
 			);
+			return;
 		}
 	}
 
@@ -75,6 +77,7 @@ class ProductManager {
 				`No es posible asignar una nueva ID.\n 
         Error: ${err}`
 			);
+			return;
 		}
 	};
 
@@ -125,6 +128,7 @@ class ProductManager {
 				`No es posible agregar el producto. \n 
                 Error: ${err}`
 			);
+			return;
 		}
 	}
 
@@ -192,9 +196,10 @@ class ProductManager {
 				`No es posible actualizar el producto. \n 
 	Error: ${err}`
 			);
+			return;
 		}
 	}
 }
 
 //Creo una instancia de la clase
-export const productManager = new ProductManager('./productsList.json');
+export const productManager = new ProductManager('./src/products.json');
