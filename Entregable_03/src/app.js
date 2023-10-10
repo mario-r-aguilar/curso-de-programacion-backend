@@ -3,9 +3,16 @@ import { productManager } from './ProductManager.js';
 
 const app = express();
 
-// Para el manejo de datos complejos
+// Línea utilizada para el manejo de datos complejos enviados por url
 app.use(express.urlencoded({ extended: true }));
 
+/**
+ * Este endpoint por defecto muestra todos los productos que se encuentran
+ * en la DB usando el método getProducts() de la clase ProducManager.
+ * Asimismo a través de la query limit se puede elegir la cantidad
+ * de productos que queremos ver por pantalla. Este filtro se logra con el uso
+ * del método de arrays slice().
+ */
 app.get('/products', async (req, res) => {
 	try {
 		let limit = req.query.limit;
@@ -22,10 +29,18 @@ app.get('/products', async (req, res) => {
 	}
 });
 
+/**
+ * Este endpoint muestra un producto según la id que le pasemos, para ello usa
+ * el método getProductById() de la clase ProductManager.
+ * La id es ingresada por el usuario a través de params y antes de ser usada
+ * por getProductById(), es parseada a número con parseInt() para que coincida
+ * con el tipo de dato de la DB. En caso de no encontrarla muestra el error en
+ * pantalla.
+ */
 app.get('/products/:pid', async (req, res) => {
 	try {
 		let { pid } = req.params;
-		pid = parseInt(pid); // Convierte el id a tipo número, tal cual está almacenado en el archivo json
+		pid = parseInt(pid);
 		const product = await productManager.getProductById(pid);
 
 		if (product) {

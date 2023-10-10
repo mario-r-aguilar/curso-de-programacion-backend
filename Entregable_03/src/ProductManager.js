@@ -201,5 +201,5 @@ class ProductManager {
 	}
 }
 
-//Creo una instancia de la clase
+//Creo una instancia de la clase y la exporto para usarla en otro archivo
 export const productManager = new ProductManager('./src/products.json');
