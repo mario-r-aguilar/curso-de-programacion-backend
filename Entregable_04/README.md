@@ -41,8 +41,8 @@ _quantity_: debe contener el número de ejemplares de dicho producto. El product
 
 **Si un producto ya existente intenta agregarse, incrementar el campo quantity de dicho producto**.
 
-4. La persistencia de la información se implementará **utilizando el file system**, donde los archivos “productos.json” y “carrito.json”, respaldan la información.
+4. La persistencia de la información se implementará **utilizando el file system**, donde los archivos “products.json” y “carts.json”, respaldan la información.
 
-5. No es necesario realizar ninguna implementación visual, todo el flujo se puede realizar por Postman o por el cliente de tu preferencia. Tampoco es necesario implementar multer.
+5. No es necesario realizar ninguna implementación visual, **todo el flujo se puede realizar por Postman** o por el cliente de tu preferencia. Tampoco es necesario implementar multer.
 
-6. No olvides app.use(express.json())
+6. **No olvides app.use(express.json())**

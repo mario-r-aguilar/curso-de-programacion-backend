@@ -1,5 +1,6 @@
 import express from 'express';
 import { productManager } from './ProductManager.js';
+import { cartManager } from './CartManager.js';
 
 const app = express();
 
@@ -90,6 +91,44 @@ app.delete('/api/products/:pid', async (req, res) => {
 		let { pid } = req.params;
 		pid = parseInt(pid);
 		return res.status(200).send(await productManager.deleteProduct(pid));
+	} catch (error) {
+		return res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+app.get('/api/carts/:cid', async (req, res) => {
+	try {
+		let { cid } = req.params;
+		cid = parseInt(cid);
+		const cart = await cartManager.getCartById(cid);
+
+		if (cart) {
+			return res.status(200).send(cart);
+		} else {
+			return res.status(404).send({ error: 'Carrito no encontrado' });
+		}
+	} catch (error) {
+		return res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+app.post('/api/carts/', async (req, res) => {
+	try {
+		let newCart = req.body;
+		return res.status(201).send(await cartManager.addCart(newCart));
+	} catch (error) {
+		return res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+app.post('/api/carts/:cid/product/:pid', async (req, res) => {
+	try {
+		let { cid } = req.params;
+		cid = parseInt(cid);
+		let { pid } = req.params;
+		pid = parseInt(pid);
+
+		return res.status(201).send(await cartManager.addProductToCart(cid, pid));
 	} catch (error) {
 		return res.status(500).send(`Error interno del servidor: ${error}`);
 	}

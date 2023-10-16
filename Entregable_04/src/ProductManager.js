@@ -52,7 +52,7 @@ class ProductManager {
 			}
 		} catch {
 			console.error(
-				`No es posible agregar el producto. \n 
+				`No es posible mostrar el producto. \n 
             Error: ${err}`
 			);
 			return;
@@ -160,13 +160,23 @@ class ProductManager {
 	 * @returns {Array} Lista de productos sin el producto eliminado
 	 */
 	async deleteProduct(productID) {
-		const productList = await this.getProducts();
-		const newProductList = productList.filter(
-			(product) => product.id != productID
-		);
-		await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
-		console.info(`El producto con la ID ${productID} fue eliminado`);
-		return;
+		try {
+			const productList = await this.getProducts();
+			const newProductList = productList.filter(
+				(product) => product.id != productID
+			);
+
+			await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
+
+			console.info(`El producto con la ID ${productID} fue eliminado`);
+			return;
+		} catch (err) {
+			console.error(
+				`No es posible eliminar el producto. \n 
+                Error: ${err}`
+			);
+			return;
+		}
 	}
 
 	/**
