@@ -4,9 +4,15 @@ import { productManager } from './ProductManager.js';
 class CartManager {
 	constructor(path) {
 		this.path = path;
-		if (!this.path) fs.writeFileSync(this.path, JSON.stringify([]));
+		// Si el usuario no brinda una ruta, lo crea en el mismo directorio
+		if (!this.path) fs.writeFileSync('./carts.json', JSON.stringify([]));
 	}
 
+	/**
+	 * Lee el contenido del archivo donde se encuentra la lista de carritos
+	 * y lo retorna.
+	 * @returns {Array} Listado de carritos
+	 */
 	async getCarts() {
 		try {
 			const cartsList = await fs.promises.readFile(this.path, 'utf-8');
@@ -20,6 +26,13 @@ class CartManager {
 		}
 	}
 
+	/**
+	 * Busca un carrito mediante su ID. Primero trae el listado de carritos
+	 * con el método getCarts(), luego busca en el listado con el método find
+	 * el carrito solicitado y si lo encuentra lo retorna.
+	 * @param {Number} ID del producto a buscar
+	 * @returns {Object} Producto buscado
+	 */
 	async getCartById(cartID) {
 		try {
 			const cartsList = await this.getCarts();
@@ -42,6 +55,13 @@ class CartManager {
 		}
 	}
 
+	/**
+	 * Permite autoincrementar la ID del último carrito agregado a la lista.
+	 * Para ello obtiene el listado de carritos, almacena en una constante el
+	 * último agregado y finalmente incrementa en 1 su ID para ser utilizada
+	 * por un nuevo carrito.
+	 * @returns {number} Nueva ID
+	 */
 	#getNewCartID = async () => {
 		try {
 			const cartsList = await this.getCarts();
@@ -57,6 +77,12 @@ class CartManager {
 		}
 	};
 
+	/**
+	 * Primero realiza la validación del campo products para que sea obligatorio,
+	 * después trae el listado de carritos. Luego genera la id mediante #getNewID(),
+	 * pushea el nuevo carrito al listado y actualiza el archivo donde se guarda.
+	 * @param {Object} Nuevo carrito a agregar
+	 */
 	async addCart(newCart) {
 		try {
 			const { products } = newCart;
@@ -66,7 +92,6 @@ class CartManager {
 			const cartsList = await this.getCarts();
 
 			const id = await this.#getNewCartID();
-
 			cartsList.push({
 				id,
 				products: [],
@@ -86,6 +111,21 @@ class CartManager {
 		}
 	}
 
+	/**
+	 * Permite agregar un producto a un carrito. Primero almacena el carrito
+	 * y el producto en constantes (usa los métodos getCartById() y
+	 * getProductById()). Luego trae el listado de carritos completo y genera
+	 * una constante donde almacena el listado anterior sin el carrito a actualizar.
+	 * Si el producto existe (usa el método some() para saber si está y find()
+	 * para traerlo), incrementa la propiedad quantity en 1 y por último
+	 * crea una nueva lista actualizada que contiente los carritos existentes
+	 * y el carrito modificado. Mientras que si no existe, lo crea y lo agrega
+	 * al listado de productos del carrito (con push()) y realiza la misma tarea
+	 * anterior de crear una lista actualizada y sobreescribir el archivo de
+	 * persistencia.
+	 * @param {number} ID del carrito
+	 * @param {number} ID del producto a agregar
+	 */
 	async addProductToCart(cartId, productId) {
 		try {
 			const cart = await this.getCartById(cartId);
@@ -128,4 +168,5 @@ class CartManager {
 	}
 }
 
+//Creo una instancia de la clase y la exporto para usarla en otro archivo
 export const cartManager = new CartManager('./src/carts.json');

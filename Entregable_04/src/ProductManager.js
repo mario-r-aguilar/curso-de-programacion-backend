@@ -1,18 +1,15 @@
 import fs from 'fs';
 
 class ProductManager {
-	/**
-	 * Crea el archivo una vez que el usuario proporciona la ubicación
-	 * del archivo en la instancia.
-	 */
 	constructor(path) {
 		this.path = path;
-		if (!this.path) fs.writeFileSync(this.path, JSON.stringify([]));
+		// Si el usuario no brinda una ruta, lo crea en el mismo directorio
+		if (!this.path) fs.writeFileSync('./products.json', JSON.stringify([]));
 	}
 
 	/**
 	 * Lee el contenido del archivo donde se encuentra la lista de productos
-	 * y lo retorna como un Array
+	 * y lo retorna.
 	 * @returns {Array} Listado de productos
 	 */
 	async getProducts() {
@@ -31,7 +28,7 @@ class ProductManager {
 	/**
 	 * Busca un producto mediante su ID. Para ello trae el listado de productos
 	 * con el método getProducts, luego busca en el listado con el método find
-	 * el producto seleccionado y si lo encuentra lo devuelve como un objeto.
+	 * el producto solicitado y si lo encuentra lo retorna.
 	 * @param {Number} ID del producto a buscar
 	 * @returns {Object} Producto buscado
 	 */
@@ -60,10 +57,10 @@ class ProductManager {
 	}
 
 	/**
-	 * Permite autoincrementar la ID del último producto agregado para poder
-	 * asignarsela a un nuevo producto. Para ello obtiene el listado de productos,
-	 * luego almacena en una constante el último producto agregado y finalmente
-	 * incrementa en 1 su ID y la devuelve en forma de número para un nuevo producto.
+	 * Permite autoincrementar la ID del último producto agregado a la lista.
+	 * Para ello obtiene el listado de productos, almacena en una constante el
+	 * último agregado y finalmente incrementa en 1 su ID para ser utilizada
+	 * por un nuevo producto.
 	 * @returns {number} Nueva ID
 	 */
 	#getNewID = async () => {
@@ -83,13 +80,10 @@ class ProductManager {
 
 	/**
 	 * Primero realiza las validaciones para que todos los campos sean
-	 * obligatorios, después trae el listado de productos, luego valida que no
-	 * se repita el atributo code. Genera la id mediante el método privado
-	 * #getNewID, pushea el nuevo producto al array que contiene el listado de
-	 * productos y actualiza el archivo con la nueva información. Finalmente le
-	 * informa al usuario el resultado y retorna el nuevo producto.
+	 * obligatorios, después trae el listado de productos y valida que no
+	 * se repita el atributo code. Genera la id mediante #getNewID(),
+	 * pushea el nuevo producto al listado y actualiza el archivo.
 	 * @param {Object} Nuevo producto a agregar
-	 * @returns {Object} Producto agregado
 	 */
 	async addProduct(newProduct) {
 		try {
@@ -153,11 +147,10 @@ class ProductManager {
 
 	/**
 	 * Elimina el producto que le indiquemos mediante su ID. Para ello obtiene
-	 * el listado de productos, genera una nueva lista (con el método filter)
-	 * sin el producto a eliminar y finalmente sobreescribe el archivo con la
-	 * nueva lista.
+	 * el listado de productos, genera una nueva lista sin el producto
+	 * a eliminar (con el método filter) y finalmente sobreescribe el archivo
+	 * con la nueva lista.
 	 * @param {number} ID del producto a eliminar
-	 * @returns {Array} Lista de productos sin el producto eliminado
 	 */
 	async deleteProduct(productID) {
 		try {
@@ -183,13 +176,12 @@ class ProductManager {
 	 * Permite actualizar las características (atributos) de un producto. Primero
 	 * desestructura el objeto para facilitar el acceso a sus propiedades. Luego
 	 * obtengo el listado de productos, después recorro este listado con el método
-	 * map para generar un nuevo listado con el producto actualizado. Dentro del
-	 * map incluyo un condicional (if). Si encuentra el producto lo retorna
-	 * con los campos modificados y si no lo hace, retorna el mismo producto sin
-	 * modificaciones. Finalmente sobreescribe el archivo con la nueva lista.
+	 * map para generar un nuevo listado con el producto actualizado.
+	 * Si encuentra el producto lo retorna con los campos modificados y si no,
+	 * retorna el mismo producto sin modificaciones. Finalmente sobreescribe el
+	 * archivo con la nueva lista.
 	 * @param {number} ID del producto a actualizar
 	 * @param {Object} Producto con los campos actualizados
-	 * @returns {Array} Lista de productos actualizada
 	 */
 	async updateProduct(productID, productToChanged) {
 		try {

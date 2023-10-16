@@ -32,7 +32,7 @@ app.get('/api/products/', async (req, res) => {
 
 /**
  * Muestra un producto según la id que le pasemos mediante el método
- * getProductById(). La id es ingresada por el usuario es parseada a número
+ * getProductById(). La id ingresada por el usuario es parseada a número
  * con parseInt() para que coincida con el tipo de dato de la DB.
  */
 app.get('/api/products/:pid', async (req, res) => {
@@ -96,6 +96,11 @@ app.delete('/api/products/:pid', async (req, res) => {
 	}
 });
 
+/**
+ * Muestra un carrito según la id que le pasemos mediante el método
+ * getCartById(). La id ingresada por el usuario es parseada a número
+ * con parseInt() para que coincida con el tipo de dato de la DB.
+ */
 app.get('/api/carts/:cid', async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -112,6 +117,9 @@ app.get('/api/carts/:cid', async (req, res) => {
 	}
 });
 
+/*
+ * Agrega un nuevo carrito (enviado por req.body) mediante el método addCart()
+ */
 app.post('/api/carts/', async (req, res) => {
 	try {
 		let newCart = req.body;
@@ -121,6 +129,10 @@ app.post('/api/carts/', async (req, res) => {
 	}
 });
 
+/*
+ * Agrega un producto a un carrito mediante el método addProductToCart() al que 
+se le envía por req.params el id del carrito y el id del producto
+ */
 app.post('/api/carts/:cid/product/:pid', async (req, res) => {
 	try {
 		let { cid } = req.params;
