@@ -116,8 +116,6 @@ class ProductManager {
 			)
 				return console.error('Todos los campos son obligatorios');
 
-			status = true;
-
 			const productList = await this.getProducts();
 
 			if (productList.some((product) => product.code === code))
@@ -143,7 +141,7 @@ class ProductManager {
 
 			console.info(`El producto ${title} fue agregado satisfactoriamente`);
 
-			return productList[id - 1];
+			return;
 		} catch (err) {
 			console.error(
 				`No es posible agregar el producto. \n 
@@ -168,7 +166,7 @@ class ProductManager {
 		);
 		await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
 		console.info(`El producto con la ID ${productID} fue eliminado`);
-		return newProductList;
+		return;
 	}
 
 	/**
@@ -222,7 +220,7 @@ class ProductManager {
 			);
 
 			console.info(`El producto con ID ${productID} fue actualizado`);
-			return updatedProductList;
+			return;
 		} catch (err) {
 			console.error(
 				`No es posible actualizar el producto. \n 
