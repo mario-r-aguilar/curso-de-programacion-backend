@@ -108,7 +108,22 @@ class ProductManager {
 				!category ||
 				!thumbnail
 			)
-				return console.error('Todos los campos son obligatorios');
+				return console.error(
+					'Faltan campos por completar. Todos son obligatorios'
+				);
+
+			if (
+				typeof title !== 'string' ||
+				typeof description !== 'string' ||
+				typeof code !== 'string' ||
+				typeof price !== 'number' ||
+				typeof status !== 'boolean' || // Valida que status sea booleano
+				typeof stock !== 'number' ||
+				typeof category !== 'string' ||
+				!Array.isArray(thumbnail)
+			) {
+				return console.error('Campos con tipos de datos no válidos');
+			}
 
 			const productList = await this.getProducts();
 
