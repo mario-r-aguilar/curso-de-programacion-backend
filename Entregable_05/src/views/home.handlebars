@@ -1,0 +1,47 @@
+<h1 style='margin-bottom: 2rem; text-align: center'>Lista de productos disponibles</h1>
+
+<div class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap' 
+id='containerProducts'>
+
+    {{#if isProductsList}}
+
+        {{#each productsList}}
+
+		    <div class='card p-3 mb-3 shadow-lg' id='cardProduct' style='width: 18rem;'>			    
+                <div class='card-body'>
+				    <span class='card-title'>Producto: </span>
+                        <p>
+					        <b class='card-title'>{{this.title}}</b>
+				        </p>
+				    <span class="card-text">Descripción: </span>
+                        <p class="card-text">
+					        <b>{{this.description}}</b>
+				        </p>
+				    <span class="card-text">Código: </span>
+                        <p class="card-text">
+					        <b>{{this.code}}</b>
+				        </p>
+				    <span class="card-text">Precio: </span>
+                        <p class="card-text">
+					        <b>{{this.price}}</b>
+				        </p>
+				<span class="card-text">Stock: </span>
+                        <p class="card-text">
+					        <b>{{this.stock}}</b>
+				        </p>
+				<spanclass="card-text">Categoría: </spanclass=>
+                        <p class="card-text">
+					        <b>{{this.category}}</b>
+				        </p>
+			    </div>
+		    </div>
+
+        {{/each}}
+
+    {{else}}
+
+        <h4 class="text-bg-danger p-3 text-start">No tienes productos disponibles</h4>
+
+    {{/if}}
+
+</div>
