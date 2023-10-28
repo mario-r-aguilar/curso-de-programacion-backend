@@ -7,9 +7,10 @@ id='containerProducts'>
 
         {{#each productsList}}
 
-		    <div class='card p-3 mb-3 shadow-lg' id='cardProduct' style='width: 18rem;'>			    
+		    <div class='card p-3 mb-3 shadow-lg' id='cardProduct' style='width: 18rem;'>
+                <img src="{{this.thumbnail}}" class="card-img-top" alt="{{this.title}}">			    
                 <div class='card-body'>
-				    <span class='card-title'>Producto: </span>
+                        <span class='card-title'>Producto: </span>
                         <p>
 					        <b class='card-title'>{{this.title}}</b>
 				        </p>
