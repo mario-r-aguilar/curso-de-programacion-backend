@@ -1,17 +1,22 @@
+// Instanciamos socket.io del lado cliente
 const socket = io();
 
+// Recibe la lista de productos y la renderiza con la función renderProducts()
 socket.on('productList', (data) => {
 	renderProducts(data);
 });
 
 const renderProducts = async (data) => {
+	// Selecciona la sección de la plantilla para renderizar
 	const productsList = document.getElementById('productsList');
 	productsList.innerHTML = '';
+	// Si el array de productos llega vacío muestra un mensaje
 	if (data.length === 0) {
 		const elementHtml = document.createElement('div');
 		elementHtml.innerHTML = `<h4 class='text-bg-danger p-3 text-start'>No es posible mostrar los productos</h4>`;
 		productsList.appendChild(elementHtml);
 	} else {
+		// Si contiene los productos, recorre el array y los renderiza
 		data.forEach((element) => {
 			const elementHtml = document.createElement('div');
 			elementHtml.innerHTML = `
@@ -62,14 +67,17 @@ const renderProducts = async (data) => {
 };
 
 const closeForm = () => {
+	// Cierra (borra) el formulario mediante el uso del DOM
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 };
 
 const renderAddForm = () => {
+	// Selecciona la sección de la plantilla para renderizar
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	const newForm = document.createElement('div');
+	// Renderiza el formulario para agregar productos
 	newForm.innerHTML = `
     <form id='addForm' method='post' action='/api/products' target="_blank">
 		<input class="form-control mb-1 w-50" type='text' required id='title' name='title' placeholder='Nombre' />
@@ -87,18 +95,30 @@ const renderAddForm = () => {
     `;
 	form.appendChild(newForm);
 
+	// Selecciona el formulario recientemente creado
 	const addForm = document.getElementById('addForm');
+	// Escucha el evento submit al presionar el botón agregar
 	addForm.addEventListener('submit', async function (event) {
+		// Evita el funcionamiento habitual del evento
 		event.preventDefault();
+		// Captura el contenido de nuestro formulario
 		const formData = new FormData(addForm);
 
+		// Crea el objeto que contendrá la información del formulario
 		const productData = {};
+
+		//Recorre formData y guarda key y valor en productData
 		formData.forEach((value, key) => {
+			// Convierte el valor ingresado de string a número
 			if (key === 'price' || key === 'stock') {
 				productData[key] = Number(value);
-			} else if (key === 'thumbnail') {
+			}
+			// Convierte el valor ingresado de string a array
+			else if (key === 'thumbnail') {
 				productData[key] = value.split(',').map((s) => s.trim());
-			} else if (key === 'status') {
+			}
+			// Convierte el valor ingresado de string a booleano
+			else if (key === 'status') {
 				productData[key] = value === 'on' ? true : false;
 			} else {
 				productData[key] = value;
@@ -106,6 +126,7 @@ const renderAddForm = () => {
 		});
 
 		try {
+			// Envía el objeto productData usando fetch y guarda la respuesta
 			const response = await fetch('/api/products', {
 				method: 'POST',
 				headers: {
@@ -113,6 +134,7 @@ const renderAddForm = () => {
 				},
 				body: JSON.stringify(productData),
 			});
+			// Si la respuesta fue satisfactoria renderiza un mensaje informándolo
 			if (response.ok) {
 				form.innerHTML = '';
 				const responseMessage = document.createElement('div');
@@ -122,7 +144,7 @@ const renderAddForm = () => {
                 `;
 				form.appendChild(responseMessage);
 				addForm.reset();
-
+				// Envía por socket.io el aviso de actualización de la lista de productos
 				socket.emit('updatedList', 'Se actualizo la lista de productos');
 			} else {
 				console.error('No fue posible agregar el producto');
@@ -134,9 +156,11 @@ const renderAddForm = () => {
 };
 
 const renderDelForm = () => {
+	// Selecciona la sección de la plantilla para renderizar
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	const newForm = document.createElement('div');
+	// Renderiza el formulario para eliminar productos
 	newForm.innerHTML = `
 	<form id='delForm' method='post' action='/api/products/:pid'>
 		<input class="form-control mb-1 w-50" type='text' required id='id' name='id' placeholder='Id del producto' />
@@ -146,17 +170,24 @@ const renderDelForm = () => {
     `;
 	form.appendChild(newForm);
 
+	// Selecciona el formulario recientemente creado
 	document.getElementById('delForm');
+	// Escucha el evento submit al presionar el botón eliminar
 	document.addEventListener('submit', function (event) {
+		// Evita el funcionamiento habitual del evento
 		event.preventDefault();
+		// Selecciona la sección id del formulario
 		const idInput = document.getElementById('id');
 		if (idInput !== null) {
+			// Si existe, guarda el valor de id
 			const productId = idInput.value;
 
+			// Elimina el producto indicado según su id
 			fetch(`/api/products/${productId}`, {
 				method: 'DELETE',
 			})
 				.then((res) => {
+					// Si la promesa se resolvio renderiza un mensaje informándolo
 					if (res.ok) {
 						const form = document.getElementById('form');
 						form.innerHTML = '';
@@ -168,7 +199,7 @@ const renderDelForm = () => {
 						form.appendChild(response);
 						const delForm = document.getElementById('delForm');
 						if (delForm !== null) delForm.reset();
-
+						// Envía por socket.io el aviso de actualización de la lista de productos
 						socket.emit(
 							'updatedList',
 							'Se actualizo la lista de productos'

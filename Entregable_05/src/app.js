@@ -32,5 +32,5 @@ const httpServer = app.listen(8080, () => {
 	console.log('Server listening port 8080...');
 });
 
-// Websocket
+// Inicia socket.io en el servidor
 socketServer(httpServer);

@@ -1,5 +1,6 @@
 <h1 class='mb-3'>Lista de productos en tiempo real</h1>
 
+{{! Según el botón que presionemos ejecuta la función de renderizado de su formulario }}
 <button
 	class='btn btn-success border border-dark shadow me-1 mb-3'
 	id='btnAdd'
@@ -11,6 +12,7 @@
 	onclick='renderDelForm()'
 >Eliminar Productos</button>
 
+{{! Secciones donde se renderizaran los formularios y la lista de productos respectivamente }}
 <div id='form'></div>
 
 <div
@@ -18,5 +20,6 @@
 	id='productsList'
 ></div>
 
+{{! Librerías necesarias para ejecutar socket.io en el cliente }}
 <script src='/socket.io/socket.io.js'></script>
 <script src='/static/js/socketClient.js'></script>
