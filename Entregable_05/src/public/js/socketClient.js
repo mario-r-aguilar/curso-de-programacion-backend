@@ -122,6 +122,8 @@ const renderAddForm = () => {
                 `;
 				form.appendChild(responseMessage);
 				addForm.reset();
+
+				socket.emit('updatedList', 'Se actualizo la lista de productos');
 			} else {
 				console.error('No fue posible agregar el producto');
 			}
@@ -166,6 +168,11 @@ const renderDelForm = () => {
 						form.appendChild(response);
 						const delForm = document.getElementById('delForm');
 						if (delForm !== null) delForm.reset();
+
+						socket.emit(
+							'updatedList',
+							'Se actualizo la lista de productos'
+						);
 					} else {
 						console.error('No fue posible eliminar el producto');
 					}
