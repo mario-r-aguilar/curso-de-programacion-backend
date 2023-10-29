@@ -117,7 +117,7 @@ class ProductManager {
 				typeof description !== 'string' ||
 				typeof code !== 'string' ||
 				typeof price !== 'number' ||
-				typeof status !== 'boolean' || // Valida que status sea booleano
+				typeof status !== 'boolean' ||
 				typeof stock !== 'number' ||
 				typeof category !== 'string' ||
 				!Array.isArray(thumbnail)
