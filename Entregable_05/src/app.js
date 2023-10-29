@@ -1,6 +1,6 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
-import { Server } from 'socket.io';
+import { socketServer } from './utils/websocket.js';
 import path from 'node:path';
 import getDirname from './utils/utils.js';
 import { productRouter } from './routes/product.routes.js';
@@ -32,11 +32,5 @@ const httpServer = app.listen(8080, () => {
 	console.log('Server listening port 8080...');
 });
 
-// Websockets
-const io = new Server(httpServer);
-io.on('connection', (socket) => {
-	console.log('user connected');
-	socket.on('disconnect', () => {
-		console.log('user disconnected');
-	});
-});
+// Websocket
+socketServer(httpServer);
