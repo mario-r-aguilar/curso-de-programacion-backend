@@ -10,9 +10,13 @@
 	id='btnDel'
 	onclick='renderDelForm()'
 >Eliminar Productos</button>
+
 <div id='form'></div>
 
-<div id='productList'></div>
+<div
+	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
+	id='productsList'
+></div>
 
 <script src='/socket.io/socket.io.js'></script>
 <script src='/static/js/socketClient.js'></script>

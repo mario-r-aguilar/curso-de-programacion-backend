@@ -1,5 +1,66 @@
 const socket = io();
 
+socket.on('productList', (data) => {
+	renderProducts(data);
+});
+
+const renderProducts = async (data) => {
+	const productsList = document.getElementById('productsList');
+	productsList.innerHTML = '';
+	if (data.length === 0) {
+		const elementHtml = document.createElement('div');
+		elementHtml.innerHTML = `<h4 class='text-bg-danger p-3 text-start'>No es posible mostrar los productos</h4>`;
+		productsList.appendChild(elementHtml);
+	} else {
+		data.forEach((element) => {
+			const elementHtml = document.createElement('div');
+			elementHtml.innerHTML = `
+			<div
+			class='card p-3 mb-3 shadow-lg'
+			id='cardProduct' 
+			style='width: 18rem; height: 52rem'
+		>
+			<img
+				src='${element.thumbnail}'
+				class='card-img-top'
+				alt='${element.title}'
+			/>
+			<div class='card-body'>
+				<h5 class='card-title mb-3 ps-1 pb-1 text-light bg-dark'>
+					<b class='card-title'>${element.title}</b>
+				</h5>
+				<span class='card-text'>Descripción: </span>
+				<p class='card-text'>
+					<b>${element.description}</b>
+				</p>
+				<span class='card-text'>Código: </span>
+				<p class='card-text'>
+					<b>${element.code}</b>
+				</p>
+				<span class='card-text'>Precio: </span>
+				<p class='card-text'>
+					<b>$ ${element.price}</b>
+				</p>
+				<span class='card-text'>Stock: </span>
+				<p class='card-text'>
+					<b>${element.stock}</b>
+				</p>
+				<span class='card-text'>Categoría: </span>
+				<p class='card-text'>
+					<b>${element.category}</b>
+				</p>
+				<span class='card-text'>ID: </span>
+				<p class='card-text'>
+					<b>${element.id}</b>
+				</p>
+			</div>
+		</div>
+	`;
+			productsList.appendChild(elementHtml);
+		});
+	}
+};
+
 const closeForm = () => {
 	const form = document.getElementById('form');
 	form.innerHTML = '';
