@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import ProductManagerMongo from '../dao/ProductManager.mongo.js';
 import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
+import { chatManager } from '../dao/ChatManager.js';
 
 dotenv.config();
 const mongoDbActive = process.env.MONGO_DB_ACTIVE;
@@ -28,6 +29,20 @@ export function socketServer(server) {
 		socket.on('updatedList', async (data) => {
 			console.info(data);
 			socket.emit('productList', await productManager.getProducts());
+		});
+
+		// Chat
+		socket.on('message', async (data) => {
+			await chatManager.createMessage(data);
+			io.emit('messages', await chatManager.getMessages());
+		});
+
+		socket.on('getMessages', async () => {
+			socket.emit('messages', await chatManager.getMessages());
+		});
+
+		socket.on('newUserConnect', (newUser) => {
+			socket.broadcast.emit('userConnected', newUser);
 		});
 
 		// Da aviso cuando el cliente se desconecta

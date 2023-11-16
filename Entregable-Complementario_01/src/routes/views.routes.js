@@ -37,4 +37,8 @@ viewsRouter.get('/realtimeproducts', (req, res) => {
 	});
 });
 
+viewsRouter.get('/chat', (req, res) => {
+	res.render('chat', { title: 'Chat' });
+});
+
 export { viewsRouter };
