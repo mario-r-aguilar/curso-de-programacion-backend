@@ -56,7 +56,7 @@ const renderProducts = async (data) => {
 				</p>
 				<span class='card-text'>ID: </span>
 				<p class='card-text'>
-					<b>${element.id}</b>
+					<b>${element.id || element._id}</b>
 				</p>
 			</div>
 		</div>

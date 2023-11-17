@@ -27,18 +27,26 @@ viewsRouter.get('/', async (req, res) => {
 			title: 'Lista de productos disponibles',
 		});
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
 viewsRouter.get('/realtimeproducts', (req, res) => {
-	res.render('realTimeProducts', {
-		title: 'Lista de productos en tiempo real',
-	});
+	try {
+		res.render('realTimeProducts', {
+			title: 'Lista de productos en tiempo real',
+		});
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
 viewsRouter.get('/chat', (req, res) => {
-	res.render('chat', { title: 'Chat' });
+	try {
+		res.render('chat', { title: 'Chat' });
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
 export { viewsRouter };

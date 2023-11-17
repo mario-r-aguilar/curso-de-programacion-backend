@@ -1,6 +1,27 @@
 import { Router } from 'express';
-import { cartManager } from '../dao/CartManager.filesystem.js';
+import CartManagerFileSystem from '../dao/CartManager.filesystem.js';
+import CartManagerMongo from '../dao/CartManager.mongo.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const mongoDbActive = process.env.MONGO_DB_ACTIVE;
+
+let cartManager;
+
+mongoDbActive === 'yes'
+	? (cartManager = new CartManagerMongo())
+	: (cartManager = new CartManagerFileSystem('./src/dao/db/carts.json'));
+
 const cartRouter = Router();
+
+cartRouter.get('/', async (req, res) => {
+	try {
+		const carts = await cartManager.getCarts();
+		res.status(200).send(carts);
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
 
 /**
  * Muestra un carrito según la id que le pasemos mediante el método
@@ -11,14 +32,9 @@ cartRouter.get('/:cid', async (req, res) => {
 	try {
 		let { cid } = req.params;
 		const cart = await cartManager.getCartById(cid);
-
-		if (cart) {
-			return res.status(200).send(cart);
-		} else {
-			return res.status(404).send({ error: 'Carrito no encontrado' });
-		}
+		res.status(200).send(cart);
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
@@ -28,9 +44,9 @@ cartRouter.get('/:cid', async (req, res) => {
 cartRouter.post('/', async (req, res) => {
 	try {
 		let newCart = req.body;
-		return res.status(201).send(await cartManager.addCart(newCart));
+		res.status(201).send(await cartManager.addCart(newCart));
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
@@ -43,9 +59,9 @@ cartRouter.post('/:cid/product/:pid', async (req, res) => {
 		let { cid } = req.params;
 		let { pid } = req.params;
 
-		return res.status(201).send(await cartManager.addProductToCart(cid, pid));
+		res.status(201).send(await cartManager.addProductToCart(cid, pid));
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 

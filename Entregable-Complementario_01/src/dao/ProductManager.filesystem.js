@@ -25,7 +25,7 @@ class ProductManagerFileSystem {
 			}
 		} catch (err) {
 			console.error(
-				`No es posible leer el archivo.\n 
+				`No es posible mostrar los productos.\n 
             Error: ${err}`
 			);
 			return;
@@ -77,7 +77,7 @@ class ProductManagerFileSystem {
 			return newID.toString();
 		} catch (err) {
 			console.error(
-				`No es posible asignar una nueva ID.\n 
+				`No es posible asignar una ID.\n 
         Error: ${err}`
 			);
 			return;

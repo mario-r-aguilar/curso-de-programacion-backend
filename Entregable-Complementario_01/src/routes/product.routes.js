@@ -24,9 +24,9 @@ mongoDbActive === 'yes'
 productRouter.get('/', async (req, res) => {
 	try {
 		let productList = await productManager.getProducts(req.query.limit);
-		return res.status(200).send({ productList });
+		res.status(200).send({ productList });
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
@@ -39,14 +39,9 @@ productRouter.get('/:pid', async (req, res) => {
 	try {
 		let { pid } = req.params;
 		const product = await productManager.getProductById(pid);
-
-		if (product) {
-			return res.status(200).send(product);
-		} else {
-			return res.status(404).send({ error: 'Producto no encontrado' });
-		}
+		res.status(200).send(product);
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
@@ -56,9 +51,9 @@ productRouter.get('/:pid', async (req, res) => {
 productRouter.post('/', async (req, res) => {
 	try {
 		let newProduct = req.body;
-		return res.status(201).send(await productManager.addProduct(newProduct));
+		res.status(201).send(await productManager.addProduct(newProduct));
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
@@ -72,11 +67,11 @@ productRouter.put('/:pid', async (req, res) => {
 		let { pid } = req.params;
 		const updatedProduct = req.body;
 
-		return res
-			.status(200)
-			.send(await productManager.updateProduct(pid, updatedProduct));
+		res.status(200).send(
+			await productManager.updateProduct(pid, updatedProduct)
+		);
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 
@@ -87,9 +82,9 @@ mismo por req.params
 productRouter.delete('/:pid', async (req, res) => {
 	try {
 		let { pid } = req.params;
-		return res.status(200).send(await productManager.deleteProduct(pid));
+		res.status(204).send(await productManager.deleteProduct(pid));
 	} catch (error) {
-		return res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 });
 

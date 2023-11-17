@@ -1,5 +1,4 @@
 import fs from 'fs';
-import ProductManagerMongo from '../dao/ProductManager.mongo.js';
 import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import dotenv from 'dotenv';
 
@@ -9,12 +8,12 @@ const mongoDbActive = process.env.MONGO_DB_ACTIVE;
 let productManager;
 
 mongoDbActive === 'yes'
-	? (productManager = new ProductManagerMongo())
+	? console.info('Base de Datos de File System Desactivada')
 	: (productManager = new ProductManagerFileSystem(
 			'./src/dao/db/products.json'
 	  ));
 
-class CartManager {
+class CartManagerFileSystem {
 	constructor(path) {
 		this.path = path;
 		// Si el usuario no brinda una ruta, lo crea en el mismo directorio
@@ -33,7 +32,7 @@ class CartManager {
 			return JSON.parse(cartsList);
 		} catch (err) {
 			console.error(
-				`No es posible leer el archivo.\n 
+				`No es posible obtener los carritos.\n 
             Error: ${err}`
 			);
 			return;
@@ -85,7 +84,7 @@ class CartManager {
 			return newID.toString();
 		} catch (err) {
 			console.error(
-				`No es posible asignar una nueva ID.\n 
+				`No es posible asignar una ID.\n 
         Error: ${err}`
 			);
 			return;
@@ -119,7 +118,7 @@ class CartManager {
 			return;
 		} catch (err) {
 			console.error(
-				`No es posible agregar el producto. \n 
+				`No es posible agregar el carrito. \n 
             Error: ${err}`
 			);
 			return;
@@ -184,4 +183,4 @@ class CartManager {
 }
 
 //Creo una instancia de la clase y la exporto para usarla en otro archivo
-export const cartManager = new CartManager('./src/dao/db/carts.json');
+export default CartManagerFileSystem;

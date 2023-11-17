@@ -10,7 +10,11 @@ class ChatManager {
 			const messages = await this.model.find().limit(15).lean().exec();
 			return messages;
 		} catch (error) {
-			console.error('No es posible ver todos los mensajes');
+			console.error(
+				`No es posible obtener los mensajes.\n 
+				Error: ${error}`
+			);
+			return;
 		}
 	}
 
@@ -19,7 +23,11 @@ class ChatManager {
 			const newMessage = await this.model.create(message);
 			return newMessage;
 		} catch (error) {
-			console.error('No se ha podido enviar el mensaje');
+			console.error(
+				`No es posible enviar el mensaje.\n 
+				Error: ${error}`
+			);
+			return;
 		}
 	}
 }
