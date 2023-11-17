@@ -18,11 +18,9 @@ mongoDbActive === 'yes'
 
 viewsRouter.get('/', async (req, res) => {
 	try {
-		const productsList = await productManager.getProducts();
-		let isProductsList = Array.isArray(productsList);
+		const productsList = await productManager.getProducts(req.query.limit);
 
 		res.render('home', {
-			isProductsList,
 			productsList,
 			title: 'Lista de productos disponibles',
 		});

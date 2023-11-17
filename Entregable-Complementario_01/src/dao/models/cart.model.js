@@ -17,6 +17,7 @@ const cartSchema = mongoose.Schema({
 	},
 });
 
+// Middleware para ver los productos completos cuando busco un carrito en particular (no solo el _id)
 cartSchema.pre('findOne', function () {
 	this.populate('products.product');
 });

@@ -2,6 +2,7 @@ import fs from 'fs';
 import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import dotenv from 'dotenv';
 
+// Genera una instancia de la clase ProductManagerFileSystem() solo si no se usa la DB de Mongo
 dotenv.config();
 const mongoDbActive = process.env.MONGO_DB_ACTIVE;
 
@@ -16,14 +17,14 @@ mongoDbActive === 'yes'
 class CartManagerFileSystem {
 	constructor(path) {
 		this.path = path;
-		// Si el usuario no brinda una ruta, lo crea en el mismo directorio
+		// Si el usuario no brinda una ruta, crea el archivo con un array vacío
 		if (!this.path)
 			fs.writeFileSync('./dao/db/carts.json', JSON.stringify([]));
 	}
 
 	/**
-	 * Lee el contenido del archivo donde se encuentra la lista de carritos
-	 * y lo retorna.
+	 * Obtiene la lista de carritos.
+	 * Lee el contenido del archivo donde se encuentra el listado y lo retorna.
 	 * @returns {Array} Listado de carritos
 	 */
 	async getCarts() {
@@ -40,10 +41,10 @@ class CartManagerFileSystem {
 	}
 
 	/**
-	 * Busca un carrito mediante su ID. Primero trae el listado de carritos
-	 * con el método getCarts(), luego busca en el listado con el método find
-	 * el carrito solicitado y si lo encuentra lo retorna.
-	 * @param {Number} ID del producto a buscar
+	 * Busca un carrito mediante su ID.
+	 * Primero trae el listado de carritos con el método getCarts(),
+	 * luego busca en el listado con find el carrito solicitado.
+	 * @param {String} ID del producto a buscar
 	 * @returns {Object} Producto buscado
 	 */
 	async getCartById(cartID) {
@@ -69,11 +70,11 @@ class CartManagerFileSystem {
 	}
 
 	/**
-	 * Permite autoincrementar la ID del último carrito agregado a la lista.
+	 * Permite obtener una ID que luego será usada por un nuevo carrito agregado.
 	 * Para ello obtiene el listado de carritos, almacena en una constante el
-	 * último agregado y finalmente incrementa en 1 su ID para ser utilizada
-	 * por un nuevo carrito.
-	 * @returns {number} Nueva ID
+	 * indice del último agregado, incrementa en 1 su valor y luego
+	 * lo convierte a String.
+	 * @returns {String} Nueva ID
 	 */
 	#getNewCartID = async () => {
 		try {
@@ -92,6 +93,7 @@ class CartManagerFileSystem {
 	};
 
 	/**
+	 * Agrega un nuevo carrito.
 	 * Primero realiza la validación del campo products para que sea obligatorio,
 	 * después trae el listado de carritos. Luego genera la id mediante #getNewID(),
 	 * pushea el nuevo carrito al listado y actualiza el archivo donde se guarda.
@@ -129,7 +131,7 @@ class CartManagerFileSystem {
 	 * Permite agregar un producto a un carrito. Primero almacena el carrito
 	 * y el producto en constantes (usa los métodos getCartById() y
 	 * getProductById()). Luego trae el listado de carritos completo y genera
-	 * una constante donde almacena el listado anterior sin el carrito a actualizar.
+	 * una constante donde guarda el listado sin el carrito a actualizar.
 	 * Si el producto existe (usa el método some() para saber si está y find()
 	 * para traerlo), incrementa la propiedad quantity en 1 y por último
 	 * crea una nueva lista actualizada que contiente los carritos existentes
@@ -137,8 +139,8 @@ class CartManagerFileSystem {
 	 * al listado de productos del carrito (con push()) y realiza la misma tarea
 	 * anterior de crear una lista actualizada y sobreescribir el archivo de
 	 * persistencia.
-	 * @param {number} ID del carrito
-	 * @param {number} ID del producto a agregar
+	 * @param {String} ID del carrito
+	 * @param {String} ID del producto a agregar
 	 */
 	async addProductToCart(cartId, productId) {
 		try {
@@ -182,5 +184,5 @@ class CartManagerFileSystem {
 	}
 }
 
-//Creo una instancia de la clase y la exporto para usarla en otro archivo
+// Exporto la clase
 export default CartManagerFileSystem;
