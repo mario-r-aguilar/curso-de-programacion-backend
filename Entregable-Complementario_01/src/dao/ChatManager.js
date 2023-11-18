@@ -5,6 +5,10 @@ class ChatManager {
 		this.model = chatModel;
 	}
 
+	/**
+	 * Devuelve los últimos 15 mensajes del chat
+	 * @returns {Array} Listado de mensajes
+	 */
 	async getMessages() {
 		try {
 			const messages = await this.model.find().limit(15).lean().exec();
@@ -18,6 +22,11 @@ class ChatManager {
 		}
 	}
 
+	/**
+	 * Crea un nuevo mensaje en el chat.
+	 * @param {Object} Mensaje a enviar
+	 * @returns {Object} Mensaje enviado
+	 */
 	async createMessage(message) {
 		try {
 			const newMessage = await this.model.create(message);

@@ -3,6 +3,9 @@ import CartManagerFileSystem from '../dao/CartManager.filesystem.js';
 import CartManagerMongo from '../dao/CartManager.mongo.js';
 import dotenv from 'dotenv';
 
+const cartRouter = Router();
+
+// Genera una instancia de una clase, según la base de datos activa
 dotenv.config();
 const mongoDbActive = process.env.MONGO_DB_ACTIVE;
 
@@ -12,8 +15,7 @@ mongoDbActive === 'yes'
 	? (cartManager = new CartManagerMongo())
 	: (cartManager = new CartManagerFileSystem('./src/dao/db/carts.json'));
 
-const cartRouter = Router();
-
+// Muestra el listado de carritos
 cartRouter.get('/', async (req, res) => {
 	try {
 		const carts = await cartManager.getCarts();
@@ -23,11 +25,7 @@ cartRouter.get('/', async (req, res) => {
 	}
 });
 
-/**
- * Muestra un carrito según la id que le pasemos mediante el método
- * getCartById(). La id ingresada por el usuario es parseada a número
- * con parseInt() para que coincida con el tipo de dato de la DB.
- */
+// Muestra un carrito según su id enviada por req.params
 cartRouter.get('/:cid', async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -38,9 +36,7 @@ cartRouter.get('/:cid', async (req, res) => {
 	}
 });
 
-/*
- * Agrega un nuevo carrito (enviado por req.body) mediante el método addCart()
- */
+//Agrega un nuevo carrito enviado desde req.body
 cartRouter.post('/', async (req, res) => {
 	try {
 		let newCart = req.body;
@@ -50,10 +46,7 @@ cartRouter.post('/', async (req, res) => {
 	}
 });
 
-/*
- * Agrega un producto a un carrito mediante el método addProductToCart() al que 
-se le envía por req.params el id del carrito y el id del producto
- */
+// Agrega un producto a un carrito mediante sus IDs envíadas por req.params
 cartRouter.post('/:cid/product/:pid', async (req, res) => {
 	try {
 		let { cid } = req.params;

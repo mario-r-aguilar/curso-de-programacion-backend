@@ -31,7 +31,7 @@ export function socketServer(server) {
 			socket.emit('productList', await productManager.getProducts());
 		});
 
-		// Chat
+		// Manejo del chat
 		socket.on('message', async (data) => {
 			await chatManager.createMessage(data);
 			io.emit('messages', await chatManager.getMessages());

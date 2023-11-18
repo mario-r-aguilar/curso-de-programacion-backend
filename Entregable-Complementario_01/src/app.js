@@ -38,6 +38,7 @@ app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);
 
+// Inicia el servidor según la base de datos activa
 if (mongoDbActive == 'yes') {
 	mongoose
 		.connect(urlMongoDb, { dbName: mongoDbName })

@@ -3,14 +3,14 @@ import fs from 'fs';
 class ProductManagerFileSystem {
 	constructor(path) {
 		this.path = path;
-		// Si el usuario no brinda una ruta, lo crea en el mismo directorio
+		// Si el usuario no brinda una ruta, crea el archivo con un array vacío
 		if (!this.path)
 			fs.writeFileSync('./dao/db/products.json', JSON.stringify([]));
 	}
 
 	/**
-	 * Lee el contenido del archivo donde se encuentra la lista de productos
-	 * y lo retorna.
+	 * Obtiene la lista de productos.
+	 * Lee el contenido del archivo donde se encuentra el listado y lo retorna.
 	 * @returns {Array} Listado de productos
 	 */
 	async getProducts(limit) {
@@ -33,9 +33,9 @@ class ProductManagerFileSystem {
 	}
 
 	/**
-	 * Busca un producto mediante su ID. Para ello trae el listado de productos
-	 * con el método getProducts, luego busca en el listado con el método find
-	 * el producto solicitado y si lo encuentra lo retorna.
+	 * Busca un producto mediante su ID.
+	 * Para ello trae el listado de productos con el método getProducts(),
+	 * luego busca en el listado con el método find el producto solicitado.
 	 * @param {Number} ID del producto a buscar
 	 * @returns {Object} Producto buscado
 	 */
@@ -62,11 +62,11 @@ class ProductManagerFileSystem {
 	}
 
 	/**
-	 * Permite autoincrementar la ID del último producto agregado a la lista.
+	 * Permite obtener una ID que luego será usada por un nuevo producto agregado.
 	 * Para ello obtiene el listado de productos, almacena en una constante el
-	 * último agregado y finalmente incrementa en 1 su ID para ser utilizada
-	 * por un nuevo producto.
-	 * @returns {number} Nueva ID
+	 * indice del último agregado, incrementa en 1 su valor y luego
+	 * lo convierte a String.
+	 * @returns {String} Nueva ID
 	 */
 	#getNewID = async () => {
 		try {
@@ -85,6 +85,7 @@ class ProductManagerFileSystem {
 	};
 
 	/**
+	 * Agrega un nuevo producto.
 	 * Primero realiza las validaciones para que todos los campos sean
 	 * obligatorios, después trae el listado de productos y valida que no
 	 * se repita el atributo code. Genera la id mediante #getNewID(),
@@ -167,10 +168,10 @@ class ProductManagerFileSystem {
 	}
 
 	/**
-	 * Elimina el producto que le indiquemos mediante su ID. Para ello obtiene
-	 * el listado de productos, genera una nueva lista sin el producto
-	 * a eliminar (con el método filter) y finalmente sobreescribe el archivo
-	 * con la nueva lista.
+	 * Elimina el producto que le indiquemos mediante su ID.
+	 * Para ello obtiene el listado de productos, genera una nueva lista
+	 * sin el producto a eliminar (con el método filter) y finalmente
+	 * sobreescribe el archivo con la nueva lista.
 	 * @param {number} ID del producto a eliminar
 	 */
 	async deleteProduct(productID) {
@@ -194,9 +195,9 @@ class ProductManagerFileSystem {
 	}
 
 	/**
-	 * Permite actualizar las características (atributos) de un producto. Primero
-	 * desestructura el objeto para facilitar el acceso a sus propiedades. Luego
-	 * obtengo el listado de productos, después recorro este listado con el método
+	 * Permite actualizar las características (atributos) de un producto.
+	 * Primero desestructura el objeto para facilitar el acceso a sus propiedades.
+	 * Luego obtiene el listado de productos, recorre este listado con el método
 	 * map para generar un nuevo listado con el producto actualizado.
 	 * Si encuentra el producto lo retorna con los campos modificados y si no,
 	 * retorna el mismo producto sin modificaciones. Finalmente sobreescribe el

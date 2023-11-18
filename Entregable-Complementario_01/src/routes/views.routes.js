@@ -5,6 +5,7 @@ import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 
 const viewsRouter = Router();
 
+// Genera una instancia de una clase, según la base de datos activa
 dotenv.config();
 const mongoDbActive = process.env.MONGO_DB_ACTIVE;
 
@@ -16,6 +17,8 @@ mongoDbActive === 'yes'
 			'./src/dao/db/products.json'
 	  ));
 
+// Muestra el listado de productos y permite a traves de la query limit elegir
+// la cantidad de productos que ver por pantalla
 viewsRouter.get('/', async (req, res) => {
 	try {
 		const productsList = await productManager.getProducts(req.query.limit);
@@ -29,6 +32,7 @@ viewsRouter.get('/', async (req, res) => {
 	}
 });
 
+// Muestra el listado de productos y permite actualizarlos en tiempo real
 viewsRouter.get('/realtimeproducts', (req, res) => {
 	try {
 		res.render('realTimeProducts', {
@@ -39,6 +43,7 @@ viewsRouter.get('/realtimeproducts', (req, res) => {
 	}
 });
 
+// Muestra el chat
 viewsRouter.get('/chat', (req, res) => {
 	try {
 		res.render('chat', { title: 'Chat' });

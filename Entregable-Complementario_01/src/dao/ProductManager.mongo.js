@@ -5,6 +5,14 @@ class ProductManagerMongo {
 		this.model = productModel;
 	}
 
+	/**
+	 * Muestra el listado de productos.
+	 * Con el método lean() obtengo los datos como objetos JavaScript simples.
+	 * Con el método exec() ejecuto la consulta final después de haber aplicado
+	 * diferentes métodos de Mongoose al find().
+	 * @param {String} Cantidad de productos que se mostraran
+	 * @returns {Array} Listado de productos
+	 */
 	async getProducts(limit) {
 		try {
 			if (limit) {
@@ -21,6 +29,11 @@ class ProductManagerMongo {
 		}
 	}
 
+	/**
+	 * Busca un producto mediante su ID y muestra su contenido.
+	 * @param {String} ID del producto
+	 * @returns {Object} Producto buscado
+	 */
 	async getProductById(productID) {
 		try {
 			return await this.model.findById(productID).lean().exec();
@@ -33,6 +46,11 @@ class ProductManagerMongo {
 		}
 	}
 
+	/**
+	 * Agrega un producto.
+	 * @param {Object} Producto a agregar
+	 * @returns {Object} Nuevo producto agregado
+	 */
 	async addProduct(newProduct) {
 		try {
 			return await this.model.create(newProduct);
@@ -45,6 +63,10 @@ class ProductManagerMongo {
 		}
 	}
 
+	/**
+	 * Busca un producto mediante su ID y elimina el producto.
+	 * @param {String} ID del producto
+	 */
 	async deleteProduct(productID) {
 		try {
 			return await this.model.deleteOne({ _id: productID });
@@ -57,6 +79,11 @@ class ProductManagerMongo {
 		}
 	}
 
+	/**
+	 * Actualiza un producto.
+	 * @param {String} ID del producto
+	 * @param {Object} Producto actualizado
+	 */
 	async updateProduct(productID, productToChanged) {
 		try {
 			return await this.model.updateOne(
