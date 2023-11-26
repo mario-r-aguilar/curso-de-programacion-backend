@@ -8,7 +8,7 @@
 
    _page_: permitirá devolver la página que queremos buscar, en caso de no recibir page, ésta será de 1
 
-   _query_: el tipo de elemento que quiero buscar (es decir, qué filtro aplicar), en caso de no recibir query, realizar la búsqueda general
+   _query_: el tipo de elemento que quiero buscar (es decir, qué filtro aplicar), en caso de no recibir query, realizar la búsqueda general. Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio.
 
    _sort_: asc/desc, para realizar ordenamiento ascendente o descendente por precio, en caso de no recibir sort, no realizar ningún ordenamiento
 
@@ -27,9 +27,7 @@
 `nextLink: Link directo a la página siguiente (null si hasNextPage=false)`
 `}`
 
-3. Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio.
-
-4. Además, agregar al router de carts los siguientes endpoints:
+3. Además, agregar al router de carts los siguientes endpoints:
 
    **DELETE** _api/carts/:cid/products/:pid_ deberá eliminar del carrito el producto seleccionado.
 
@@ -39,17 +37,17 @@
 
    **DELETE** _api/carts/:cid_ deberá eliminar todos los productos del carrito
 
-5. El modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. **Modificar la ruta /:cid** para que al traer todos los productos, los traiga completos **mediante un “populate”**. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados.
+4. El modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. **Modificar la ruta /:cid** para que al traer todos los productos, los traiga completos **mediante un “populate”**. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados.
 
-6. Crear una **vista en el router de views ‘/products’** para visualizar todos los productos con su respectiva paginación. Cada producto mostrado puede resolverse de dos formas:
+5. Crear una **vista en el router de views ‘/products’** para visualizar todos los productos con su respectiva paginación. Cada producto mostrado puede resolverse de dos formas:
 
    -  Llevar a una nueva vista con el producto seleccionado con su descripción completa, detalles de precio, categoría, etc. Además de un botón para agregar al carrito.
 
    -  Contar con el botón de “agregar al carrito” directamente, sin necesidad de abrir una página adicional con los detalles del producto.
 
-7. Agregar una **vista en ‘/carts/:cid** (cartId) para visualizar un carrito específico, donde se deberán listar SOLO los productos que pertenezcan a dicho carrito.
+6. Agregar una **vista en ‘/carts/:cid** (cartId) para visualizar un carrito específico, donde se deberán listar SOLO los productos que pertenezcan a dicho carrito.
 
-8. Contarás con Mongo como sistema de persistencia principal y tendrás definidos todos los endpoints para poder trabajar con productos y carritos.
+7. Contarás con Mongo como sistema de persistencia principal y tendrás definidos todos los endpoints para poder trabajar con productos y carritos.
 
 ## Sugerencias
 

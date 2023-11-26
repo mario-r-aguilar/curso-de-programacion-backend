@@ -21,8 +21,26 @@ mongoDbActive === 'yes'
 // elegir la cantidad de productos que queremos ver por pantalla
 productRouter.get('/', async (req, res) => {
 	try {
-		let productList = await productManager.getProducts(req.query.limit);
-		res.status(200).send({ productList });
+		if (mongoDbActive) {
+			const { limit, page, sort, category, status } = req.query;
+
+			let productList = await productManager.getProducts(
+				limit,
+				page,
+				sort,
+				category,
+				status
+			);
+
+			const statusProductList =
+				(await productList.docs.length) !== 0 ? 'success' : 'error';
+			const result = { status: statusProductList, payload: productList };
+
+			res.send(result);
+		} else {
+			let productList = await productManager.getProducts(req.query.limit);
+			res.send({ productList });
+		}
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}

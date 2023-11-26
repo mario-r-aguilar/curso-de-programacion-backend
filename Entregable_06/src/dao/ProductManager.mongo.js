@@ -13,13 +13,29 @@ class ProductManagerMongo {
 	 * @param {String} Cantidad de productos que se mostraran
 	 * @returns {Array} Listado de productos
 	 */
-	async getProducts(limit) {
+	async getProducts(limit = 10, page = 1, sort, category = false, status) {
 		try {
-			if (limit) {
-				return await this.model.find().limit(limit).lean().exec();
-			} else {
-				return await this.model.find().lean().exec();
+			let query = {};
+
+			if (category) {
+				query.category = category;
 			}
+
+			if (status) {
+				query.status = status;
+			}
+
+			const options = {
+				lean: true,
+				page,
+				limit,
+			};
+
+			if (sort) {
+				options.sort = { price: sort };
+			}
+
+			return await productModel.paginate(query, options);
 		} catch (error) {
 			console.error(
 				`No es posible obtener los productos.\n 
