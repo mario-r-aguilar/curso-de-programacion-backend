@@ -19,7 +19,8 @@ mongoDbActive === 'yes'
 cartRouter.get('/', async (req, res) => {
 	try {
 		const carts = await cartManager.getCarts();
-		res.status(200).send(carts);
+
+		res.send(carts);
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
@@ -30,7 +31,8 @@ cartRouter.get('/:cid', async (req, res) => {
 	try {
 		let { cid } = req.params;
 		const cart = await cartManager.getCartById(cid);
-		res.status(200).send(cart);
+
+		res.send(cart);
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
@@ -40,6 +42,7 @@ cartRouter.get('/:cid', async (req, res) => {
 cartRouter.post('/', async (req, res) => {
 	try {
 		let newCart = req.body;
+
 		res.status(201).send(await cartManager.addCart(newCart));
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
@@ -47,12 +50,60 @@ cartRouter.post('/', async (req, res) => {
 });
 
 // Agrega un producto a un carrito mediante sus IDs envíadas por req.params
-cartRouter.post('/:cid/product/:pid', async (req, res) => {
+cartRouter.post('/:cid/products/:pid', async (req, res) => {
 	try {
 		let { cid } = req.params;
 		let { pid } = req.params;
 
 		res.status(201).send(await cartManager.addProductToCart(cid, pid));
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+cartRouter.delete('/:cid/products/:pid', async (req, res) => {
+	try {
+		let { cid } = req.params;
+		let { pid } = req.params;
+
+		res.status(204).send(
+			await cartManager.deleteOneProductfromCart(cid, pid)
+		);
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+cartRouter.put('/:cid', async (req, res) => {
+	try {
+		let { cid } = req.params;
+		let newProductList = req.body;
+
+		res.send(await cartManager.updateAllProductsOfCart(cid, newProductList));
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+cartRouter.put('/:cid/products/:pid', async (req, res) => {
+	try {
+		let { cid } = req.params;
+		let { pid } = req.params;
+		let newQuantity = req.body;
+
+		res.send(
+			await cartManager.updateQuantityOfProduct(cid, pid, newQuantity)
+		);
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+cartRouter.delete('/:cid', async (req, res) => {
+	try {
+		let { cid } = req.params;
+
+		res.status(204).send(await cartManager.deleteAllProductsfromCart(cid));
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}

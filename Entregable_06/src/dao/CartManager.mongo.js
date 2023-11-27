@@ -41,7 +41,11 @@ class CartManagerMongo {
 	 */
 	async getCartById(cartID) {
 		try {
-			return await this.model.findById(cartID).lean().exec();
+			return await this.model
+				.findOne({ _id: cartID })
+				.populate('products.product')
+				.lean()
+				.exec();
 		} catch (error) {
 			console.error(
 				`No es posible obtener el carrito.\n 
@@ -86,6 +90,12 @@ class CartManagerMongo {
 		try {
 			const cart = await this.getCartById(cartId);
 			const product = await productManager.getProductById(productId);
+
+			if (!product) {
+				console.error('El producto no existe');
+				return;
+			}
+
 			const productExist = cart.products.find(
 				(item) => String(item.product) === String(productId)
 			);
@@ -104,6 +114,138 @@ class CartManagerMongo {
 		} catch (error) {
 			console.error(
 				`No es posible agregar el producto al carrito.\n 
+				Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	async deleteOneProductfromCart(cartId, productId) {
+		try {
+			const cart = await this.getCartById(cartId);
+
+			const productIndex = cart.products.findIndex(
+				(item) => String(item.product._id) === String(productId)
+			);
+
+			if (productIndex !== -1) {
+				cart.products.splice(productIndex, 1);
+			} else {
+				console.error('No se encontró el producto en el carrito.');
+				return;
+			}
+
+			const updatedCart = await this.model.findOneAndUpdate(
+				{ _id: cartId },
+				{ $set: { products: cart.products } },
+				{ new: true }
+			);
+
+			return updatedCart;
+		} catch (error) {
+			console.error(
+				`No es posible eliminar el producto del carrito.\n 
+				Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	async updateAllProductsOfCart(cartId, newProductList) {
+		try {
+			const cart = await this.getCartById(cartId);
+
+			// Valido si se trata de un array y que el mismo no esté vacío
+			if (
+				!Array.isArray(newProductList.payload.docs) ||
+				newProductList.payload.docs.length === 0
+			) {
+				console.error(
+					'El nuevo listado de productos es inválido o está vacío.'
+				);
+				return;
+			}
+
+			// Actualizo los productos del carrito con la nueva lista
+			cart.products = newProductList.payload.docs.map((product) => ({
+				product: product._id,
+				quantity: 1, // Asigno el valor inicial del producto, luego puede modificarse
+			}));
+
+			const updatedCart = await this.model.findOneAndUpdate(
+				{ _id: cartId },
+				{ $set: { products: cart.products } },
+				{ new: true }
+			);
+
+			return updatedCart;
+		} catch (error) {
+			console.error(
+				`No es posible actualizar los productos del carrito.\n 
+					Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	async updateQuantityOfProduct(cartId, productId, newQuantity) {
+		try {
+			const cart = await this.getCartById(cartId);
+			const product = await productManager.getProductById(productId);
+
+			if (!product) {
+				console.error(
+					'El producto no existe o hubo un error al obtenerlo.'
+				);
+				return;
+			}
+
+			const productExistInCart = cart.products.find(
+				(item) => String(item.product) === String(productId)
+			);
+
+			if (productExistInCart) {
+				const parsedQuantity = newQuantity.quantity;
+
+				if (!isNaN(parsedQuantity)) {
+					productExistInCart.quantity = parsedQuantity;
+				} else {
+					console.error(
+						'La cantidad proporcionada no es un número válido.'
+					);
+					return;
+				}
+			} else {
+				console.error('El producto no se encuentra en el carrito.');
+				return null;
+			}
+
+			const updatedCart = await this.model.findOneAndUpdate(
+				{ _id: cartId },
+				{ $set: { products: cart.products } },
+				{ new: true }
+			);
+			return updatedCart;
+		} catch (error) {
+			console.error(
+				`No es posible actualizar la cantidad del producto.\n 
+				Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	async deleteAllProductsfromCart(cartId) {
+		try {
+			const updatedCart = await this.model.findOneAndUpdate(
+				{ _id: cartId },
+				{ $set: { products: [] } },
+				{ new: true }
+			);
+			return updatedCart;
+		} catch (error) {
+			console.error(
+				`No es posible eliminar los productos del carrito.\n 
 				Error: ${error}`
 			);
 			return;
