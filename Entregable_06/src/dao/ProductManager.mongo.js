@@ -17,12 +17,9 @@ class ProductManagerMongo {
 		try {
 			let query = {};
 
-			if (query) {
-				page = 1;
-			}
-
 			if (title) {
 				query.title = { $regex: title, $options: 'i' };
+				page = 1;
 			}
 
 			if (category) {

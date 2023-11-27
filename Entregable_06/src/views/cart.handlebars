@@ -1,0 +1,48 @@
+<h1 class='text-center'>Carrito</h1>
+
+<div>
+	<button
+		class='btn btn-dark border border-dark shadow ms-5 mb-2'
+		id='btnBackToBuy'
+	>Seguir comprando</button>
+</div>
+
+<div
+	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
+	id='containerCartProducts'
+>
+
+	{{#if cart.products.length}}
+
+		{{#each cart.products}}
+
+			<div
+				class='card p-3 mb-3 shadow-lg'
+				id='cardCartProduct'
+				style='width: 18rem;'
+			>
+				<div class='card-body'>
+					<h6 class='card-title mb-3 ps-1 pb-1 text-light bg-secondary'>
+						<b class='card-title'>ID: {{this.product._id}}</b>
+					</h6>
+					<span class='card-text'>Cantidad: </span>
+					<p class='card-text'>
+						<b>{{this.quantity}}</b>
+					</p>
+					<button class='btn btn-danger' id='removeProductToCart'>Quitar
+						del Carrito</button>
+
+				</div>
+			</div>
+
+		{{/each}}
+	{{else}}
+
+		<h4 class='text-bg-danger p-3 text-start'>No tienes productos en el
+			carrito</h4>
+
+	{{/if}}
+
+</div>
+
+<script src='/static/js/cart.js'></script>

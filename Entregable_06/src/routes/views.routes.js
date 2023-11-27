@@ -2,6 +2,7 @@ import { Router } from 'express';
 import dotenv from 'dotenv';
 import ProductManagerMongo from '../dao/ProductManager.mongo.js';
 import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
+import CartManagerMongo from '../dao/CartManager.mongo.js';
 
 const viewsRouter = Router();
 
@@ -41,9 +42,24 @@ viewsRouter.get('/', async (req, res) => {
 			const productsList = await productManager.getProducts(req.query.limit);
 			res.render('home', {
 				productsList,
-				title: 'Lista de productos disponibles',
+				title: 'Lista de productos',
 			});
 		}
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+});
+
+viewsRouter.get('/carts/:cid', async (req, res) => {
+	try {
+		const { cid } = req.params;
+		let cartManagerMongo;
+		if (mongoDbActive) {
+			cartManagerMongo = new CartManagerMongo();
+		}
+		const cart = await cartManagerMongo.getCartById(cid);
+
+		res.render('cart', { cart, title: 'Carrito' });
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
