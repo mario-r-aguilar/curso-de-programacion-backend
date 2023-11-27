@@ -2,15 +2,33 @@
 	disponibles</h1>
 
 {{! Renderizo todo el listado de productos. Uso bootstrap para una mejor visualización }}
+<div>
+	<input id='limit' type='hidden' value='{{productsList.limit}}' />
+	<input id='page' type='hidden' value='{{productsList.page}}' />
+	<input id='prevPage' type='hidden' value='{{productsList.prevPage}}' />
+	<input id='nextPage' type='hidden' value='{{productsList.nextPage}}' />
+</div>
+
+<div>
+	
+	<button {{#unless productsList.hasPrevPage}} style='display: none;' {{/unless}} id='btnPrev'>
+		Página Anterior
+	</button>
+	
+	<button {{#unless productsList.hasNextPage}} style='display: none;' {{/unless}} id='btnNext'>
+		Página Siguiente 
+	</button>
+	
+</div>
 
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerProducts'
 >
 
-	{{#if productsList.length}}
+	{{#if productsList.docs.length}}
 
-		{{#each productsList}}
+		{{#each productsList.docs}}
 
 			<div
 				class='card p-3 mb-3 shadow-lg'
@@ -61,3 +79,17 @@
 	{{/if}}
 
 </div>
+
+<div>
+	
+	<button {{#unless productsList.hasPrevPage}} style='display: none;' {{/unless}} id='btnPrev'>
+		Página Anterior
+	</button>
+	
+	<button {{#unless productsList.hasNextPage}} style='display: none;' {{/unless}} id='btnNext'>
+		Página Siguiente 
+	</button>
+	
+</div>
+
+<script src="/static/js/home.js"></script>

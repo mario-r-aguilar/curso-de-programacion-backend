@@ -27,13 +27,15 @@ productRouter.get('/', async (req, res) => {
 			let productList = await productManager.getProducts(
 				limit,
 				page,
-				sort,
+				parseInt(sort),
 				category,
 				status
 			);
 
 			const statusProductList =
-				(await productList.docs.length) !== 0 ? 'success' : 'error';
+				productList && productList.docs && productList.docs.length !== 0
+					? 'success'
+					: 'error';
 			const result = { status: statusProductList, payload: productList };
 
 			res.send(result);

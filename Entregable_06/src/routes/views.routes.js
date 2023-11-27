@@ -21,12 +21,27 @@ mongoDbActive === 'yes'
 // la cantidad de productos que ver por pantalla
 viewsRouter.get('/', async (req, res) => {
 	try {
-		const productsList = await productManager.getProducts(req.query.limit);
+		if (mongoDbActive) {
+			const { limit, page, sort, category, status } = req.query;
+			const productsList = await productManager.getProducts(
+				limit,
+				page,
+				parseInt(sort),
+				category,
+				status
+			);
 
-		res.render('home', {
-			productsList,
-			title: 'Lista de productos disponibles',
-		});
+			res.render('home', {
+				productsList,
+				title: 'Lista de productos disponibles',
+			});
+		} else {
+			const productsList = await productManager.getProducts(req.query.limit);
+			res.render('home', {
+				productsList,
+				title: 'Lista de productos disponibles',
+			});
+		}
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
