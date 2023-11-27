@@ -22,14 +22,15 @@ mongoDbActive === 'yes'
 productRouter.get('/', async (req, res) => {
 	try {
 		if (mongoDbActive) {
-			const { limit, page, sort, category, status } = req.query;
+			const { limit, page, sort, category, status, title } = req.query;
 
 			let productList = await productManager.getProducts(
 				limit,
 				page,
 				parseInt(sort),
 				category,
-				status
+				status,
+				title
 			);
 
 			const statusProductList =

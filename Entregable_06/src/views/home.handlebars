@@ -1,10 +1,16 @@
 <h1 style='margin-bottom: 2rem; text-align: center'>Lista de productos
 	disponibles</h1>
 
-{{! Renderizo todo el listado de productos. Uso bootstrap para una mejor visualización }}
 <div>
-	<input id='limit' type='hidden' value='{{productsList.limit}}' />
-	<input id='page' type='hidden' value='{{productsList.page}}' />
+	<p>Total Products: {{productsList.totalDocs}}</p>
+	<p>Page: {{productsList.page}} / {{productsList.totalPages}}</p>
+	<label for='limit'>Limitar productos: </label>
+	<input id='limit' type='text' value='{{productsList.limit}}' />
+	<label for='limit'>Ir a Página: </label>
+	<input id='page' type='text' value='{{productsList.page}}' />
+	<label for='productName'>Buscar por nombre: </label>
+	<input id='productName' type='text' value='{{productsList.docs.title}}' />
+	<button id="btnSend">Aceptar</button>
 	<input id='prevPage' type='hidden' value='{{productsList.prevPage}}' />
 	<input id='nextPage' type='hidden' value='{{productsList.nextPage}}' />
 </div>
@@ -21,6 +27,7 @@
 	
 </div>
 
+{{! Renderizo todo el listado de productos. Uso bootstrap para una mejor visualización }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerProducts'
@@ -78,18 +85,6 @@
 
 	{{/if}}
 
-</div>
-
-<div>
-	
-	<button {{#unless productsList.hasPrevPage}} style='display: none;' {{/unless}} id='btnPrev'>
-		Página Anterior
-	</button>
-	
-	<button {{#unless productsList.hasNextPage}} style='display: none;' {{/unless}} id='btnNext'>
-		Página Siguiente 
-	</button>
-	
 </div>
 
 <script src="/static/js/home.js"></script>

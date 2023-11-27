@@ -13,9 +13,17 @@ class ProductManagerMongo {
 	 * @param {String} Cantidad de productos que se mostraran
 	 * @returns {Array} Listado de productos
 	 */
-	async getProducts(limit = 10, page = 1, sort, category, status) {
+	async getProducts(limit = 10, page = 1, sort, category, status, title) {
 		try {
 			let query = {};
+
+			if (query) {
+				page = 1;
+			}
+
+			if (title) {
+				query.title = { $regex: title, $options: 'i' };
+			}
 
 			if (category) {
 				query.category = category;
