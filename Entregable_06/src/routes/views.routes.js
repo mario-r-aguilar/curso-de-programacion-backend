@@ -18,8 +18,7 @@ mongoDbActive === 'yes'
 			'./src/dao/db/products.json'
 	  ));
 
-// Muestra el listado de productos y permite a traves de la query limit elegir
-// la cantidad de productos que ver por pantalla
+// Muestra el listado de productos y permite a filtrar a traves de req.query
 viewsRouter.get('/', async (req, res) => {
 	try {
 		if (mongoDbActive) {
@@ -50,6 +49,7 @@ viewsRouter.get('/', async (req, res) => {
 	}
 });
 
+// Muestra el contenido del carrito (por el momento solo funciona con mongoDb)
 viewsRouter.get('/carts/:cid', async (req, res) => {
 	try {
 		const { cid } = req.params;

@@ -61,6 +61,7 @@ cartRouter.post('/:cid/products/:pid', async (req, res) => {
 	}
 });
 
+// Elimina un producto del carrito
 cartRouter.delete('/:cid/products/:pid', async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -74,6 +75,8 @@ cartRouter.delete('/:cid/products/:pid', async (req, res) => {
 	}
 });
 
+// Actualiza el contenido completo de un carrito a partir de un array que está
+// dentro de la respuesta a un GET realizado al endpoint de productos /api/products/
 cartRouter.put('/:cid', async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -85,6 +88,7 @@ cartRouter.put('/:cid', async (req, res) => {
 	}
 });
 
+// Actualiza la cantidad de un producto que se encuentra en el carrito
 cartRouter.put('/:cid/products/:pid', async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -99,6 +103,7 @@ cartRouter.put('/:cid/products/:pid', async (req, res) => {
 	}
 });
 
+// Elimina todos los productos que se encuentran en un carrito
 cartRouter.delete('/:cid', async (req, res) => {
 	try {
 		let { cid } = req.params;

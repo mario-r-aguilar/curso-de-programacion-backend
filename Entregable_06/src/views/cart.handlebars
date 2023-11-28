@@ -1,5 +1,6 @@
 <h1 class='text-center'>Carrito</h1>
 
+{{! Vuelve a la página de inicio }}
 <div>
 	<button
 		class='btn btn-dark border border-dark shadow ms-5 mb-2'
@@ -7,6 +8,7 @@
 	>Seguir comprando</button>
 </div>
 
+{{! Por el momento solo muestra la id y cantidad de los productos que están en el carrito }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerCartProducts'
@@ -29,8 +31,8 @@
 					<p class='card-text'>
 						<b>{{this.quantity}}</b>
 					</p>
-					<button class='btn btn-danger' id='removeProductToCart'>Quitar
-						del Carrito</button>
+					<button class='btn btn-danger btnRemoveProductToCart'>Quitar del
+						Carrito</button>
 
 				</div>
 			</div>

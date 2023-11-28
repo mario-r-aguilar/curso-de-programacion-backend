@@ -2,12 +2,13 @@
 <div class='d-flex me-4  mb-3 flex-row justify-content-between flex-wrap'>
 <h1 class="ps-4 ms-5 mt-3">Lista de productos</h1>
 
-{{!-- Tiene el link a un carrito existente para testing --}}
+{{!-- Por el momento tiene un link a un carrito existente para hacer las pruebas --}}
 <a class='nav-link' style="width: 3%; height: 3%" href="/carts/6557f7d19005197b1b189ce1">
 <img class="img-fluid mt-3" style="width: 100%; height: 100%" id="cartImg" src="/static/img/cart_img.svg" alt="cart_img">
 </a>
 </div>
 
+{{!-- Bloque de filtros --}}
 <div class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerSearchOptions'>
 
@@ -65,6 +66,7 @@
 	<input id="pageErrorAux" type="hidden" value="{{productsList.totalPages}}">
 	</div>
 
+{{!-- Bloque de información de páginas --}}
 <div class='d-flex p-2 mt-3 mb-3 flex-row justify-content-center flex-wrap'
 	id='containerPageInfo'>
 	
@@ -76,6 +78,7 @@
 	
 </div>
 
+{{!-- Bloque de navegación por páginas --}}
 <div class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerPageOptions'>
 
@@ -91,7 +94,7 @@
 
 </div>
 
-{{! Renderizo todo el listado de productos. Uso bootstrap para una mejor visualización }}
+{{! Bloque de renderizado de productos }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerProducts'
@@ -102,8 +105,7 @@
 		{{#each productsList.docs}}
 
 			<div
-				class='card p-3 mb-3 shadow-lg'
-				id='cardProduct'
+				class='card p-3 mb-3 shadow-lg'				
 				style='width: 18rem;'
 			>
 				<img				
@@ -132,8 +134,8 @@
 					<input type="hidden" id="getProductId" value="{{this._id}}">
 					{{/if}}
 					
-					<button class="btn btn-success shadow mb-3" id="addProductToCart">Agregar al Carrito</button>
-					<button class="btn btn-primary shadow mb-3 productDetail">Ver detalles</button>
+					<button class="btn btn-success shadow mb-3 btnAddProductToCart">Agregar al Carrito</button>
+					<button class="btn btn-primary shadow mb-3 btnProductDetail">Ver detalles</button>
 
 				</div>
 			</div>

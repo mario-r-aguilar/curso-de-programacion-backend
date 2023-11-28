@@ -35,7 +35,8 @@ class CartManagerMongo {
 	}
 
 	/**
-	 * Busca un carrito mediante su ID y muestra su contenido.
+	 * Busca un carrito mediante su ID y muestra su contenido usando populate
+	 * para ver el detalle de los productos que se encuentran dentro.
 	 * @param {String} ID del carrito
 	 * @returns {Object} Carrito buscado
 	 */
@@ -120,6 +121,14 @@ class CartManagerMongo {
 		}
 	}
 
+	/**
+	 * Elimina un producto del carrito.
+	 * Busca el carrito, valida que el producto se encuentre en el mismo. Si lo
+	 * haya, incrementa su cantidad (quantity), si no está muestra un error.
+	 * Por último actualiza el carrito en la base de datos.
+	 * @param {String} Id del carrito
+	 * @param {String} Id del producto
+	 */
 	async deleteOneProductfromCart(cartId, productId) {
 		try {
 			const cart = await this.getCartById(cartId);
@@ -151,11 +160,22 @@ class CartManagerMongo {
 		}
 	}
 
+	/**
+	 * Actualiza todo el carrito a partir de un array contenido en la respuesta
+	 * de un GET al endpoint /API/products.
+	 * Busca el carrito, valida que el objeto contenga el Array de productos
+	 * de hallarlo, reemplaza el contenido del carrito con la nueva lista
+	 * asignándole una catidad (quantity) de 1 a cada producto.
+	 * Por último actualiza el carrito en la base de datos.
+	 * @param {String} Id del carrito
+	 * @param {Object} Respuesta al hacer un GET al endpoint /API/products
+	 * @returns {Object} Carrito con una nueva lista de productos
+	 */
 	async updateAllProductsOfCart(cartId, newProductList) {
 		try {
 			const cart = await this.getCartById(cartId);
 
-			// Valido si se trata de un array y que el mismo no esté vacío
+			// Valida si se trata de un array y que el mismo no esté vacío
 			if (
 				!Array.isArray(newProductList.payload.docs) ||
 				newProductList.payload.docs.length === 0
@@ -166,10 +186,10 @@ class CartManagerMongo {
 				return;
 			}
 
-			// Actualizo los productos del carrito con la nueva lista
+			// Actualiza los productos del carrito con la nueva lista
 			cart.products = newProductList.payload.docs.map((product) => ({
 				product: product._id,
-				quantity: 1, // Asigno el valor inicial del producto, luego puede modificarse
+				quantity: 1, // Asigno la cantidad inicial del producto
 			}));
 
 			const updatedCart = await this.model.findOneAndUpdate(
@@ -188,6 +208,17 @@ class CartManagerMongo {
 		}
 	}
 
+	/**
+	 * Actualiza la cantidad de un producto que se encuentra en el carrito.
+	 * Busca el carrito y el producto, valida que el producto se encuentre
+	 * en el carrito. De hallarlo, convierto la cantidad en un número y la
+	 * modifico en el producto. Por último actualiza el carrito en la base
+	 * de datos.
+	 * @param {String} Id del carrito
+	 * @param {String} Id del producto
+	 * @param {Object} Nueva cantidad del producto
+	 * @returns {Object} Carrito actualizado
+	 */
 	async updateQuantityOfProduct(cartId, productId, newQuantity) {
 		try {
 			const cart = await this.getCartById(cartId);
@@ -204,9 +235,11 @@ class CartManagerMongo {
 				(item) => String(item.product._id) === String(productId)
 			);
 
+			// Almaceno el valor de la nueva cantidad en una cosntante
 			if (productExistInCart) {
 				const parsedQuantity = newQuantity.quantity;
 
+				// Convierto la cantidad a número y la actualizo en el producto
 				if (!isNaN(parsedQuantity)) {
 					productExistInCart.quantity = parsedQuantity;
 				} else {
@@ -235,6 +268,12 @@ class CartManagerMongo {
 		}
 	}
 
+	/**
+	 * Elimina todos los productos que contenga el carrito.
+	 * Actualiza el contenido del carrito con un array vacio.
+	 * @param {String} Id del carrito
+	 * @returns {Object} Carrito actualizado
+	 */
 	async deleteAllProductsfromCart(cartId) {
 		try {
 			const updatedCart = await this.model.findOneAndUpdate(

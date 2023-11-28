@@ -1,3 +1,4 @@
+// Función para la navegación por las páginas y uso de filtros
 function navigateToPage(pageValue) {
 	const page = document.querySelector('#' + pageValue).value;
 	const limit = document.querySelector('#limit').value;
@@ -9,14 +10,17 @@ function navigateToPage(pageValue) {
 	document.location.href = url;
 }
 
+// Función para volver a la página de inicio
 function resetPage() {
 	const url = '/';
 	document.location.href = url;
 }
 
+// Manejo de los botones para el desplazamiento entre páginas
 document.querySelector('#btnPrev').onclick = () => navigateToPage('prevPage');
 document.querySelector('#btnNext').onclick = () => navigateToPage('nextPage');
 
+// Manejo del botón de filtros
 document.querySelector('#btnApplyFilters').onclick = () => {
 	const totalPages = document.querySelector('#pageErrorAux').value;
 	const pageInput = document.querySelector('#page').value;
@@ -30,20 +34,23 @@ document.querySelector('#btnApplyFilters').onclick = () => {
 		`;
 		messageError.append(div);
 	} else {
-		console.log('nooooo');
 		navigateToPage('page');
 	}
 };
 
+// Manejo del botón para volver a la página de inicio
 document.querySelector('#btnCleanFilters').onclick = () => resetPage();
 
+// Renderización de la página para ver los detalles de un producto
 const renderOneProduct = (id) => {
+	// Realiza un GET con la id del producto al endpoint correspondiente para obtenerlo
 	fetch(`/api/products/${id}`, {
 		method: 'get',
 	})
+		// Convierte la respuesta a JSON
 		.then((res) => res.json())
+		// Renderiza el producto
 		.then((data) => {
-			console.log(data);
 			const html = document.getElementById('pageComplete');
 			html.innerHTML = '';
 			const div = document.createElement('div');
@@ -96,22 +103,28 @@ const renderOneProduct = (id) => {
 					<p class='card-text'>
 						<b>${data.id || data._id}</b>
 					</p>
-					<button class="btn btn-success shadow mb-3 d-block" id="addProductToCartDetail">Agregar al Carrito</button>
+					<button class="btn btn-success shadow mb-3 d-block btnAddProductToCart">Agregar al Carrito</button>
 					<button class="btn btn-primary border border-dark shadow mb-3 d-block " id="btnBack">Volver</button>
 				</div>
 			</div>
 			</div>
 			`;
 			html.appendChild(div);
+
+			// Manejo del botón para volver a la página de inicio desde la página de detalles de un producto
 			document.querySelector('#btnBack').onclick = () => resetPage();
 		});
 };
 
-document.querySelectorAll('.productDetail').forEach((button) => {
+// Manejo del botón para ver los detalles de un producto
+document.querySelectorAll('.btnProductDetail').forEach((button) => {
+	// Escucha los eventos clic de los botones de detalle de las card
 	button.addEventListener('click', (event) => {
+		// Guarda la id de la card donde se presiono el botón
 		const id = event.target
 			.closest('.card')
 			.querySelector('#getProductId').value;
+		// Ejecuta la función para renderizar el producto elegido
 		renderOneProduct(id);
 	});
 });
