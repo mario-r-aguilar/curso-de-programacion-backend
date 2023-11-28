@@ -88,7 +88,7 @@ class CartManagerMongo {
 	 */
 	async addProductToCart(cartId, productId) {
 		try {
-			const cart = await this.getCartById(cartId);
+			const cart = await this.model.findById(cartId);
 			const product = await productManager.getProductById(productId);
 
 			if (!product) {
@@ -201,7 +201,7 @@ class CartManagerMongo {
 			}
 
 			const productExistInCart = cart.products.find(
-				(item) => String(item.product) === String(productId)
+				(item) => String(item.product._id) === String(productId)
 			);
 
 			if (productExistInCart) {
@@ -217,7 +217,7 @@ class CartManagerMongo {
 				}
 			} else {
 				console.error('El producto no se encuentra en el carrito.');
-				return null;
+				return;
 			}
 
 			const updatedCart = await this.model.findOneAndUpdate(
