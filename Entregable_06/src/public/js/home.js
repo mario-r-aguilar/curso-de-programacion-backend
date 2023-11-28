@@ -16,8 +16,25 @@ function resetPage() {
 
 document.querySelector('#btnPrev').onclick = () => navigateToPage('prevPage');
 document.querySelector('#btnNext').onclick = () => navigateToPage('nextPage');
-document.querySelector('#btnApplyFilters').onclick = () =>
-	navigateToPage('page');
+
+document.querySelector('#btnApplyFilters').onclick = () => {
+	const totalPages = document.querySelector('#pageErrorAux').value;
+	const pageInput = document.querySelector('#page').value;
+
+	if (parseInt(pageInput) > parseInt(totalPages) || parseInt(pageInput) < 1) {
+		const messageError = document.getElementById('pageError');
+		messageError.innerHTML = '';
+		const div = document.createElement('div');
+		div.innerHTML = `
+			<p class='text-bg-danger ms-5 mt-3 p-1 text-start w-75'>La página no existe</p>
+		`;
+		messageError.append(div);
+	} else {
+		console.log('nooooo');
+		navigateToPage('page');
+	}
+};
+
 document.querySelector('#btnCleanFilters').onclick = () => resetPage();
 
 const renderOneProduct = (id) => {
