@@ -29,9 +29,9 @@
 
 3. Además, agregar al router de carts los siguientes endpoints:
 
-   **DELETE** _api/carts/:cid/products/:pid_ deberá eliminar del carrito el producto seleccionado.
+   **DELETE** _api/carts/:cid/products/:pid_ deberá eliminar del carrito el producto seleccionado
 
-   **PUT** _api/carts/:cid_ deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+   **PUT** _api/carts/:cid_ deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba
 
    **PUT** _api/carts/:cid/products/:pid_ deberá poder actualizar **sólo la cantidad** de ejemplares del producto desde _req.body_
 
