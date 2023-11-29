@@ -1,7 +1,7 @@
 {
-	"name": "entregable-complementario_01",
+	"name": "entregable_06",
 	"version": "1.0.0",
-	"description": "Entregable complementario 1",
+	"description": "Segunda Pre-entrega",
 	"type": "module",
 	"main": "app.js",
 	"scripts": {
