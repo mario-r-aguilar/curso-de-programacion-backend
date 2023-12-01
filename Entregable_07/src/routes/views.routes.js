@@ -19,7 +19,7 @@ mongoDbActive === 'yes'
 			'./src/dao/db/products.json'
 	  ));
 
-viewsRouter.get('/login', isUserAuth, (req, res) => {
+viewsRouter.get('/', isUserAuth, (req, res) => {
 	return res.render('login', {});
 });
 

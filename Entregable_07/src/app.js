@@ -8,6 +8,9 @@ import { cartRouter } from './routes/cart.routes.js';
 import { viewsRouter } from './routes/views.routes.js';
 import { sessionRouter } from './routes/session.routes.js';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import dotenv from 'dotenv';
 
 const app = express();
@@ -33,6 +36,22 @@ app.use(express.urlencoded({ extended: true }));
 app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'handlebars');
+
+// Inicializo cookie-parser
+app.use(cookieParser('mOnG0dBD4t@'));
+
+// Configuración de sessions
+app.use(
+	session({
+		store: MongoStore.create({
+			mongoUrl: urlMongoDb,
+			dbName: mongoDbName,
+		}),
+		secret: 'dAt4B@S3M0ngODB',
+		resave: true,
+		saveUninitialized: true,
+	})
+);
 
 // Routes
 app.use('/api/users', sessionRouter);

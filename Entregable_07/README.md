@@ -13,9 +13,9 @@
 
 4. Agregar un sistema de roles, de manera que si colocamos en el login como
    correo _adminCoder@coder.com_, y la contraseña _adminCod3r123_, el usuario de
-   la sesión además tenga un campo con su rol.
+   la sesión tenga un campo con su rol.
 
-5. Todos los usuarios que no sean admin deberán contar con un rol “usuario”.
+5. Todos los usuarios que no sean admin deberán contar con un rol “user”.
 
 6. Implementar botón de “logout” para destruir la sesión y redirigir a la vista
    de login.

@@ -25,14 +25,14 @@ sessionRouter.post('/register', async (req, res) => {
 	const newUser = req.body;
 	await userManagerMongo.createUser(newUser);
 
-	return res.redirect('/login');
+	return res.redirect('/');
 });
 
-sessionRouter.get('/logout', (req, res) => {
+sessionRouter.post('/logout', (req, res) => {
 	req.session.destroy((err) => {
 		if (err) return res.send('Logout Error');
 
-		return res.redirect('/login');
+		return res.redirect('/');
 	});
 });
 
