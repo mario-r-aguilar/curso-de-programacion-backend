@@ -11,29 +11,46 @@ if (mongoDbActive === 'yes') {
 
 const sessionRouter = Router();
 
+// Loguea al usuario
 sessionRouter.post('/login', async (req, res) => {
-	const { email, password } = req.body;
-	const user = await userManagerMongo.getUserData(email, password);
+	try {
+		const { email, password } = req.body;
 
-	if (!user) return res.status(404).send('User Not Found');
+		const user = await userManagerMongo.getUserData(email, password);
 
-	req.session.user = user;
-	return res.redirect('/products');
+		if (!user) return res.status(404).send('User Not Found');
+
+		// Crea la sesión del usuario
+		req.session.user = user;
+		return res.redirect('/products');
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
+// Crea un nuevo usuario
 sessionRouter.post('/register', async (req, res) => {
-	const newUser = req.body;
-	await userManagerMongo.createUser(newUser);
+	try {
+		const newUser = req.body;
+		await userManagerMongo.createUser(newUser);
 
-	return res.redirect('/');
+		return res.status(201).redirect('/');
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
+// Desloguea al usuario
 sessionRouter.post('/logout', (req, res) => {
-	req.session.destroy((err) => {
-		if (err) return res.send('Logout Error');
+	try {
+		req.session.destroy((err) => {
+			if (err) return res.send('Logout Error');
 
-		return res.redirect('/');
-	});
+			return res.redirect('/');
+		});
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
 export { sessionRouter };

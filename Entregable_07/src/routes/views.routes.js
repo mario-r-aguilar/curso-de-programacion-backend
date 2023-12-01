@@ -19,19 +19,35 @@ mongoDbActive === 'yes'
 			'./src/dao/db/products.json'
 	  ));
 
+// Muestra la página para loguearse. En caso de que ya este logueado lo
+// redirecciona a la página de productos mediante el middleware isUserAuth
 viewsRouter.get('/', isUserAuth, (req, res) => {
-	return res.render('login', {});
+	try {
+		return res.render('login', {});
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
+// Muestra la página para registrarse. En caso de que ya tenga cuenta y
+// este logueado, lo redirecciona a la página de productos mediante el
+// middleware isUserAuth
 viewsRouter.get('/register', isUserAuth, (req, res) => {
-	return res.render('register', {});
+	try {
+		return res.render('register', {});
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
 
 // Muestra el listado de productos y permite a filtrar a traves de req.query
+// Siempre y cuando esté logueado, de lo contrario lo redirecciona a la página
+// de logueo
 viewsRouter.get('/products', isGuest, async (req, res) => {
 	try {
 		if (mongoDbActive === 'yes') {
 			const user = req.session.user;
+			// Elimina el password (dato sensible) de la sesión del usuario
 			delete user.password;
 
 			const { limit, page, sort, category, status, title } = req.query;
@@ -62,7 +78,7 @@ viewsRouter.get('/products', isGuest, async (req, res) => {
 	}
 });
 
-// Muestra el contenido del carrito (por el momento solo funciona con mongoDb)
+// Muestra el contenido del carrito (funciona con mongoDb)
 viewsRouter.get('/carts/:cid', async (req, res) => {
 	try {
 		const { cid } = req.params;
