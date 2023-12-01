@@ -1,0 +1,21 @@
+<section class='container'>
+	<h2>Ingresar</h2>
+
+	<form action='/api/users/login' method='post'>
+		<input
+			class='form-control w-25'
+			type='email'
+			placeholder='Correo'
+			name='email'
+		/>
+		<input
+			class='form-control w-25'
+			type='password'
+			placeholder='Password'
+			name='password'
+		/>
+		<button class='btn btn-primary' type='submit'>Ingresar</button>
+	</form>
+
+	<a target='_blank' class='btn btn-primary' href='/register'>Registrarse</a>
+</section>
