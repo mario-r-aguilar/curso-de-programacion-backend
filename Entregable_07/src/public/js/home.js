@@ -6,15 +6,10 @@ function navigateToPage(pageValue) {
 	const category = document.querySelector('#category').value;
 	const sort = document.querySelector('#sort').value;
 	const status = document.querySelector('#status').checked ? true : false;
-	if (title || category || sort || status) {
-		const url = `/products?page=1&limit=${limit}&title=${title}&category=${category}&sort=${sort}&status=${status}`;
 
-		document.location.href = url;
-	} else {
-		const url = `/products?page=${page}&limit=${limit}&title=${title}&category=${category}&sort=${sort}&status=${status}}`;
+	const url = `/products?page=${page}&limit=${limit}&title=${title}&category=${category}&sort=${sort}&status=${status}`;
 
-		document.location.href = url;
-	}
+	document.location.href = url;
 }
 
 // Función para volver a la página de inicio
