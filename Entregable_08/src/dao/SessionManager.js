@@ -21,12 +21,11 @@ class UserManagerMongo {
 	}
 
 	/**
-	 *
+	 * Busca el usuario mediante su email.
 	 * @param {String} Email del usuario
-	 * @param {String} Password del usuario
 	 * @returns {Object} Usuario
 	 */
-	async getUserData(email) {
+	async getUserByEmail(email) {
 		try {
 			return await this.model.findOne({ email }).lean().exec();
 		} catch (error) {
@@ -37,6 +36,11 @@ class UserManagerMongo {
 		}
 	}
 
+	/**
+	 * Busca el usuario mediante su id.
+	 * @param {String} ID del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getUserById(id) {
 		try {
 			return await this.model.findById(id);
@@ -49,7 +53,7 @@ class UserManagerMongo {
 	}
 
 	/**
-	 *
+	 * Crea un nuevo usuario.
 	 * @param {Object} Datos del usuario
 	 * @returns {Object} Nuevo usuario creado
 	 */

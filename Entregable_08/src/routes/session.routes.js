@@ -3,7 +3,7 @@ import passport from 'passport';
 
 const sessionRouter = Router();
 
-// Loguea al usuario con password
+// Loguea al usuario con usuario y password (estrategia local)
 sessionRouter.post(
 	'/login',
 	passport.authenticate('login', { failureRedirect: '/' }),
@@ -19,7 +19,7 @@ sessionRouter.post(
 	}
 );
 
-// Loguea al usuario usando GitHub
+// Loguea al usuario usando GitHub 1º bloque (estrategia GitHub)
 sessionRouter.get(
 	'/github',
 	passport.authenticate('github', { scope: ['user:email'] }),
@@ -31,6 +31,7 @@ sessionRouter.get(
 	}
 );
 
+// Loguea al usuario usando GitHub 2º bloque (estrategia GitHub)
 sessionRouter.get(
 	'/githubcallback',
 	passport.authenticate('github', { failureRedirect: '/' }),
@@ -47,7 +48,9 @@ sessionRouter.get(
 // Crea un nuevo usuario
 sessionRouter.post(
 	'/register',
-	passport.authenticate('register', { failureRedirect: '/register' }),
+	passport.authenticate('register', {
+		failureRedirect: 'failregister',
+	}),
 	async (req, res) => {
 		try {
 			return res.status(201).redirect('/');
@@ -56,6 +59,11 @@ sessionRouter.post(
 		}
 	}
 );
+
+// Informa si hubo error al registrarse
+sessionRouter.get('/failregister', (req, res) => {
+	return res.status(400).json({ error: 'Registration Failed' });
+});
 
 // Desloguea al usuario
 sessionRouter.post('/logout', (req, res) => {

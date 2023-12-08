@@ -13,6 +13,7 @@ if (mongoDbActive === 'yes') {
 }
 
 // Variables de entorno del perfil del administrador
+const adminId = process.env.ADMIN_ID;
 const adminName = process.env.ADMIN_NAME;
 const adminLastname = process.env.ADMIN_LASTNAME;
 const adminMail = process.env.ADMIN_MAIL;
@@ -28,29 +29,36 @@ const gitHubCallbackUrl = process.env.CALLBACK_URL;
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
+	// Estrategia local
 	passport.use(
 		'register',
 		new LocalStrategy(
 			{
-				passReqToCallback: true, // Permitimos el acceso al objeto req como un middleware
-				usernameField: 'email', // Definimos a email como username
+				passReqToCallback: true, // Permite el acceso al objeto req
+				usernameField: 'email', // Define al campo email como username
 			},
 			async (req, username, password, done) => {
 				try {
-					const validUser = await userManagerMongo.getUserData(username);
+					// Verifica si el usuario ya existe
+					const validUser = await userManagerMongo.getUserByEmail(
+						username
+					);
 					if (validUser) {
 						console.info('User already exists');
 						return done(null, false);
 					}
 
+					// Evita la creación de un usuario con el mismo email del administrador
 					if (username === adminMail) {
 						console.error('Invalid email. Use another email address');
 						return done(null, false);
 					}
 
+					// Almacena los datos del nuevo usuario y hashea su password
 					const newUser = req.body;
 					newUser.password = createHash(password);
 
+					// Almacena el nuevo usuario y lo devuelve
 					const result = await userManagerMongo.createUser(newUser);
 					return done(null, result);
 				} catch (error) {
@@ -63,12 +71,13 @@ const initializePassport = () => {
 	passport.use(
 		'login',
 		new LocalStrategy(
-			// Definimos a email como username
-			{ usernameField: 'email' },
+			{ usernameField: 'email' }, // Define el campo email como username
 			async (username, password, done) => {
 				try {
+					// Verifica si se trata del usuario administrador y lo autentica
 					if (username == adminMail && password == adminPass) {
 						const user = {
+							_id: adminId,
 							name: adminName,
 							lastname: adminLastname,
 							email: adminMail,
@@ -79,8 +88,8 @@ const initializePassport = () => {
 						return done(null, user);
 					}
 
-					const user = await userManagerMongo.getUserData(username);
-
+					// Verifica si el usuario existe y si su password es correcto
+					const user = await userManagerMongo.getUserByEmail(username);
 					if (!user) {
 						console.error('User does not exist');
 						return done(null, false);
@@ -91,6 +100,7 @@ const initializePassport = () => {
 						return done(null, false);
 					}
 
+					// Autentica el usuario
 					return done(null, user);
 				} catch (error) {
 					return done(`Error interno del servidor: ${error}`);
@@ -99,9 +109,11 @@ const initializePassport = () => {
 		)
 	);
 
+	// Estrategia GitHub
 	passport.use(
 		'github',
 		new GitHubStrategy(
+			// Datos de la app de GitHub
 			{
 				clientID: gitHubClientId,
 				clientSecret: gitHubClientSecret,
@@ -109,15 +121,17 @@ const initializePassport = () => {
 			},
 			async (accessToken, refreshToken, profile, done) => {
 				try {
-					const user = await userManagerMongo.getUserData(
+					// Verifica si el usuario ya existe
+					const user = await userManagerMongo.getUserByEmail(
 						profile._json.email
 					);
 
 					if (user) {
-						console.info('El usuario ya se encuentra registrado');
+						console.info('User already exists');
 						return done(null, user);
 					}
 
+					// Si no existe genera uno con los datos que obtiene desde GitHub
 					const newUser = await userManagerMongo.createUser({
 						name: profile._json.name,
 						lastname: '',
@@ -127,6 +141,7 @@ const initializePassport = () => {
 						role: 'user',
 					});
 
+					// Autentica el usuario
 					return done(null, newUser);
 				} catch (error) {
 					console.error(error);
@@ -135,11 +150,18 @@ const initializePassport = () => {
 		)
 	);
 
+	// Serializa el usuario
 	passport.serializeUser((user, done) => {
 		done(null, user._id);
 	});
 
+	// Deserializa el usuario
 	passport.deserializeUser(async (id, done) => {
+		// Este bloque se usa para poder usar el usuario administrador que no está en la base de datos
+		if (id === adminId) {
+			return done(null, false);
+		}
+
 		const user = await userManagerMongo.getUserById(id);
 		done(null, user);
 	});
