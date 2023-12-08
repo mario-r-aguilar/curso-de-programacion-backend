@@ -60,7 +60,7 @@ sessionRouter.post(
 	}
 );
 
-// Informa si hubo error al registrarse
+// Informa si hubo errores al registrarse
 sessionRouter.get('/failregister', (req, res) => {
 	return res.status(400).json({ error: 'Registration Failed' });
 });
