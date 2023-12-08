@@ -45,8 +45,8 @@ const initializePassport = () => {
 					const newUser = req.body;
 					newUser.password = createHash(password);
 
-					await userManagerMongo.createUser(newUser);
-					return done(null, newUser);
+					const result = await userManagerMongo.createUser(newUser);
+					return done(null, result);
 				} catch (error) {
 					done(`Error interno del servidor: ${error}`);
 				}
