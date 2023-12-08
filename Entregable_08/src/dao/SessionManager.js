@@ -26,9 +26,9 @@ class UserManagerMongo {
 	 * @param {String} Password del usuario
 	 * @returns {Object} Usuario
 	 */
-	async getUserData(email, password) {
+	async getUserData(email) {
 		try {
-			return await this.model.findOne({ email, password }).lean().exec();
+			return await this.model.findOne({ email }).lean().exec();
 		} catch (error) {
 			console.error(
 				`No es posible obtener el usuario.\n 

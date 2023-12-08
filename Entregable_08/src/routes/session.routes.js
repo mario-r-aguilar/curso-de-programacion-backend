@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import UserManagerMongo from '../dao/SessionManager.js';
 import dotenv from 'dotenv';
+import { createHash, checkPassword } from '../utils/utils.js';
 
 dotenv.config();
 
@@ -34,7 +35,7 @@ sessionRouter.post('/login', async (req, res) => {
 				lastname: adminLastname,
 				email: adminMail,
 				age: adminAge,
-				password: adminPass,
+				password: createHash(adminPass),
 				role: adminRole,
 			};
 
@@ -44,9 +45,11 @@ sessionRouter.post('/login', async (req, res) => {
 			return res.redirect('/products');
 		}
 
-		const user = await userManagerMongo.getUserData(email, password);
+		const user = await userManagerMongo.getUserData(email);
 
-		if (!user) return res.status(404).send('User Not Found');
+		if (!user) return res.status(401).send('User Not Found');
+		if (!checkPassword(user, password))
+			return res.status(401).send('Password Invalid');
 
 		// Crea la sesión del usuario
 		req.session.user = user;
@@ -61,6 +64,14 @@ sessionRouter.post('/login', async (req, res) => {
 sessionRouter.post('/register', async (req, res) => {
 	try {
 		const newUser = req.body;
+
+		if (newUser.email === adminMail)
+			return res
+				.status(400)
+				.send('Invalid email. Use another email address');
+
+		newUser.password = createHash(newUser.password);
+
 		await userManagerMongo.createUser(newUser);
 
 		return res.status(201).redirect('/');
