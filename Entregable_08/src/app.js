@@ -11,6 +11,9 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
+
 import dotenv from 'dotenv';
 
 const app = express();
@@ -52,6 +55,11 @@ app.use(
 		saveUninitialized: true,
 	})
 );
+
+// Passport
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 app.use('/api/users', sessionRouter);

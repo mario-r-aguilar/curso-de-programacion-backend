@@ -37,6 +37,17 @@ class UserManagerMongo {
 		}
 	}
 
+	async getUserById(id) {
+		try {
+			return await this.model.findById(id);
+		} catch (error) {
+			console.error(
+				`No es posible obtener el usuario.\n 
+				Error: ${error}`
+			);
+		}
+	}
+
 	/**
 	 *
 	 * @param {Object} Datos del usuario

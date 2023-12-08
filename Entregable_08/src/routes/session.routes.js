@@ -1,9 +1,16 @@
 import { Router } from 'express';
 import UserManagerMongo from '../dao/SessionManager.js';
-import dotenv from 'dotenv';
 import { createHash, checkPassword } from '../utils/utils.js';
-
+import passport from 'passport';
+import dotenv from 'dotenv';
 dotenv.config();
+
+// Variable de entorno de base de datos elegida
+const mongoDbActive = process.env.MONGO_DB_ACTIVE;
+let userManagerMongo;
+if (mongoDbActive === 'yes') {
+	userManagerMongo = new UserManagerMongo();
+}
 
 // Variables de entorno del perfil del administrador
 const adminName = process.env.ADMIN_NAME;
@@ -12,13 +19,6 @@ const adminMail = process.env.ADMIN_MAIL;
 const adminAge = process.env.ADMIN_AGE;
 const adminPass = process.env.ADMIN_PASS;
 const adminRole = process.env.ADMIN_ROLE;
-
-// Variable de entorno de base de datos elegida
-const mongoDbActive = process.env.MONGO_DB_ACTIVE;
-let userManagerMongo;
-if (mongoDbActive === 'yes') {
-	userManagerMongo = new UserManagerMongo();
-}
 
 const sessionRouter = Router();
 
@@ -61,24 +61,13 @@ sessionRouter.post('/login', async (req, res) => {
 });
 
 // Crea un nuevo usuario
-sessionRouter.post('/register', async (req, res) => {
-	try {
-		const newUser = req.body;
-
-		if (newUser.email === adminMail)
-			return res
-				.status(400)
-				.send('Invalid email. Use another email address');
-
-		newUser.password = createHash(newUser.password);
-
-		await userManagerMongo.createUser(newUser);
-
+sessionRouter.post(
+	'/register',
+	passport.authenticate('register', { failureRedirect: '/register' }),
+	async (req, res) => {
 		return res.status(201).redirect('/');
-	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
-});
+);
 
 // Desloguea al usuario
 sessionRouter.post('/logout', (req, res) => {
