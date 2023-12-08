@@ -54,6 +54,45 @@ const initializePassport = () => {
 		)
 	);
 
+	passport.use(
+		'login',
+		new LocalStrategy(
+			// Definimos a email como username
+			{ usernameField: 'email' },
+			async (username, password, done) => {
+				try {
+					if (username == adminMail && password == adminPass) {
+						const user = {
+							name: adminName,
+							lastname: adminLastname,
+							email: adminMail,
+							age: adminAge,
+							password: createHash(adminPass),
+							role: adminRole,
+						};
+						return done(null, user);
+					}
+
+					const user = await userManagerMongo.getUserData(username);
+
+					if (!user) {
+						console.error('User does not exist');
+						return done(null, false);
+					}
+
+					if (!checkPassword(user, password)) {
+						console.error('Password is invalid');
+						return done(null, false);
+					}
+
+					return done(null, user);
+				} catch (error) {
+					return done(`Error interno del servidor: ${error}`);
+				}
+			}
+		)
+	);
+
 	passport.serializeUser((user, done) => {
 		done(null, user._id);
 	});
