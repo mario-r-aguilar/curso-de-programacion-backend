@@ -3,7 +3,7 @@ import passport from 'passport';
 
 const sessionRouter = Router();
 
-// Loguea al usuario
+// Loguea al usuario con password
 sessionRouter.post(
 	'/login',
 	passport.authenticate('login', { failureRedirect: '/' }),
@@ -13,6 +13,31 @@ sessionRouter.post(
 
 			req.session.user = req.user;
 			return res.redirect('/products');
+		} catch (error) {
+			res.status(500).send(`Error interno del servidor: ${error}`);
+		}
+	}
+);
+
+// Loguea al usuario usando GitHub
+sessionRouter.get(
+	'/github',
+	passport.authenticate('github', { scope: ['user:email'] }),
+	(req, res) => {
+		try {
+		} catch (error) {
+			res.status(500).send(`Error interno del servidor: ${error}`);
+		}
+	}
+);
+
+sessionRouter.get(
+	'/githubcallback',
+	passport.authenticate('github', { failureRedirect: '/' }),
+	(req, res) => {
+		try {
+			req.session.user = req.user;
+			res.redirect('/products');
 		} catch (error) {
 			res.status(500).send(`Error interno del servidor: ${error}`);
 		}

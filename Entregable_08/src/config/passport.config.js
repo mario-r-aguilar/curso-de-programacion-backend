@@ -1,5 +1,6 @@
 import passport from 'passport';
 import local from 'passport-local';
+import GitHubStrategy from 'passport-github2';
 import UserManagerMongo from '../dao/SessionManager.js';
 import { createHash, checkPassword } from '../utils/utils.js';
 import dotenv from 'dotenv';
@@ -18,6 +19,11 @@ const adminMail = process.env.ADMIN_MAIL;
 const adminAge = process.env.ADMIN_AGE;
 const adminPass = process.env.ADMIN_PASS;
 const adminRole = process.env.ADMIN_ROLE;
+
+// Variables para estrategia GitHub
+const gitHubClientId = process.env.CLIEN_ID;
+const gitHubClientSecret = process.env.CLIENT_SECRET;
+const gitHubCallbackUrl = process.env.CALLBACK_URL;
 
 const LocalStrategy = local.Strategy;
 
@@ -88,6 +94,42 @@ const initializePassport = () => {
 					return done(null, user);
 				} catch (error) {
 					return done(`Error interno del servidor: ${error}`);
+				}
+			}
+		)
+	);
+
+	passport.use(
+		'github',
+		new GitHubStrategy(
+			{
+				clientID: gitHubClientId,
+				clientSecret: gitHubClientSecret,
+				callbackURL: gitHubCallbackUrl,
+			},
+			async (accessToken, refreshToken, profile, done) => {
+				try {
+					const user = await userManagerMongo.getUserData(
+						profile._json.email
+					);
+
+					if (user) {
+						console.info('El usuario ya se encuentra registrado');
+						return done(null, user);
+					}
+
+					const newUser = await userManagerMongo.createUser({
+						name: profile._json.name,
+						lastname: '',
+						email: profile._json.email,
+						age: 18,
+						password: '',
+						role: 'user',
+					});
+
+					return done(null, newUser);
+				} catch (error) {
+					console.error(error);
 				}
 			}
 		)
