@@ -1,0 +1,152 @@
+<div id="pageComplete">	
+
+	<div class='d-flex me-4  mb-3 flex-row justify-content-between flex-wrap'>
+		<h1 class="ps-4 ms-5 mt-3">Lista de productos</h1>
+
+		{{!-- Por el momento tiene un link a un carrito existente para hacer las pruebas --}}
+		<a class='nav-link' style="width: 3%; height: 3%" href="/carts/6557f7d19005197b1b189ce1">
+			<img class="img-fluid mt-3" style="width: 100%; height: 100%" id="cartImg" src="/static/img/cart_img.svg" alt="cart_img">
+		</a>
+	</div>
+
+	{{!-- Bloque de filtros --}}
+	<div class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
+		id='containerSearchOptions'>
+
+		<div class="input-group m-3 w-25">
+			<label class="input-group-text" for='limit'>Limitar productos: </label>
+			<input class="form-control" id='limit' type='number' value='{{productsList.limit}}' />
+		</div>
+
+		<div class="input-group m-3 w-25">
+			<label class="input-group-text" for='page'>Ir a Página: </label>
+			<input class="form-control" id='page' type='number' value='{{productsList.page}}' />
+		</div>	
+
+		<div class="input-group m-3 w-25">
+			<label class="input-group-text" for='productName'>Buscar por nombre: </label>
+			<input class="form-control" id='productName' type='text' value='{{productsList.docs.title}}' />
+		</div>	
+
+		<div class="input-group m-3 w-25">
+			<label class="input-group-text" for="category">Categorías:</label>
+			<select class="form-select" id="category">
+				<option value="">Elige...</option>
+  				<option value="Motorola">Motorola</option>
+  				<option value="Samsung">Samsung</option>
+  				<option value="Xiaomi">Xiaomi</option>
+  				<option value="iPhone">iPhone</option>
+  				<option value="TCL">TCL</option>  
+			</select>
+		</div>
+
+		<div class="input-group m-3 w-25">
+			<label class="input-group-text" for="sort">Ordenar por precio:</label>
+			<select class="form-select" id="sort">
+				<option value="">Elige...</option>
+  				<option value="1">Ascendente</option>
+  				<option value="-1">Descendente</option>  			
+			</select>
+		</div>
+
+		<div class="input-group m-3 w-25 bg-dark bg-opacity-75 rounded">
+			<label class="input-group-text" for="status">Solo productos disponibles:</label>
+			<input class="form-check-input p-2  mt-2 ms-4" type='checkbox' id='status' checked />
+		</div>
+	</div>
+
+	<div>
+		<span class="me-5"></span>
+		<button class="btn btn-primary border border-dark shadow ms-5 me-3" id="btnApplyFilters">Aplicar filtros</button>
+		<button class="btn btn-primary border border-dark shadow ms-3" id="btnCleanFilters">Limpiar filtros</button>
+	</div>
+
+	<div id="validatePageValue">
+		<div id="pageError"></div>
+		<input id="pageErrorAux" type="hidden" value="{{productsList.totalPages}}">
+	</div>
+
+	{{!-- Bloque de información de páginas --}}
+	<div class='d-flex p-2 mt-3 mb-3 flex-row justify-content-center flex-wrap'
+		id='containerPageInfo'>
+	
+		<div>
+			<h4 class="mt-2 mb-2 me-4 d-inline">Total de Productos: {{productsList.totalDocs}}</h4>
+			<h4 class="mt-2 mb-2 me-4 d-inline">|</h4>
+			<h4 class="mt-2 mb-2 me-4 d-inline">Página: {{productsList.page}} / {{productsList.totalPages}}</h4>
+		</div>
+	
+	</div>
+
+	{{!-- Bloque de navegación por páginas --}}
+	<div class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
+		id='containerPageOptions'>
+
+		<input id='prevPage' type='hidden' value='{{productsList.prevPage}}' />
+		<button class="btn btn-dark shadow" {{#unless productsList.hasPrevPage}} style='display: none;' {{/unless}} id='btnPrev'>
+			Página Anterior
+		</button>	
+
+		<input id='nextPage' type='hidden' value='{{productsList.nextPage}}' />
+		<button class="btn btn-dark shadow" {{#unless productsList.hasNextPage}} style='display: none;' {{/unless}} id='btnNext'>
+			Página Siguiente 
+		</button>
+
+	</div>
+
+	{{! Bloque de renderizado de productos }}
+	<div
+		class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
+		id='containerProducts'
+	>
+
+		{{#if productsList.docs.length}}
+
+			{{#each productsList.docs}}
+
+				<div
+					class='card p-3 mb-3 shadow-lg'				
+					style='width: 18rem;'
+				>
+					<img				
+						src='{{this.thumbnail}}'
+						class='card-img-top'
+						alt='{{this.title}}'
+					/>
+					<div class='card-body'>
+						<h5 class='card-title mb-3 ps-1 pb-1 text-light bg-dark'>
+							<b class='card-title'>{{this.title}}</b>
+						</h5>
+						<span class='card-text'>Descripción: </span>
+						<p class='card-text'>
+							<b>{{this.description}}</b>
+						</p>					
+						<span class='card-text'>Precio: </span>
+						<p class='card-text'>
+							<b>$ {{this.price}}</b>
+						</p>					
+						<span class='card-text'>Categoría: </span>
+						<p class='card-text'>
+							<b>{{this.category}}</b>
+						</p>
+
+						{{#if this._id}}
+							<input type="hidden" id="getProductId" value="{{this._id}}">
+						{{/if}}
+					
+						<button class="btn btn-success shadow mb-3 btnAddProductToCart">Agregar al Carrito</button>
+						<button class="btn btn-primary shadow mb-3 btnProductDetail">Ver detalles</button>
+					</div>
+				</div>
+
+			{{/each}}
+		{{else}}
+
+			<h4 class='text-bg-danger p-3 text-start'>No tienes productos disponibles</h4>
+
+		{{/if}}
+
+	</div>
+</div>
+
+<script src="/static/js/home.js"></script>
