@@ -2,14 +2,17 @@ import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import UserManagerMongo from '../dao/SessionManager.js';
+import CartManagerMongo from '../dao/CartManager.mongo.js';
 import { createHash, checkPassword } from '../utils/utils.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 const mongoDbActive = process.env.MONGO_DB_ACTIVE;
 let userManagerMongo;
+let cartManagerMongo;
 if (mongoDbActive === 'yes') {
 	userManagerMongo = new UserManagerMongo();
+	cartManagerMongo = new CartManagerMongo();
 }
 
 // Variables de entorno del perfil del administrador
@@ -19,6 +22,7 @@ const adminLastname = process.env.ADMIN_LASTNAME;
 const adminMail = process.env.ADMIN_MAIL;
 const adminAge = process.env.ADMIN_AGE;
 const adminPass = process.env.ADMIN_PASS;
+const adminCart = process.env.ADMIN_CART;
 const adminRole = process.env.ADMIN_ROLE;
 
 // Variables para estrategia GitHub
@@ -57,6 +61,10 @@ const initializePassport = () => {
 					// Almacena los datos del nuevo usuario y hashea su password
 					const newUser = req.body;
 					newUser.password = createHash(password);
+					// crea un carrito nuevo y lo asigna al usuario recientemente creado
+					newUser.cart = await cartManagerMongo.addCart({
+						products: [],
+					});
 
 					// Almacena el nuevo usuario y lo devuelve
 					const result = await userManagerMongo.createUser(newUser);
@@ -83,6 +91,7 @@ const initializePassport = () => {
 							email: adminMail,
 							age: adminAge,
 							password: createHash(adminPass),
+							cart: adminCart,
 							role: adminRole,
 						};
 						return done(null, user);
@@ -138,6 +147,9 @@ const initializePassport = () => {
 						email: profile._json.email,
 						age: 18,
 						password: '',
+						cart: await cartManagerMongo.addCart({
+							products: [],
+						}),
 						role: 'user',
 					});
 
