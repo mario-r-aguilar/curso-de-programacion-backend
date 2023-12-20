@@ -1,9 +1,10 @@
 import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2';
+import passportJWT from 'passport-jwt';
 import UserManagerMongo from '../dao/SessionManager.js';
 import CartManagerMongo from '../dao/CartManager.mongo.js';
-import { createHash, checkPassword } from '../utils/utils.js';
+import { createHash, checkPassword, generateToken } from '../utils/utils.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,9 +31,36 @@ const gitHubClientId = process.env.CLIEN_ID;
 const gitHubClientSecret = process.env.CLIENT_SECRET;
 const gitHubCallbackUrl = process.env.CALLBACK_URL;
 
+// Variable para JWT
+const privateKey = process.env.PRIVATE_KEY_JWT;
+
+// Core de las estrategias
 const LocalStrategy = local.Strategy;
+const JWTStrategy = passportJWT.Strategy;
+
+// Función para extraer las cookies en la estrategia JWT
+const cookieExtractor = (req) => {
+	const token = req?.cookies ? req.cookies['token'] : null;
+	return token;
+};
 
 const initializePassport = () => {
+	// Estrategia JWT
+	passport.use(
+		'current',
+		new JWTStrategy(
+			{
+				secretOrKey: privateKey,
+				jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([
+					cookieExtractor,
+				]),
+			},
+			(current_payload, done) => {
+				return done(null, current_payload);
+			}
+		)
+	);
+
 	// Estrategia local
 	passport.use(
 		'register',
@@ -94,6 +122,10 @@ const initializePassport = () => {
 							cart: adminCart,
 							role: adminRole,
 						};
+
+						const token = generateToken(user);
+						user.token = token;
+
 						return done(null, user);
 					}
 
@@ -108,6 +140,9 @@ const initializePassport = () => {
 						console.error('Password is invalid');
 						return done(null, false);
 					}
+
+					const token = generateToken(user);
+					user.token = token;
 
 					// Autentica el usuario
 					return done(null, user);
@@ -136,7 +171,9 @@ const initializePassport = () => {
 					);
 
 					if (user) {
-						console.info('User already exists');
+						const token = generateToken(user);
+						user.token = token;
+
 						return done(null, user);
 					}
 
@@ -152,6 +189,9 @@ const initializePassport = () => {
 						}),
 						role: 'user',
 					});
+
+					const token = generateToken(user);
+					user.token = token;
 
 					// Autentica el usuario
 					return done(null, newUser);

@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import ProductManagerMongo from '../dao/ProductManager.mongo.js';
 import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import CartManagerMongo from '../dao/CartManager.mongo.js';
-import { isUserAuth, isGuest } from '../middlewares/auth.middleware.js';
+import passport from 'passport';
+import { isUserAuth } from '../middlewares/auth.middleware.js';
 
 const viewsRouter = Router();
 
@@ -19,7 +20,7 @@ mongoDbActive === 'yes'
 			'./src/dao/db/products.json'
 	  ));
 
-// Muestra la página para loguearse. En caso de que ya este logueado lo
+// Muestra la página para loguearse. En caso de que ya este logueado, lo
 // redirecciona a la página de productos mediante el middleware isUserAuth
 viewsRouter.get('/', isUserAuth, (req, res) => {
 	try {
@@ -29,9 +30,8 @@ viewsRouter.get('/', isUserAuth, (req, res) => {
 	}
 });
 
-// Muestra la página para registrarse. En caso de que ya tenga cuenta y
-// este logueado, lo redirecciona a la página de productos mediante el
-// middleware isUserAuth
+// Muestra la página para registrarse. En caso de que ya este logueado,
+// lo redirecciona a la página de productos mediante el middleware isUserAuth
 viewsRouter.get('/register', isUserAuth, (req, res) => {
 	try {
 		return res.render('register', {});
@@ -41,42 +41,48 @@ viewsRouter.get('/register', isUserAuth, (req, res) => {
 });
 
 // Muestra el listado de productos y permite a filtrar a traves de req.query
-// Siempre y cuando esté logueado, de lo contrario lo redirecciona a la página
-// de logueo
-viewsRouter.get('/products', isGuest, async (req, res) => {
-	try {
-		if (mongoDbActive === 'yes') {
-			const user = req.session.user;
-			// Elimina el password (dato sensible) de la sesión del usuario
-			delete user.password;
+// siempre y cuando esté logueado, de lo contrario devuelve un error al intentar
+// acceder
+viewsRouter.get(
+	'/products',
+	passport.authenticate('current', { session: false }),
+	async (req, res) => {
+		try {
+			if (mongoDbActive === 'yes') {
+				const user = req.session.user;
+				// Vacia el password (dato sensible) de la sesión del usuario
+				user.password = '';
 
-			const { limit, page, sort, category, status, title } = req.query;
+				const { limit, page, sort, category, status, title } = req.query;
 
-			const productsList = await productManager.getProducts(
-				limit,
-				page,
-				parseInt(sort),
-				category,
-				status,
-				title
-			);
+				const productsList = await productManager.getProducts(
+					limit,
+					page,
+					parseInt(sort),
+					category,
+					status,
+					title
+				);
 
-			res.render('home', {
-				user,
-				productsList,
-				title: 'Lista de productos disponibles',
-			});
-		} else {
-			const productsList = await productManager.getProducts(req.query.limit);
-			res.render('home', {
-				productsList,
-				title: 'Lista de productos',
-			});
+				res.render('home', {
+					user,
+					productsList,
+					title: 'Lista de productos disponibles',
+				});
+			} else {
+				const productsList = await productManager.getProducts(
+					req.query.limit
+				);
+				res.render('home', {
+					productsList,
+					title: 'Lista de productos',
+				});
+			}
+		} catch (error) {
+			res.status(500).send(`Error interno del servidor: ${error}`);
 		}
-	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
-});
+);
 
 // Muestra el contenido del carrito (funciona con mongoDb)
 viewsRouter.get('/carts/:cid', async (req, res) => {

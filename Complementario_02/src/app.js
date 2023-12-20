@@ -10,7 +10,6 @@ import { sessionRouter } from './routes/session.routes.js';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 
@@ -24,6 +23,7 @@ const mongoDbActive = process.env.MONGO_DB_ACTIVE;
 const mongoPass = process.env.MONGO_PASS;
 const mongoUser = process.env.MONGO_USER;
 const mongoDbName = process.env.MONGO_DB_NAME;
+const sessionSecret = process.env.SESSION_SECRET;
 const urlMongoDb = `mongodb+srv://${mongoUser}:${mongoPass}@ecommerce-coder.1dfmp8r.mongodb.net/?retryWrites=true&w=majority`;
 
 // Permite que __dirname funcione por mas que lo cambie de carpeta
@@ -41,16 +41,12 @@ app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'handlebars');
 
 // Inicializo cookie-parser
-app.use(cookieParser('mOnG0dBD4t@'));
+app.use(cookieParser());
 
-// Configuración de sessions
+// Configuración de session
 app.use(
 	session({
-		store: MongoStore.create({
-			mongoUrl: urlMongoDb,
-			dbName: mongoDbName,
-		}),
-		secret: 'dAt4B@S3M0ngODB',
+		secret: sessionSecret,
 		resave: true,
 		saveUninitialized: true,
 	})
