@@ -58,7 +58,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/api/users', sessionRouter);
+app.use('/api/sessions', sessionRouter);
 app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);

@@ -50,8 +50,6 @@ viewsRouter.get(
 		try {
 			if (mongoDbActive === 'yes') {
 				const user = req.session.user;
-				// Vacia el password (dato sensible) de la sesión del usuario
-				user.password = '';
 
 				const { limit, page, sort, category, status, title } = req.query;
 

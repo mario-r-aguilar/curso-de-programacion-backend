@@ -72,8 +72,26 @@ sessionRouter.post(
 
 // Informa si hubo errores al registrarse
 sessionRouter.get('/failregister', (req, res) => {
-	return res.status(400).json({ error: 'Registration Failed' });
+	try {
+		return res.status(400).json({ error: 'Registration Failed' });
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
 });
+
+// Devuelve el usuario actual
+sessionRouter.get(
+	'/current',
+	passport.authenticate('current', { session: false }),
+	async (req, res) => {
+		try {
+			const user = req.session.user;
+			return res.send(user);
+		} catch (error) {
+			res.status(500).send(`Error interno del servidor: ${error}`);
+		}
+	}
+);
 
 // Desloguea al usuario
 sessionRouter.post('/logout', (req, res) => {
