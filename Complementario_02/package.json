@@ -14,14 +14,21 @@
 		"express-handlebars",
 		"socket.io",
 		"mongoose",
+		"mongoose-paginate-v2",
 		"javascript",
-		"mongo db"
+		"mongo db",
+		"bcrypt",
+		"cookie-parser",
+		"dotenv",
+		"passport",
+		"passport-local",
+		"passport-github2",
+		"passport-jwt"
 	],
 	"author": "Mario Aguilar",
 	"license": "ISC",
 	"dependencies": {
 		"bcrypt": "^5.1.1",
-		"connect-mongo": "^5.1.0",
 		"cookie-parser": "^1.4.6",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
