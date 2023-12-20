@@ -6,11 +6,11 @@ Continuar sobre el proyecto que has trabajado para tu e-commerce y configurar lo
 
 1. Crear un **modelo User** el cual contará con los campos:
 
-   -  first_name: String,
-   -  last_name: String,
+   -  name: String,
+   -  lastname: String,
    -  email: String (único),
    -  age: Number,
-   -  password: String(Hash),
+   -  password: String (hash),
    -  _cart: Id con referencia a Carts,_
    -  role: String (default:'user')
 
