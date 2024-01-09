@@ -19,13 +19,19 @@ export function socketServer(server) {
 	io.on('connection', async (socket) => {
 		console.info('Cliente conectado');
 
+		// Modifico el valor por defecto del límite para que muestre todos los productos
+		let limitValue = 50;
+		let productList = await productManager.getProducts(limitValue);
 		// Envía la lista de productos cuando un cliente se conecta
-		socket.emit('productList', await productManager.getProducts());
+		socket.emit('productList', productList);
 
-		// Envía la lista de productos cada vez que es modificada
 		socket.on('updatedList', async (data) => {
+			// Modifico el valor por defecto del límite para que muestre todos los productos
+			let limitValue = 50;
+			let productList = await productManager.getProducts(limitValue);
+			// Envía la lista de productos cada vez que es modificada
 			console.info(data);
-			socket.emit('productList', await productManager.getProducts());
+			socket.emit('productList', productList);
 		});
 
 		// Manejo del chat

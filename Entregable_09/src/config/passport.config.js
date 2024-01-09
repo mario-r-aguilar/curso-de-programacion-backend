@@ -2,7 +2,7 @@ import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import passportJWT from 'passport-jwt';
-import UserManagerMongo from '../dao/SessionManager.js';
+import UserManagerMongo from '../dao/UserManagerMongo.js';
 import CartManagerMongo from '../dao/CartManager.mongo.js';
 import { createHash, checkPassword, generateToken } from '../utils/utils.js';
 import config from './config.js';

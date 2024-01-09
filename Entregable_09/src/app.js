@@ -6,7 +6,7 @@ import getDirname from './utils/utils.js';
 import { productRouter } from './routes/product.routes.js';
 import { cartRouter } from './routes/cart.routes.js';
 import { viewsRouter } from './routes/views.routes.js';
-import { sessionRouter } from './routes/session.routes.js';
+import { userRouter } from './routes/user.routes.js';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -50,7 +50,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/api/sessions', sessionRouter);
+app.use('/api/sessions', userRouter);
 app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);

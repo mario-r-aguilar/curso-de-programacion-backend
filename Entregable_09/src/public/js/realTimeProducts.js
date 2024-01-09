@@ -3,7 +3,7 @@ const socket = io();
 
 // Recibe la lista de productos y la renderiza con la función renderProducts()
 socket.on('productList', (data) => {
-	renderProducts(data);
+	renderProducts(data.docs);
 });
 
 const renderProducts = async (data) => {
