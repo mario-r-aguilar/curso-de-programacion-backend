@@ -32,8 +32,7 @@ class CartManagerMongo {
 	}
 
 	/**
-	 * Busca un carrito mediante su ID y muestra su contenido usando populate
-	 * para ver el detalle de los productos que se encuentran dentro.
+	 * Busca un carrito mediante su ID y muestra el detalle de su contenido usando populate.
 	 * @param {String} ID del carrito
 	 * @returns {Object} Carrito buscado
 	 */
@@ -72,14 +71,6 @@ class CartManagerMongo {
 
 	/**
 	 * Agrega un producto a un carrito.
-	 * Primero busca el producto y el carrito mediante sus IDs y los almacena
-	 * en constantes. Luego verifica si el producto ya está en el carrito,
-	 * previamente iguala el tipo de valor de la ID convirtiéndolos a String.
-	 * Si el producto existe en el carrito, incrementa su cantidad en 1
-	 * de lo contrario lo agrega. Por último actualiza el carrito en la base
-	 * de datos.
-	 * Con la opción {new: true} devuelve la versión actualizada del carrito
-	 * luego del proceso de actualización.
 	 * @param {String} ID del carrito
 	 * @param {String} ID del producto
 	 * @returns {Object} Carrito con productos agregados
@@ -95,6 +86,7 @@ class CartManagerMongo {
 			}
 
 			const productExist = cart.products.find(
+				// Iguala el tipo de valor de la ID convirtiéndolos a string
 				(item) => String(item.product) === String(productId)
 			);
 
@@ -106,6 +98,7 @@ class CartManagerMongo {
 			const updatedCart = await this.model.findOneAndUpdate(
 				{ _id: cartId },
 				{ $set: { products: cart.products } },
+				// Devuelve la versión actualizada del carrito luego del proceso de actualización.
 				{ new: true }
 			);
 			return updatedCart;
@@ -120,9 +113,6 @@ class CartManagerMongo {
 
 	/**
 	 * Elimina un producto del carrito.
-	 * Busca el carrito, valida que el producto se encuentre en el mismo. Si lo
-	 * haya, incrementa su cantidad (quantity), si no está muestra un error.
-	 * Por último actualiza el carrito en la base de datos.
 	 * @param {String} Id del carrito
 	 * @param {String} Id del producto
 	 */
@@ -158,14 +148,10 @@ class CartManagerMongo {
 	}
 
 	/**
-	 * Actualiza todo el carrito a partir de un array contenido en la respuesta
-	 * de un GET al endpoint /API/products.
-	 * Busca el carrito, valida que el objeto contenga el Array de productos
-	 * de hallarlo, reemplaza el contenido del carrito con la nueva lista
-	 * asignándole una catidad (quantity) de 1 a cada producto.
-	 * Por último actualiza el carrito en la base de datos.
+	 * Actualiza todo el carrito a partir del array contenido en la respuesta
+	 * a un GET al endpoint /API/products.
 	 * @param {String} Id del carrito
-	 * @param {Object} Respuesta al hacer un GET al endpoint /API/products
+	 * @param {Object} Respuesta obtenida al hacer un GET al endpoint /API/products
 	 * @returns {Object} Carrito con una nueva lista de productos
 	 */
 	async updateAllProductsOfCart(cartId, newProductList) {
@@ -207,10 +193,6 @@ class CartManagerMongo {
 
 	/**
 	 * Actualiza la cantidad de un producto que se encuentra en el carrito.
-	 * Busca el carrito y el producto, valida que el producto se encuentre
-	 * en el carrito. De hallarlo, convierto la cantidad en un número y la
-	 * modifico en el producto. Por último actualiza el carrito en la base
-	 * de datos.
 	 * @param {String} Id del carrito
 	 * @param {String} Id del producto
 	 * @param {Object} Nueva cantidad del producto
@@ -232,7 +214,7 @@ class CartManagerMongo {
 				(item) => String(item.product._id) === String(productId)
 			);
 
-			// Almaceno el valor de la nueva cantidad en una cosntante
+			// Almaceno el valor de la nueva cantidad
 			if (productExistInCart) {
 				const parsedQuantity = newQuantity.quantity;
 
@@ -267,7 +249,6 @@ class CartManagerMongo {
 
 	/**
 	 * Elimina todos los productos que contenga el carrito.
-	 * Actualiza el contenido del carrito con un array vacio.
 	 * @param {String} Id del carrito
 	 * @returns {Object} Carrito actualizado
 	 */

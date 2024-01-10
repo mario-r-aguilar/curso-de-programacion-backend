@@ -6,12 +6,14 @@ class ProductManagerMongo {
 	}
 
 	/**
-	 * Muestra el listado de productos.
-	 * Con el método lean() obtengo los datos como objetos JavaScript simples.
-	 * Con el método exec() ejecuto la consulta final después de haber aplicado
-	 * diferentes métodos de Mongoose al find().
-	 * @param {String} Cantidad de productos que se mostraran
-	 * @returns {Array} Listado de productos
+	 * Muestra el listado de productos. Los parámetros son opcionales.
+	 * @param {String} Cantidad de productos que se mostrarán por página (por defecto 10)
+	 * @param {String} Página a mostrar (por defecto 1)
+	 * @param {Number} Orden de los productos por precio
+	 * @param {String} Categoría de los productos
+	 * @param {Boolean} Disponibilidad del productos
+	 * @param {String} Nombre de los productos
+	 * @returns {Object} Listado de productos
 	 */
 	async getProducts(limit = 10, page = 1, sort, category, status, title) {
 		try {
@@ -50,7 +52,7 @@ class ProductManagerMongo {
 	}
 
 	/**
-	 * Busca un producto mediante su ID y muestra su contenido.
+	 * Busca un producto mediante su ID.
 	 * @param {String} ID del producto
 	 * @returns {Object} Producto buscado
 	 */

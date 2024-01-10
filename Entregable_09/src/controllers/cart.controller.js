@@ -2,9 +2,8 @@ import CartManagerFileSystem from '../dao/CartManager.filesystem.js';
 import CartManagerMongo from '../dao/CartManager.mongo.js';
 import config from '../config/config.js';
 
-// Genera una instancia de una clase, según la base de datos activa
+// Genera una instancia según la base de datos que este activa
 let cartManager;
-
 config.mongoDbActive === 'yes'
 	? (cartManager = new CartManagerMongo())
 	: (cartManager = new CartManagerFileSystem('./src/dao/db/carts.json'));
@@ -19,7 +18,7 @@ export const getCarts = async (req, res) => {
 	}
 };
 
-// Muestra un carrito según su id enviada por req.params
+// Muestra un carrito según la id enviada por req.params
 export const getCartById = async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -30,7 +29,7 @@ export const getCartById = async (req, res) => {
 	}
 };
 
-//Agrega un nuevo carrito enviado desde req.body
+// Agrega un nuevo carrito enviado desde req.body
 export const addCart = async (req, res) => {
 	try {
 		let newCart = req.body;
@@ -64,8 +63,7 @@ export const deleteOneProductfromCart = async (req, res) => {
 	}
 };
 
-// Actualiza el contenido completo de un carrito a partir de un array que está
-// dentro de la respuesta a un GET realizado al endpoint de productos /api/products/
+// Actualiza el contenido completo de un carrito
 export const updateAllProductsOfCart = async (req, res) => {
 	try {
 		let { cid } = req.params;

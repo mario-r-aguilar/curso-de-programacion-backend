@@ -8,32 +8,27 @@ import {
 	failRegister,
 	currentUser,
 	logoutUser,
-} from '../controllers/session.controller.js';
+} from '../controllers/user.controller.js';
 
 const userRouter = Router();
 
-// Loguea al usuario con usuario y password (estrategia local)
 userRouter.post(
 	'/login',
 	passport.authenticate('login', { failureRedirect: '/' }),
 	loginUser
 );
 
-// Loguea al usuario usando GitHub (1º bloque - estrategia GitHub)
 userRouter.get(
 	'/github',
 	passport.authenticate('github', { scope: ['user:email'] }),
 	loginGithub
 );
-
-// Loguea al usuario usando GitHub (2º bloque - estrategia GitHub)
 userRouter.get(
 	'/githubcallback',
 	passport.authenticate('github', { failureRedirect: '/' }),
 	loginGithubCallBack
 );
 
-// Crea un nuevo usuario
 userRouter.post(
 	'/register',
 	passport.authenticate('register', {
@@ -42,17 +37,15 @@ userRouter.post(
 	registerUser
 );
 
-// Informa si hubo errores al registrarse
 userRouter.get('/failregister', failRegister);
 
-// Devuelve el usuario actual
+// Valida la existencia del token con la estrategia current, antes de dar acceso a la ruta
 userRouter.get(
 	'/current',
 	passport.authenticate('current', { session: false }),
 	currentUser
 );
 
-// Desloguea al usuario
 userRouter.post('/logout', logoutUser);
 
 export { userRouter };

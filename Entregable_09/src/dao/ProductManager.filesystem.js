@@ -10,7 +10,7 @@ class ProductManagerFileSystem {
 
 	/**
 	 * Obtiene la lista de productos.
-	 * Lee el contenido del archivo donde se encuentra el listado y lo retorna.
+	 * @param {String} Cantidad de productos para mostrar
 	 * @returns {Array} Listado de productos
 	 */
 	async getProducts(limit) {
@@ -34,8 +34,6 @@ class ProductManagerFileSystem {
 
 	/**
 	 * Busca un producto mediante su ID.
-	 * Para ello trae el listado de productos con el método getProducts(),
-	 * luego busca en el listado con el método find el producto solicitado.
 	 * @param {Number} ID del producto a buscar
 	 * @returns {Object} Producto buscado
 	 */
@@ -63,16 +61,15 @@ class ProductManagerFileSystem {
 
 	/**
 	 * Permite obtener una ID que luego será usada por un nuevo producto agregado.
-	 * Para ello obtiene el listado de productos, almacena en una constante el
-	 * indice del último agregado, incrementa en 1 su valor y luego
-	 * lo convierte a String.
 	 * @returns {String} Nueva ID
 	 */
 	#getNewID = async () => {
 		try {
 			const productList = await this.getProducts();
 			if (productList.length === 0) return '1';
+			// almacena el indice del último producto agregado
 			const lastProductAdd = productList[productList.length - 1];
+			// genera una ID (último índice +1) y la convierte a string
 			const newID = lastProductAdd.id + 1;
 			return newID.toString();
 		} catch (err) {
@@ -86,10 +83,6 @@ class ProductManagerFileSystem {
 
 	/**
 	 * Agrega un nuevo producto.
-	 * Primero realiza las validaciones para que todos los campos sean
-	 * obligatorios, después trae el listado de productos y valida que no
-	 * se repita el atributo code. Genera la id mediante #getNewID(),
-	 * pushea el nuevo producto al listado y actualiza el archivo.
 	 * @param {Object} Nuevo producto a agregar
 	 */
 	async addProduct(newProduct) {
@@ -169,14 +162,12 @@ class ProductManagerFileSystem {
 
 	/**
 	 * Elimina el producto que le indiquemos mediante su ID.
-	 * Para ello obtiene el listado de productos, genera una nueva lista
-	 * sin el producto a eliminar (con el método filter) y finalmente
-	 * sobreescribe el archivo con la nueva lista.
 	 * @param {number} ID del producto a eliminar
 	 */
 	async deleteProduct(productID) {
 		try {
 			const productList = await this.getProducts();
+			// Crea un nuevo listado sin el producto cuya id se ingreso
 			const newProductList = productList.filter(
 				(product) => product.id != productID
 			);
@@ -195,13 +186,7 @@ class ProductManagerFileSystem {
 	}
 
 	/**
-	 * Permite actualizar las características (atributos) de un producto.
-	 * Primero desestructura el objeto para facilitar el acceso a sus propiedades.
-	 * Luego obtiene el listado de productos, recorre este listado con el método
-	 * map para generar un nuevo listado con el producto actualizado.
-	 * Si encuentra el producto lo retorna con los campos modificados y si no,
-	 * retorna el mismo producto sin modificaciones. Finalmente sobreescribe el
-	 * archivo con la nueva lista.
+	 * Permite actualizar los atributos de un producto.
 	 * @param {number} ID del producto a actualizar
 	 * @param {Object} Producto con los campos actualizados
 	 */
@@ -220,6 +205,7 @@ class ProductManagerFileSystem {
 
 			const productList = await this.getProducts();
 
+			// Genera un nuevo listado con el producto actualizado
 			const updatedProductList = productList.map((product) => {
 				if (product.id === productID) {
 					return {

@@ -7,7 +7,6 @@ socket.on('productList', (data) => {
 });
 
 const renderProducts = async (data) => {
-	// Selecciona la sección de la plantilla para renderizar
 	const productsList = document.getElementById('productsList');
 	productsList.innerHTML = '';
 	// Si el array de productos llega vacío muestra un mensaje
@@ -73,7 +72,6 @@ const closeForm = () => {
 };
 
 const renderAddForm = () => {
-	// Selecciona la sección de la plantilla para renderizar
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	const newForm = document.createElement('div');
@@ -95,11 +93,9 @@ const renderAddForm = () => {
     `;
 	form.appendChild(newForm);
 
-	// Selecciona el formulario recientemente creado
 	const addForm = document.getElementById('addForm');
 	// Escucha el evento submit al presionar el botón agregar
 	addForm.addEventListener('submit', async function (event) {
-		// Evita el funcionamiento habitual del evento
 		event.preventDefault();
 		// Captura el contenido de nuestro formulario
 		const formData = new FormData(addForm);
@@ -126,7 +122,7 @@ const renderAddForm = () => {
 		});
 
 		try {
-			// Envía el objeto productData usando fetch y guarda la respuesta
+			// Envía el objeto productData usando fetch
 			const response = await fetch('/api/products', {
 				method: 'POST',
 				headers: {
@@ -156,7 +152,6 @@ const renderAddForm = () => {
 };
 
 const renderDelForm = () => {
-	// Selecciona la sección de la plantilla para renderizar
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	const newForm = document.createElement('div');
@@ -170,11 +165,9 @@ const renderDelForm = () => {
     `;
 	form.appendChild(newForm);
 
-	// Selecciona el formulario recientemente creado
 	document.getElementById('delForm');
 	// Escucha el evento submit al presionar el botón eliminar
 	document.addEventListener('submit', function (event) {
-		// Evita el funcionamiento habitual del evento
 		event.preventDefault();
 		// Selecciona la sección id del formulario
 		const idInput = document.getElementById('id');

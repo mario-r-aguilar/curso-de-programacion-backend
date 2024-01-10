@@ -4,7 +4,6 @@ import config from '../config/config.js';
 
 // Genera una instancia de la clase ProductManagerFileSystem() solo si no se usa la DB de Mongo
 let productManager;
-
 config.mongoDbActive === 'yes'
 	? console.info('Base de Datos de File System Desactivada')
 	: (productManager = new ProductManagerFileSystem(
@@ -21,7 +20,6 @@ class CartManagerFileSystem {
 
 	/**
 	 * Obtiene la lista de carritos.
-	 * Lee el contenido del archivo donde se encuentra el listado y lo retorna.
 	 * @returns {Array} Listado de carritos
 	 */
 	async getCarts() {
@@ -39,8 +37,6 @@ class CartManagerFileSystem {
 
 	/**
 	 * Busca un carrito mediante su ID.
-	 * Primero trae el listado de carritos con el método getCarts(),
-	 * luego busca en el listado con find el carrito solicitado.
 	 * @param {String} ID del producto a buscar
 	 * @returns {Object} Producto buscado
 	 */
@@ -67,17 +63,16 @@ class CartManagerFileSystem {
 	}
 
 	/**
-	 * Permite obtener una ID que luego será usada por un nuevo carrito agregado.
-	 * Para ello obtiene el listado de carritos, almacena en una constante el
-	 * indice del último agregado, incrementa en 1 su valor y luego
-	 * lo convierte a String.
+	 * Permite obtener una ID para ser utilizada por un nuevo carrito que sea agregado.
 	 * @returns {String} Nueva ID
 	 */
 	#getNewCartID = async () => {
 		try {
 			const cartsList = await this.getCarts();
 			if (cartsList.length === 0) return '1';
+			// almacena el índice del último carrito agregado
 			const lastCartAdd = cartsList[cartsList.length - 1];
+			// genera una ID (último índice +1) y la convierte a string
 			const newID = lastCartAdd.id + 1;
 			return newID.toString();
 		} catch (err) {
@@ -91,9 +86,6 @@ class CartManagerFileSystem {
 
 	/**
 	 * Agrega un nuevo carrito.
-	 * Primero realiza la validación del campo products para que sea obligatorio,
-	 * después trae el listado de carritos. Luego genera la id mediante #getNewID(),
-	 * pushea el nuevo carrito al listado y actualiza el archivo donde se guarda.
 	 * @param {Object} Nuevo carrito a agregar
 	 */
 	async addCart(newCart) {
@@ -125,17 +117,7 @@ class CartManagerFileSystem {
 	}
 
 	/**
-	 * Permite agregar un producto a un carrito. Primero almacena el carrito
-	 * y el producto en constantes (usa los métodos getCartById() y
-	 * getProductById()). Luego trae el listado de carritos completo y genera
-	 * una constante donde guarda el listado sin el carrito a actualizar.
-	 * Si el producto existe (usa el método some() para saber si está y find()
-	 * para traerlo), incrementa la propiedad quantity en 1 y por último
-	 * crea una nueva lista actualizada que contiente los carritos existentes
-	 * y el carrito modificado. Mientras que si no existe, lo crea y lo agrega
-	 * al listado de productos del carrito (con push()) y realiza la misma tarea
-	 * anterior de crear una lista actualizada y sobreescribir el archivo de
-	 * persistencia.
+	 * Permite agregar un producto a un carrito.
 	 * @param {String} ID del carrito
 	 * @param {String} ID del producto a agregar
 	 */
@@ -148,10 +130,12 @@ class CartManagerFileSystem {
 				(cart) => cart.id !== cartId
 			);
 
+			// Corrobora si el producto existe
 			if (cart.products.some((product) => product.id === productId)) {
 				let productExist = cart.products.find(
 					(product) => product.id === productId
 				);
+				// Si el producto existe incrementa su cantidad
 				productExist.quantity++;
 				let cartsListUpdated = [cart, ...cartsListWithoutCart];
 				await fs.promises.writeFile(
@@ -162,6 +146,7 @@ class CartManagerFileSystem {
 				return;
 			}
 
+			// Si el producto no existe, lo agrega al carrito
 			cart.products.push({ id: product.id, quantity: 1 });
 			let cartsListUpdated = [cart, ...cartsListWithoutCart];
 			await fs.promises.writeFile(
@@ -181,5 +166,4 @@ class CartManagerFileSystem {
 	}
 }
 
-// Exporto la clase
 export default CartManagerFileSystem;

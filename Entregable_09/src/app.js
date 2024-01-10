@@ -18,12 +18,10 @@ const app = express();
 
 const urlMongoDb = `mongodb+srv://${config.mongoUser}:${config.mongoPass}@ecommerce-coder.1dfmp8r.mongodb.net/?retryWrites=true&w=majority`;
 
-// Permite que __dirname funcione por mas que lo cambie de carpeta
+// Permite que __dirname funcione por mas que cambie de ubicación el archivo desde donde se encuentra
 const __dirname = getDirname(import.meta.url);
-// Configuro carpeta para archivos estáticos
-app.use('/static', express.static(path.join(__dirname, '/public')));
 
-// Manejo de datos de express
+app.use('/static', express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -44,7 +42,7 @@ app.use(
 	})
 );
 
-// Passport
+// Inicializo passport
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
@@ -65,6 +63,7 @@ if (config.mongoDbActive == 'yes') {
 				console.info('Server online and listening');
 			});
 
+			// Ejecuto función para inicializar socket.io
 			socketServer(httpServer);
 		})
 		.catch((error) => {

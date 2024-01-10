@@ -1,4 +1,4 @@
-// Loguea al usuario con usuario y password (estrategia local)
+// Estrategia local
 export const loginUser = async (req, res) => {
 	try {
 		if (!req.user) return res.status(401).send('Invalid Credentials');
@@ -15,7 +15,7 @@ export const loginUser = async (req, res) => {
 	}
 };
 
-// Loguea al usuario usando GitHub (1º bloque - estrategia GitHub)
+// Estrategia GitHub
 export const loginGithub = (req, res) => {
 	try {
 	} catch (error) {
@@ -23,7 +23,6 @@ export const loginGithub = (req, res) => {
 	}
 };
 
-// Loguea al usuario usando GitHub (2º bloque - estrategia GitHub)
 export const loginGithubCallBack = (req, res) => {
 	try {
 		req.session.user = req.user;
@@ -38,7 +37,7 @@ export const loginGithubCallBack = (req, res) => {
 	}
 };
 
-// Crea un nuevo usuario
+// Para registrar un nuevo usuario
 export const registerUser = async (req, res) => {
 	try {
 		return res.status(201).redirect('/');
@@ -47,7 +46,7 @@ export const registerUser = async (req, res) => {
 	}
 };
 
-// Informa si hubo errores al registrarse
+// Se muestra si hubo errores en el registro de un usuario
 export const failRegister = (req, res) => {
 	try {
 		return res.status(400).json({ error: 'Registration Failed' });
@@ -56,7 +55,7 @@ export const failRegister = (req, res) => {
 	}
 };
 
-// Devuelve el usuario actual
+// Muestra los datos del usuario logueado
 export const currentUser = async (req, res) => {
 	try {
 		const user = req.session.user;
@@ -66,7 +65,7 @@ export const currentUser = async (req, res) => {
 	}
 };
 
-// Desloguea al usuario
+// Desloguea a un usuario
 export const logoutUser = (req, res) => {
 	try {
 		req.session.destroy((err) => {

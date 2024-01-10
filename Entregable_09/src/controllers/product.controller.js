@@ -2,17 +2,15 @@ import ProductManagerMongo from '../dao/ProductManager.mongo.js';
 import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import config from '../config/config.js';
 
-// Genera una instancia de una clase, según la base de datos activa
+// Genera una instancia según la base de datos que este activa
 let productManager;
-
 config.mongoDbActive === 'yes'
 	? (productManager = new ProductManagerMongo())
 	: (productManager = new ProductManagerFileSystem(
 			'./src/dao/db/products.json'
 	  ));
 
-// Muestra el listado de productos y permite también con la query limit
-// elegir la cantidad de productos que queremos ver por pantalla
+// Muestra el listado de productos y permite aplicar filtros al hacerlo
 export const getProducts = async (req, res) => {
 	try {
 		if (config.mongoDbActive === 'yes') {
@@ -42,7 +40,7 @@ export const getProducts = async (req, res) => {
 	}
 };
 
-// Muestra un producto según la id que le pasemos a través de req.params
+// Muestra un producto según la id que le pasemos por req.params
 export const getProductById = async (req, res) => {
 	try {
 		let { pid } = req.params;
@@ -63,8 +61,7 @@ export const addProduct = async (req, res) => {
 	}
 };
 
-// Actualiza un producto existente. Mediante el id enviado por req.params
-// lo encuentra y recibe un producto actualizado desde req.body
+// Actualiza un producto existente obteniendo su ID por req.params y los nuevos valores por req.body
 export const updateProduct = async (req, res) => {
 	try {
 		let { pid } = req.params;

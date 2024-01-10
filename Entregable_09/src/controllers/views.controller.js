@@ -3,17 +3,15 @@ import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import CartManagerMongo from '../dao/CartManager.mongo.js';
 import config from '../config/config.js';
 
-// Genera una instancia de una clase, según la base de datos activa
+// Genera una instancia según la base de datos que este activa
 let productManager;
-
 config.mongoDbActive === 'yes'
 	? (productManager = new ProductManagerMongo())
 	: (productManager = new ProductManagerFileSystem(
 			'./src/dao/db/products.json'
 	  ));
 
-// Muestra la página para loguearse. En caso de que ya este logueado, lo
-// redirecciona a la página de productos mediante el middleware isUserAuth
+// Vista para loguear un usuario
 export const renderLogin = (req, res) => {
 	try {
 		return res.render('login', {});
@@ -22,8 +20,7 @@ export const renderLogin = (req, res) => {
 	}
 };
 
-// Muestra la página para registrarse. En caso de que ya este logueado,
-// lo redirecciona a la página de productos mediante el middleware isUserAuth
+// Vista para registrar un usuario
 export const renderRegister = (req, res) => {
 	try {
 		return res.render('register', {});
@@ -32,10 +29,8 @@ export const renderRegister = (req, res) => {
 	}
 };
 
-// Muestra el listado de productos y permite a filtrar a traves de req.query
-// siempre y cuando esté logueado, de lo contrario devuelve un error al intentar
-// acceder
-export const renderCurrentUser = async (req, res) => {
+// Vista para mostrar el listado de productos (permite a filtrar a traves de req.query)
+export const renderProductsPage = async (req, res) => {
 	try {
 		if (config.mongoDbActive === 'yes') {
 			const user = req.session.user;
@@ -68,7 +63,7 @@ export const renderCurrentUser = async (req, res) => {
 	}
 };
 
-// Muestra el contenido del carrito (funciona con mongoDb)
+// Vista para mostrar el contenido del carrito (solo funciona con mongoDb)
 export const renderCart = async (req, res) => {
 	try {
 		const { cid } = req.params;
@@ -84,7 +79,7 @@ export const renderCart = async (req, res) => {
 	}
 };
 
-// Muestra el listado de productos y permite actualizarlos en tiempo real
+// Vista para mostrar el listado de productos y actualizarlos en tiempo real
 export const renderRealTimeProducts = (req, res) => {
 	try {
 		res.render('realTimeProducts', {
@@ -95,7 +90,7 @@ export const renderRealTimeProducts = (req, res) => {
 	}
 };
 
-// Muestra el chat
+// Vista para mostrar el chat e interactuar en él
 export const renderChat = (req, res) => {
 	try {
 		res.render('chat', { title: 'Chat' });

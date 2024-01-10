@@ -4,8 +4,8 @@ import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import { chatManager } from '../dao/ChatManager.js';
 import config from '../config/config.js';
 
+// Creo instancia según la base de datos activa
 let productManager;
-
 config.mongoDbActive === 'yes'
 	? (productManager = new ProductManagerMongo())
 	: (productManager = new ProductManagerFileSystem(
@@ -15,18 +15,17 @@ config.mongoDbActive === 'yes'
 export function socketServer(server) {
 	const io = new Server(server);
 
-	// Da aviso cuando el cliente se conecta
 	io.on('connection', async (socket) => {
+		// Mensaje de conexión de un cliente
 		console.info('Cliente conectado');
 
-		// Modifico el valor por defecto del límite para que muestre todos los productos
+		// Modifico el valor por defecto del límite
 		let limitValue = 50;
 		let productList = await productManager.getProducts(limitValue);
 		// Envía la lista de productos cuando un cliente se conecta
 		socket.emit('productList', productList);
 
 		socket.on('updatedList', async (data) => {
-			// Modifico el valor por defecto del límite para que muestre todos los productos
 			let limitValue = 50;
 			let productList = await productManager.getProducts(limitValue);
 			// Envía la lista de productos cada vez que es modificada
@@ -48,7 +47,7 @@ export function socketServer(server) {
 			socket.broadcast.emit('userConnected', newUser);
 		});
 
-		// Da aviso cuando el cliente se desconecta
+		// Mensaje de desconexión de un cliente
 		socket.on('disconnect', () => {
 			console.info('Cliente desconectado');
 		});

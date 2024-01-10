@@ -69,7 +69,7 @@ const initializePassport = () => {
 					// Almacena los datos del nuevo usuario y hashea su password
 					const newUser = req.body;
 					newUser.password = createHash(password);
-					// crea un carrito nuevo y lo asigna al usuario recientemente creado
+					// Crea un carrito nuevo y lo asigna al usuario recientemente creado
 					newUser.cart = await cartManagerMongo.addCart({
 						products: [],
 					});
