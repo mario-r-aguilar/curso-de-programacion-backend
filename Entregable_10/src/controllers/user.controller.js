@@ -1,3 +1,5 @@
+import UserDTO from '../DTO/user.dto.js';
+
 // Estrategia local
 export const loginUser = async (req, res) => {
 	try {
@@ -59,7 +61,8 @@ export const failRegister = (req, res) => {
 export const currentUser = async (req, res) => {
 	try {
 		const user = req.session.user;
-		return res.send(user);
+		const userInfo = new UserDTO(user);
+		return res.send(userInfo);
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
