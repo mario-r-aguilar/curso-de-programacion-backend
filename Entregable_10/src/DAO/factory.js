@@ -1,4 +1,5 @@
 import config from '../config/config.js';
+import selectedPersistence from '../config/persistence.js';
 import mongoose from 'mongoose';
 
 export let Product;
@@ -8,9 +9,7 @@ export let Chat;
 
 const urlMongoDb = `mongodb+srv://${config.mongoUser}:${config.mongoPass}@ecommerce-coder.1dfmp8r.mongodb.net/?retryWrites=true&w=majority`;
 
-console.info(`Persistence selected ${config.persistence}`);
-
-switch (config.persistence) {
+switch (selectedPersistence.persistence) {
 	case 'MONGO':
 		try {
 			mongoose
