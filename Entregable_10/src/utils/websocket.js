@@ -1,16 +1,5 @@
 import { Server } from 'socket.io';
-import ProductManagerMongo from '../dao/ProductManager.mongo.js';
-import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
-import { chatManager } from '../dao/ChatManager.js';
-import config from '../config/config.js';
-
-// Creo instancia según la base de datos activa
-let productManager;
-config.mongoDbActive === 'yes'
-	? (productManager = new ProductManagerMongo())
-	: (productManager = new ProductManagerFileSystem(
-			'./src/dao/db/products.json'
-	  ));
+import { ProductService, ChatService } from '../services/index.js';
 
 export function socketServer(server) {
 	const io = new Server(server);
@@ -21,13 +10,13 @@ export function socketServer(server) {
 
 		// Modifico el valor por defecto del límite
 		let limitValue = 50;
-		let productList = await productManager.getProducts(limitValue);
+		let productList = await ProductService.getProducts(limitValue);
 		// Envía la lista de productos cuando un cliente se conecta
 		socket.emit('productList', productList);
 
 		socket.on('updatedList', async (data) => {
 			let limitValue = 50;
-			let productList = await productManager.getProducts(limitValue);
+			let productList = await ProductService.getProducts(limitValue);
 			// Envía la lista de productos cada vez que es modificada
 			console.info(data);
 			socket.emit('productList', productList);
@@ -35,12 +24,12 @@ export function socketServer(server) {
 
 		// Manejo del chat
 		socket.on('message', async (data) => {
-			await chatManager.createMessage(data);
-			io.emit('messages', await chatManager.getMessages());
+			await ChatService.createMessage(data);
+			io.emit('messages', await ChatService.getMessages());
 		});
 
 		socket.on('getMessages', async () => {
-			socket.emit('messages', await chatManager.getMessages());
+			socket.emit('messages', await ChatService.getMessages());
 		});
 
 		socket.on('newUserConnect', (newUser) => {

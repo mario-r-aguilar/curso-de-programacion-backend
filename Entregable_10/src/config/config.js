@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
-	mongoDbActive: process.env.MONGO_DB_ACTIVE,
+	persistence: process.env.PERSISTENCE,
 	mongoPass: process.env.MONGO_PASS,
 	mongoUser: process.env.MONGO_USER,
 	mongoDbName: process.env.MONGO_DB_NAME,
@@ -19,4 +19,7 @@ export default {
 	gitHubClientId: process.env.CLIEN_ID,
 	gitHubClientSecret: process.env.CLIENT_SECRET,
 	gitHubCallbackUrl: process.env.CALLBACK_URL,
+	error: (message, error) => {
+		console.error(message, error);
+	},
 };

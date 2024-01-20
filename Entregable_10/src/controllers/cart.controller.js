@@ -1,20 +1,21 @@
-import CartManagerFileSystem from '../dao/CartManager.filesystem.js';
-import CartManagerMongo from '../dao/CartManager.mongo.js';
-import config from '../config/config.js';
+// import CartManagerFileSystem from '../dao/CartManager.filesystem.js';
+// import CartManagerMongo from '../dao/CartManager.mongo.js';
+// import config from '../config/config.js';
+// // Genera una instancia según la base de datos que este activa
+// let cartManager;
+// config.mongoDbActive === 'yes'
+// 	? (cartManager = new CartManagerMongo())
+// 	: (cartManager = new CartManagerFileSystem('./src/dao/db/carts.json'));
 
-// Genera una instancia según la base de datos que este activa
-let cartManager;
-config.mongoDbActive === 'yes'
-	? (cartManager = new CartManagerMongo())
-	: (cartManager = new CartManagerFileSystem('./src/dao/db/carts.json'));
+import { CartService } from '../services/index.js';
 
 // Muestra el listado de carritos
 export const getCarts = async (req, res) => {
 	try {
-		const carts = await cartManager.getCarts();
+		const carts = await CartService.getCarts();
 		res.send(carts);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -22,10 +23,10 @@ export const getCarts = async (req, res) => {
 export const getCartById = async (req, res) => {
 	try {
 		let { cid } = req.params;
-		const cart = await cartManager.getCartById(cid);
+		const cart = await CartService.getCartById(cid);
 		res.send(cart);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -33,9 +34,9 @@ export const getCartById = async (req, res) => {
 export const addCart = async (req, res) => {
 	try {
 		let newCart = req.body;
-		res.status(201).send(await cartManager.addCart(newCart));
+		res.status(201).send(await CartService.addCart(newCart));
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -44,9 +45,9 @@ export const addProductToCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
 		let { pid } = req.params;
-		res.status(201).send(await cartManager.addProductToCart(cid, pid));
+		res.status(201).send(await CartService.addProductToCart(cid, pid));
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -56,10 +57,10 @@ export const deleteOneProductfromCart = async (req, res) => {
 		let { cid } = req.params;
 		let { pid } = req.params;
 		res.status(204).send(
-			await cartManager.deleteOneProductfromCart(cid, pid)
+			await CartService.deleteOneProductfromCart(cid, pid)
 		);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -68,9 +69,9 @@ export const updateAllProductsOfCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
 		let newProductList = req.body;
-		res.send(await cartManager.updateAllProductsOfCart(cid, newProductList));
+		res.send(await CartService.updateAllProductsOfCart(cid, newProductList));
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -81,10 +82,10 @@ export const updateQuantityOfProduct = async (req, res) => {
 		let { pid } = req.params;
 		let newQuantity = req.body;
 		res.send(
-			await cartManager.updateQuantityOfProduct(cid, pid, newQuantity)
+			await CartService.updateQuantityOfProduct(cid, pid, newQuantity)
 		);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -92,8 +93,8 @@ export const updateQuantityOfProduct = async (req, res) => {
 export const deleteAllProductsfromCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
-		res.status(204).send(await cartManager.deleteAllProductsfromCart(cid));
+		res.status(204).send(await CartService.deleteAllProductsfromCart(cid));
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

@@ -11,7 +11,7 @@ export const loginUser = async (req, res) => {
 			})
 			.redirect('/products');
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -19,7 +19,7 @@ export const loginUser = async (req, res) => {
 export const loginGithub = (req, res) => {
 	try {
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -33,7 +33,7 @@ export const loginGithubCallBack = (req, res) => {
 			})
 			.redirect('/products');
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -42,7 +42,7 @@ export const registerUser = async (req, res) => {
 	try {
 		return res.status(201).redirect('/');
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -51,7 +51,7 @@ export const failRegister = (req, res) => {
 	try {
 		return res.status(400).json({ error: 'Registration Failed' });
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -61,7 +61,7 @@ export const currentUser = async (req, res) => {
 		const user = req.session.user;
 		return res.send(user);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -74,6 +74,6 @@ export const logoutUser = (req, res) => {
 			return res.clearCookie('token').redirect('/');
 		});
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

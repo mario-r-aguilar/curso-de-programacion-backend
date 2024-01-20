@@ -1,21 +1,23 @@
 import fs from 'fs';
-import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
-import config from '../config/config.js';
+import ProductManagerFileSystem from './ProductManager.filesystem.js';
+import config from '../../config/config.js';
 
-// Genera una instancia de la clase ProductManagerFileSystem() solo si no se usa la DB de Mongo
-let productManager;
-config.mongoDbActive === 'yes'
-	? console.info('Base de Datos de File System Desactivada')
-	: (productManager = new ProductManagerFileSystem(
-			'./src/dao/db/products.json'
-	  ));
+// // Genera una instancia de la clase ProductManagerFileSystem() solo si no se usa la DB de Mongo
+// let productManager;
+// config.mongoDbActive === 'yes'
+// 	? console.info('Base de Datos de File System Desactivada')
+// 	: (productManager = new ProductManagerFileSystem(
+// 			'./src/dao/db/products.json'
+// 	  ));
+
+let productManager = new ProductManagerFileSystem();
 
 class CartManagerFileSystem {
 	constructor(path) {
 		this.path = path;
 		// Si el usuario no brinda una ruta, crea el archivo con un array vacío
 		if (!this.path)
-			fs.writeFileSync('./dao/db/carts.json', JSON.stringify([]));
+			fs.writeFileSync('./DAO/file/db/carts.json', JSON.stringify([]));
 	}
 
 	/**

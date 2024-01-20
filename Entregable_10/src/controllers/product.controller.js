@@ -1,22 +1,13 @@
-import ProductManagerMongo from '../dao/ProductManager.mongo.js';
-import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
 import config from '../config/config.js';
-
-// Genera una instancia según la base de datos que este activa
-let productManager;
-config.mongoDbActive === 'yes'
-	? (productManager = new ProductManagerMongo())
-	: (productManager = new ProductManagerFileSystem(
-			'./src/dao/db/products.json'
-	  ));
+import { ProductService } from '../services/index.js';
 
 // Muestra el listado de productos y permite aplicar filtros al hacerlo
 export const getProducts = async (req, res) => {
 	try {
-		if (config.mongoDbActive === 'yes') {
+		if (config.persistence === 'MONGO') {
 			const { limit, page, sort, category, status, title } = req.query;
 
-			let productList = await productManager.getProducts(
+			let productList = await ProductService.getProducts(
 				limit,
 				page,
 				parseInt(sort),
@@ -32,11 +23,11 @@ export const getProducts = async (req, res) => {
 			const result = { status: statusProductList, payload: productList };
 			res.send(result);
 		} else {
-			let productList = await productManager.getProducts(req.query.limit);
+			let productList = await ProductService.getProducts(req.query.limit);
 			res.send({ productList });
 		}
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -44,10 +35,10 @@ export const getProducts = async (req, res) => {
 export const getProductById = async (req, res) => {
 	try {
 		let { pid } = req.params;
-		const product = await productManager.getProductById(pid);
+		const product = await ProductService.getProductById(pid);
 		res.status(200).send(product);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -55,9 +46,9 @@ export const getProductById = async (req, res) => {
 export const addProduct = async (req, res) => {
 	try {
 		let newProduct = req.body;
-		res.status(201).send(await productManager.addProduct(newProduct));
+		res.status(201).send(await ProductService.addProduct(newProduct));
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -68,10 +59,10 @@ export const updateProduct = async (req, res) => {
 		const updatedProduct = req.body;
 
 		res.status(200).send(
-			await productManager.updateProduct(pid, updatedProduct)
+			await ProductService.updateProduct(pid, updatedProduct)
 		);
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
@@ -79,8 +70,8 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
 	try {
 		let { pid } = req.params;
-		res.status(204).send(await productManager.deleteProduct(pid));
+		res.status(204).send(await ProductService.deleteProduct(pid));
 	} catch (error) {
-		res.status(500).send(`Error interno del servidor: ${error}`);
+		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

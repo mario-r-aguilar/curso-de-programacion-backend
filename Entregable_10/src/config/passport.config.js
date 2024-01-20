@@ -2,17 +2,9 @@ import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import passportJWT from 'passport-jwt';
-import UserManagerMongo from '../dao/UserManagerMongo.js';
-import CartManagerMongo from '../dao/CartManager.mongo.js';
+import { UserService, CartService } from '../services/index.js';
 import { createHash, checkPassword, generateToken } from '../utils/utils.js';
 import config from './config.js';
-
-let userManagerMongo;
-let cartManagerMongo;
-if (config.mongoDbActive === 'yes') {
-	userManagerMongo = new UserManagerMongo();
-	cartManagerMongo = new CartManagerMongo();
-}
 
 // Core de las estrategias
 const LocalStrategy = local.Strategy;
@@ -52,9 +44,7 @@ const initializePassport = () => {
 			async (req, username, password, done) => {
 				try {
 					// Verifica si el usuario ya existe
-					const validUser = await userManagerMongo.getUserByEmail(
-						username
-					);
+					const validUser = await UserService.getUserByEmail(username);
 					if (validUser) {
 						console.info('User already exists');
 						return done(null, false);
@@ -70,12 +60,12 @@ const initializePassport = () => {
 					const newUser = req.body;
 					newUser.password = createHash(password);
 					// Crea un carrito nuevo y lo asigna al usuario recientemente creado
-					newUser.cart = await cartManagerMongo.addCart({
+					newUser.cart = await CartService.addCart({
 						products: [],
 					});
 
 					// Almacena el nuevo usuario y lo devuelve
-					const result = await userManagerMongo.createUser(newUser);
+					const result = await UserService.addUser(newUser);
 					return done(null, result);
 				} catch (error) {
 					done(`Error interno del servidor: ${error}`);
@@ -113,7 +103,7 @@ const initializePassport = () => {
 					}
 
 					// Verifica si el usuario existe y si su password es correcto
-					const user = await userManagerMongo.getUserByEmail(username);
+					const user = await UserService.getUserByEmail(username);
 					if (!user) {
 						console.error('User does not exist');
 						return done(null, false);
@@ -149,7 +139,7 @@ const initializePassport = () => {
 			async (accessToken, refreshToken, profile, done) => {
 				try {
 					// Verifica si el usuario ya existe
-					const user = await userManagerMongo.getUserByEmail(
+					const user = await UserService.getUserByEmail(
 						profile._json.email
 					);
 
@@ -161,13 +151,13 @@ const initializePassport = () => {
 					}
 
 					// Si no existe genera uno con los datos que obtiene desde GitHub
-					const newUser = await userManagerMongo.createUser({
+					const newUser = await UserService.createUser({
 						name: profile._json.name,
 						lastname: '',
 						email: profile._json.email,
 						age: 18,
 						password: '',
-						cart: await cartManagerMongo.addCart({
+						cart: await CartService.addCart({
 							products: [],
 						}),
 						role: 'user',
@@ -197,7 +187,7 @@ const initializePassport = () => {
 			return done(null, false);
 		}
 
-		const user = await userManagerMongo.getUserById(id);
+		const user = await UserService.getUserById(id);
 		done(null, user);
 	});
 };

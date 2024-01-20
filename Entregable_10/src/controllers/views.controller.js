@@ -1,15 +1,5 @@
-import ProductManagerMongo from '../dao/ProductManager.mongo.js';
-import ProductManagerFileSystem from '../dao/ProductManager.filesystem.js';
-import CartManagerMongo from '../dao/CartManager.mongo.js';
+import { ProductService, CartService } from '../services/index.js';
 import config from '../config/config.js';
-
-// Genera una instancia según la base de datos que este activa
-let productManager;
-config.mongoDbActive === 'yes'
-	? (productManager = new ProductManagerMongo())
-	: (productManager = new ProductManagerFileSystem(
-			'./src/dao/db/products.json'
-	  ));
 
 // Vista para loguear un usuario
 export const renderLogin = (req, res) => {
@@ -32,12 +22,12 @@ export const renderRegister = (req, res) => {
 // Vista para mostrar el listado de productos (permite a filtrar a traves de req.query)
 export const renderProductsPage = async (req, res) => {
 	try {
-		if (config.mongoDbActive === 'yes') {
+		if (config.persistence === 'MONGO') {
 			const user = req.session.user;
 
 			const { limit, page, sort, category, status, title } = req.query;
 
-			const productsList = await productManager.getProducts(
+			const productsList = await ProductService.getProducts(
 				limit,
 				page,
 				parseInt(sort),
@@ -52,7 +42,7 @@ export const renderProductsPage = async (req, res) => {
 				title: 'Lista de productos disponibles',
 			});
 		} else {
-			const productsList = await productManager.getProducts(req.query.limit);
+			const productsList = await ProductService.getProducts(req.query.limit);
 			res.render('home', {
 				productsList,
 				title: 'Lista de productos',
@@ -67,11 +57,7 @@ export const renderProductsPage = async (req, res) => {
 export const renderCart = async (req, res) => {
 	try {
 		const { cid } = req.params;
-		let cartManagerMongo;
-		if (config.mongoDbActive === 'yes') {
-			cartManagerMongo = new CartManagerMongo();
-		}
-		const cart = await cartManagerMongo.getCartById(cid);
+		const cart = await CartService.getCartById(cid);
 
 		res.render('cart', { cart, title: 'Carrito' });
 	} catch (error) {

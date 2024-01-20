@@ -1,11 +1,11 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 class ProductManagerFileSystem {
 	constructor(path) {
 		this.path = path;
 		// Si el usuario no brinda una ruta, crea el archivo con un array vacío
 		if (!this.path)
-			fs.writeFileSync('./dao/db/products.json', JSON.stringify([]));
+			fs.writeFileSync('./DAO/file/db/products.json', JSON.stringify([]));
 	}
 
 	/**
