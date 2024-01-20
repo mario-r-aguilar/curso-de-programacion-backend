@@ -60,9 +60,9 @@ export const failRegister = (req, res) => {
 // Muestra los datos del usuario logueado
 export const currentUser = async (req, res) => {
 	try {
-		const user = req.session.user;
-		const userInfo = new UserDTO(user);
-		return res.send(userInfo);
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+		return res.send(user);
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}

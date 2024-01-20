@@ -160,7 +160,7 @@ const initializePassport = () => {
 						cart: await CartService.addCart({
 							products: [],
 						}),
-						role: 'user',
+						role: 'USER',
 					});
 
 					const token = generateToken(user);

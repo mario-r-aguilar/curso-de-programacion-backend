@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { roleControl } from '../middlewares/roleControl.middleware.js';
 import { isUserAuth } from '../middlewares/auth.middleware.js';
 import {
 	renderLogin,
@@ -32,12 +33,14 @@ viewsRouter.get(
 viewsRouter.get(
 	'/realtimeproducts',
 	passport.authenticate('current', { session: false }),
+	roleControl('ADMIN'),
 	renderRealTimeProducts
 );
 
 viewsRouter.get(
 	'/chat',
 	passport.authenticate('current', { session: false }),
+	roleControl('USER'),
 	renderChat
 );
 

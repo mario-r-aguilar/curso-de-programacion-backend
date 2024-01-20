@@ -1,10 +1,10 @@
-import config from '../config/config.js';
+import selectedPersistence from '../config/persistence.js';
 import { ProductService } from '../services/index.js';
 
 // Muestra el listado de productos y permite aplicar filtros al hacerlo
 export const getProducts = async (req, res) => {
 	try {
-		if (config.persistence === 'MONGO') {
+		if (selectedPersistence.persistence === 'MONGO') {
 			const { limit, page, sort, category, status, title } = req.query;
 
 			let productList = await ProductService.getProducts(
