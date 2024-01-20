@@ -6,6 +6,7 @@ export let Product;
 export let Cart;
 export let User;
 export let Chat;
+export let Ticket;
 
 const urlMongoDb = `mongodb+srv://${config.mongoUser}:${config.mongoPass}@ecommerce-coder.1dfmp8r.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -36,11 +37,15 @@ switch (selectedPersistence.persistence) {
 			const { default: ChatMongo } = await import(
 				'./mongo/ChatMongo.dao..js'
 			);
+			const { default: TicketMongo } = await import(
+				'./mongo/TicketMongo.dao.js'
+			);
 
 			Product = ProductMongo;
 			Cart = CartMongo;
 			User = UserMongo;
 			Chat = ChatMongo;
+			Ticket = TicketMongo;
 		} catch (error) {
 			config.error('Persistence not available', error);
 		}

@@ -9,6 +9,7 @@ import {
 	updateAllProductsOfCart,
 	updateQuantityOfProduct,
 	deleteAllProductsfromCart,
+	finishPurchase,
 } from '../controllers/cart.controller.js';
 
 const cartRouter = Router();
@@ -21,5 +22,6 @@ cartRouter.delete('/:cid/products/:pid', deleteOneProductfromCart);
 cartRouter.put('/:cid', updateAllProductsOfCart);
 cartRouter.put('/:cid/products/:pid', updateQuantityOfProduct);
 cartRouter.delete('/:cid', deleteAllProductsfromCart);
+cartRouter.get('/:cid/purchase', finishPurchase);
 
 export { cartRouter };

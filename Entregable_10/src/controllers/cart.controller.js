@@ -1,12 +1,3 @@
-// import CartManagerFileSystem from '../dao/CartManager.filesystem.js';
-// import CartManagerMongo from '../dao/CartManager.mongo.js';
-// import config from '../config/config.js';
-// // Genera una instancia según la base de datos que este activa
-// let cartManager;
-// config.mongoDbActive === 'yes'
-// 	? (cartManager = new CartManagerMongo())
-// 	: (cartManager = new CartManagerFileSystem('./src/dao/db/carts.json'));
-
 import { CartService } from '../services/index.js';
 
 // Muestra el listado de carritos
@@ -94,6 +85,14 @@ export const deleteAllProductsfromCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
 		res.status(204).send(await CartService.deleteAllProductsfromCart(cid));
+	} catch (error) {
+		res.status(500).send(`Internal Server Error: ${error}`);
+	}
+};
+
+// Finaliza la compra
+export const finishPurchase = async (req, res) => {
+	try {
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
