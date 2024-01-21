@@ -1,6 +1,5 @@
 import { ProductService, CartService } from '../services/index.js';
-import selectedPersistence from '../config/persistence.js';
-import UserDTO from '../DTO/user.dto.js';
+import config from '../config/config.js';
 
 // Vista para loguear un usuario
 export const renderLogin = (req, res) => {
@@ -23,9 +22,8 @@ export const renderRegister = (req, res) => {
 // Vista para mostrar el listado de productos (permite a filtrar a traves de req.query)
 export const renderProductsPage = async (req, res) => {
 	try {
-		if (selectedPersistence.persistence === 'MONGO') {
-			const userData = req.session.user;
-			const user = new UserDTO(userData);
+		if (config.persistence === 'MONGO') {
+			const user = req.session.user;
 
 			const { limit, page, sort, category, status, title } = req.query;
 

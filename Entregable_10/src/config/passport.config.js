@@ -92,7 +92,6 @@ const initializePassport = () => {
 							email: config.adminMail,
 							age: config.adminAge,
 							password: createHash(config.adminPass),
-							cart: config.adminCart,
 							role: config.adminRole,
 						};
 

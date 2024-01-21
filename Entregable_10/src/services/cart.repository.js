@@ -54,7 +54,7 @@ export default class CartRepository {
 
 			const productExist = cart.products.find(
 				// Iguala el tipo de valor de la ID convirtiéndolos a string
-				(item) => String(item.product) === String(productID)
+				(item) => String(item.product._id) === String(productID)
 			);
 
 			if (productExist) {
@@ -195,4 +195,6 @@ export default class CartRepository {
 			return;
 		}
 	}
+
+	async updateCartAfterPurchase(cartID, productsWithoutStock) {}
 }

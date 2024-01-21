@@ -90,8 +90,7 @@ export const deleteAllProductsfromCart = async (req, res) => {
 	}
 };
 
-// Finaliza la compra
-export const finishPurchase = async (req, res) => {
+export const purchaseProductsInCart = async (req, res) => {
 	try {
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
