@@ -3,6 +3,7 @@ import {
 	ProductService,
 	TicketService,
 } from '../services/index.js';
+import UserDTO from '../DTO/user.dto.js';
 
 // Muestra el listado de carritos
 export const getCarts = async (req, res) => {
@@ -99,6 +100,9 @@ export const purchaseProductsInCart = async (req, res) => {
 		let { cid } = req.params;
 		const cart = await CartService.getCartById(cid);
 
+		// const userData = req.session.user;
+		// const user = new UserDTO(userData)
+
 		let productStockOk = [];
 		let productStockNone = [];
 		let ticket = null;
@@ -127,6 +131,7 @@ export const purchaseProductsInCart = async (req, res) => {
 
 		const ticketData = {
 			amount: totalPricePurchase,
+			//purchaser: user.email,
 			purchaser: 'test@test.com',
 		};
 
