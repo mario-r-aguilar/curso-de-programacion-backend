@@ -101,6 +101,7 @@ export const purchaseProductsInCart = async (req, res) => {
 
 		let productStockOk = [];
 		let productStockNone = [];
+		let ticket = null;
 
 		for (const productInCart of cart.products) {
 			let product = await ProductService.getProductById(
@@ -117,12 +118,34 @@ export const purchaseProductsInCart = async (req, res) => {
 				);
 				productStockOk.push(product);
 			}
-
-			console.log('1', productStockNone);
-			console.log('2', productStockOk);
 		}
 
-		res.send('test');
+		let totalPricePurchase = productStockOk.reduce(
+			(total, product) => total + product.price,
+			0
+		);
+
+		const ticketData = {
+			amount: totalPricePurchase,
+			purchaser: 'test@test.com',
+		};
+
+		if (ticketData.amount !== 0) {
+			ticket = await TicketService.addTicket(ticketData);
+		}
+
+		let productStockNoneIDs = productStockNone.map((product) => {
+			return product._id.toString();
+		});
+
+		//console.log('0', productStockNone);
+
+		res.send({
+			status: 'success',
+			ticket: ticket !== null ? ticket : 'ticket not generated',
+			productsWithoutStock:
+				productStockNoneIDs.length > 0 ? productStockNoneIDs : 'none',
+		});
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
