@@ -1,19 +1,26 @@
 import fs from 'node:fs';
+import { v4 as uuidv4 } from 'uuid';
+import ProductDAOInterface from '../productDaoInterface.js';
 
-class ProductManagerFileSystem {
-	constructor(path) {
-		this.path = path;
-		// Si el usuario no brinda una ruta, crea el archivo con un array vacío
-		if (!this.path)
-			fs.writeFileSync('./DAO/file/db/products.json', JSON.stringify([]));
+export default class ProductFileDAO extends ProductDAOInterface {
+	constructor() {
+		super();
+		this.path = './src/DAO/file/db/products.json';
+
+		// Si el usuario no brinda una ruta, crea el archivo
+		if (!fs.existsSync(this.path)) {
+			fs.writeFileSync(this.path, JSON.stringify([]));
+		}
 	}
 
-	/**
-	 * Obtiene la lista de productos.
-	 * @param {String} Cantidad de productos para mostrar
-	 * @returns {Array} Listado de productos
-	 */
-	async getProducts(limit) {
+	async get(
+		limit,
+		page = null,
+		sort = null,
+		category = null,
+		status = null,
+		title = null
+	) {
 		try {
 			let productList = await fs.promises.readFile(this.path, 'utf-8');
 			productList = JSON.parse(productList);
@@ -25,26 +32,23 @@ class ProductManagerFileSystem {
 			}
 		} catch (err) {
 			console.error(
-				`No es posible mostrar los productos.\n 
+				`Products cannot be displayed.\n 
             Error: ${err}`
 			);
 			return;
 		}
 	}
 
-	/**
-	 * Busca un producto mediante su ID.
-	 * @param {Number} ID del producto a buscar
-	 * @returns {Object} Producto buscado
-	 */
-	async getProductById(productID) {
+	async getById(productID) {
 		try {
 			const productList = await this.getProducts();
 
-			const productSearch = productList.find((prod) => prod.id == productID);
+			const productSearch = productList.find(
+				(product) => product._id == productID
+			);
 
 			if (productSearch) {
-				console.info('Producto encontrado!');
+				console.info('Product found!');
 				return productSearch;
 			} else {
 				console.error(`ID ${productID} not found`);
@@ -52,40 +56,14 @@ class ProductManagerFileSystem {
 			}
 		} catch {
 			console.error(
-				`No es posible mostrar el producto. \n 
+				`Product cannot be displayed. \n 
             Error: ${err}`
 			);
 			return;
 		}
 	}
 
-	/**
-	 * Permite obtener una ID que luego será usada por un nuevo producto agregado.
-	 * @returns {String} Nueva ID
-	 */
-	#getNewID = async () => {
-		try {
-			const productList = await this.getProducts();
-			if (productList.length === 0) return '1';
-			// almacena el indice del último producto agregado
-			const lastProductAdd = productList[productList.length - 1];
-			// genera una ID (último índice +1) y la convierte a string
-			const newID = lastProductAdd.id + 1;
-			return newID.toString();
-		} catch (err) {
-			console.error(
-				`No es posible asignar una ID.\n 
-        Error: ${err}`
-			);
-			return;
-		}
-	};
-
-	/**
-	 * Agrega un nuevo producto.
-	 * @param {Object} Nuevo producto a agregar
-	 */
-	async addProduct(newProduct) {
+	async add(newProduct) {
 		try {
 			const {
 				title,
@@ -109,7 +87,7 @@ class ProductManagerFileSystem {
 				!thumbnail
 			)
 				return console.error(
-					'Faltan campos por completar. Todos son obligatorios'
+					'There are missing fields to complete. They are all mandatory'
 				);
 
 			if (
@@ -122,20 +100,19 @@ class ProductManagerFileSystem {
 				typeof category !== 'string' ||
 				!Array.isArray(thumbnail)
 			) {
-				return console.error('Campos con tipos de datos no válidos');
+				return console.error('One or more fields have invalid data types');
 			}
 
 			const productList = await this.getProducts();
 
 			if (productList.some((product) => product.code === code))
 				return console.error(
-					`El código ${code} ya existe. Intente con otro código`
+					`The code ${code} already exists. Try another code`
 				);
 
-			const id = await this.#getNewID();
-
-			productList.push({
-				id,
+			const _id = uuidv4();
+			const newProductWithID = {
+				_id,
 				title,
 				description,
 				code,
@@ -144,53 +121,46 @@ class ProductManagerFileSystem {
 				stock,
 				category,
 				thumbnail,
-			});
+			};
+
+			productList.push(newProductWithID);
 
 			await fs.promises.writeFile(this.path, JSON.stringify(productList));
 
-			console.info(`El producto ${title} fue agregado satisfactoriamente`);
+			console.info(`The product ${title} was successfully added`);
 
-			return;
+			return newProductWithID;
 		} catch (err) {
 			console.error(
-				`No es posible agregar el producto. \n 
+				`It is not possible to add the product. \n 
                 Error: ${err}`
 			);
 			return;
 		}
 	}
 
-	/**
-	 * Elimina el producto que le indiquemos mediante su ID.
-	 * @param {number} ID del producto a eliminar
-	 */
-	async deleteProduct(productID) {
+	async delete(productID) {
 		try {
 			const productList = await this.getProducts();
 			// Crea un nuevo listado sin el producto cuya id se ingreso
 			const newProductList = productList.filter(
-				(product) => product.id != productID
+				(product) => product._id != productID
 			);
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
 
-			console.info(`El producto con la ID ${productID} fue eliminado`);
+			console.info(`The product with the ID ${productID} was removed`);
 			return;
 		} catch (err) {
 			console.error(
-				`No es posible eliminar el producto. \n 
+				`It is not possible to delete the product. \n 
                 Error: ${err}`
 			);
 			return;
 		}
 	}
 
-	/**
-	 * Permite actualizar los atributos de un producto.
-	 * @param {number} ID del producto a actualizar
-	 * @param {Object} Producto con los campos actualizados
-	 */
-	async updateProduct(productID, productToChanged) {
+	async update(productID, productUpdated) {
 		try {
 			const {
 				title,
@@ -201,13 +171,13 @@ class ProductManagerFileSystem {
 				stock,
 				category,
 				thumbnail,
-			} = productToChanged;
+			} = productUpdated;
 
 			const productList = await this.getProducts();
 
 			// Genera un nuevo listado con el producto actualizado
 			const updatedProductList = productList.map((product) => {
-				if (product.id === productID) {
+				if (product._id === productID) {
 					return {
 						...product,
 						title,
@@ -224,21 +194,23 @@ class ProductManagerFileSystem {
 				}
 			});
 
+			const updatedProduct = updatedProductList.find(
+				(product) => product._id === productID
+			);
+
 			await fs.promises.writeFile(
 				this.path,
 				JSON.stringify(updatedProductList)
 			);
 
-			console.info(`El producto con ID ${productID} fue actualizado`);
-			return;
+			console.info(`The product with ID ${productID} was updated`);
+			return updatedProduct;
 		} catch (err) {
 			console.error(
-				`No es posible actualizar el producto. \n 
+				`It is not possible to update the product. \n 
 	Error: ${err}`
 			);
 			return;
 		}
 	}
 }
-
-export default ProductManagerFileSystem;

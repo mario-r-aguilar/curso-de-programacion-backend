@@ -47,24 +47,23 @@ switch (selectedPersistence.persistence) {
 			Chat = ChatMongo;
 			Ticket = TicketMongo;
 		} catch (error) {
-			config.error('Persistence not available', error);
+			selectedPersistence.error('Persistence not available', error);
 		}
 
 		break;
 
 	case 'FILE':
 		try {
+			console.info('File DB connected');
 			const { default: ProductFile } = await import(
-				'./file/ProductManager.filesystem.js'
+				'./file/ProductFile.dao.js'
 			);
-			const { default: CartFile } = await import(
-				'./file/ProductManager.filesystem.js'
-			);
+			const { default: CartFile } = await import('./file/CartFile.dao.js');
 
 			Product = ProductFile;
 			Cart = CartFile;
 		} catch (error) {
-			config.error('Persistence not available', error);
+			selectedPersistence.error('Persistence not available', error);
 		}
 
 		break;
