@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { roleControl } from '../middlewares/roleControl.middleware.js';
+import passport from 'passport';
+import { roleControl } from '../middlewares/roleControl.middleware.js'; // Se desactiva para poder trabajar desde postman
 import {
 	getCarts,
 	getCartById,
@@ -26,6 +27,10 @@ cartRouter.delete('/:cid/products/:pid', deleteOneProductfromCart);
 cartRouter.put('/:cid', updateAllProductsOfCart);
 cartRouter.put('/:cid/products/:pid', updateQuantityOfProduct);
 cartRouter.delete('/:cid', deleteAllProductsfromCart);
-cartRouter.get('/:cid/purchase', purchaseProductsInCart);
+cartRouter.get(
+	'/:cid/purchase',
+	passport.authenticate('current', { session: false }),
+	purchaseProductsInCart
+);
 
 export { cartRouter };

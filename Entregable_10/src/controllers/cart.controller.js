@@ -98,15 +98,16 @@ export const deleteAllProductsfromCart = async (req, res) => {
 export const purchaseProductsInCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
+
+		// Variables y constantes
 		const cart = await CartService.getCartById(cid);
-
-		// const userData = req.session.user;
-		// const user = new UserDTO(userData)
-
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
 		let productStockOk = [];
 		let productStockNone = [];
 		let ticket = null;
 
+		// Manejo de stock y carrito resultante
 		for (const productInCart of cart.products) {
 			let product = await ProductService.getProductById(
 				productInCart.product._id
@@ -120,10 +121,16 @@ export const purchaseProductsInCart = async (req, res) => {
 					productInCart.product._id,
 					product
 				);
+				product.price *= productInCart.quantity;
 				productStockOk.push(product);
+				await CartService.deleteOneProductfromCart(
+					cid,
+					productInCart.product._id
+				);
 			}
 		}
 
+		// Generación de ticket para response
 		let totalPricePurchase = productStockOk.reduce(
 			(total, product) => total + product.price,
 			0
@@ -131,19 +138,17 @@ export const purchaseProductsInCart = async (req, res) => {
 
 		const ticketData = {
 			amount: totalPricePurchase,
-			//purchaser: user.email,
-			purchaser: 'test@test.com',
+			purchaser: user.email,
 		};
 
 		if (ticketData.amount !== 0) {
 			ticket = await TicketService.addTicket(ticketData);
 		}
 
+		// Ids de productos sin stock para response
 		let productStockNoneIDs = productStockNone.map((product) => {
-			return product._id.toString();
+			return product._id;
 		});
-
-		//console.log('0', productStockNone);
 
 		res.send({
 			status: 'success',
