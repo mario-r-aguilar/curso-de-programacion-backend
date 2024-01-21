@@ -1,4 +1,8 @@
-import { CartService } from '../services/index.js';
+import {
+	CartService,
+	ProductService,
+	TicketService,
+} from '../services/index.js';
 
 // Muestra el listado de carritos
 export const getCarts = async (req, res) => {
@@ -92,6 +96,33 @@ export const deleteAllProductsfromCart = async (req, res) => {
 
 export const purchaseProductsInCart = async (req, res) => {
 	try {
+		let { cid } = req.params;
+		const cart = await CartService.getCartById(cid);
+
+		let productStockOk = [];
+		let productStockNone = [];
+
+		for (const productInCart of cart.products) {
+			let product = await ProductService.getProductById(
+				productInCart.product._id
+			);
+
+			if (product.stock < productInCart.quantity) {
+				productStockNone.push(product);
+			} else {
+				product.stock -= productInCart.quantity;
+				await ProductService.updateProduct(
+					productInCart.product._id,
+					product
+				);
+				productStockOk.push(product);
+			}
+
+			console.log('1', productStockNone);
+			console.log('2', productStockOk);
+		}
+
+		res.send('test');
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}

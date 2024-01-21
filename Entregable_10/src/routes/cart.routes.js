@@ -17,7 +17,11 @@ const cartRouter = Router();
 cartRouter.get('/', getCarts);
 cartRouter.get('/:cid', getCartById);
 cartRouter.post('/', addCart);
-cartRouter.post('/:cid/products/:pid', roleControl('USER'), addProductToCart);
+cartRouter.post(
+	'/:cid/products/:pid',
+	//roleControl('USER'),
+	addProductToCart
+);
 cartRouter.delete('/:cid/products/:pid', deleteOneProductfromCart);
 cartRouter.put('/:cid', updateAllProductsOfCart);
 cartRouter.put('/:cid/products/:pid', updateQuantityOfProduct);
