@@ -1,8 +1,4 @@
-import {
-	CartService,
-	ProductService,
-	TicketService,
-} from '../services/index.js';
+import { CartService } from '../services/index.js';
 import UserDTO from '../DTO/user.dto.js';
 
 // Muestra el listado de carritos
@@ -98,63 +94,33 @@ export const deleteAllProductsfromCart = async (req, res) => {
 export const purchaseProductsInCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
-
-		// Variables y constantes
-		const cart = await CartService.getCartById(cid);
+		const cart = CartService.getCartById(cid);
 		const userData = req.session.user;
+
+		if (!userData) {
+			return res
+				.status(401)
+				.send({
+					status: 'error',
+					message: 'unauthorized: you are not logged in',
+				});
+		}
+		if (!cart) {
+			return res
+				.status(404)
+				.send({
+					status: 'error',
+					message: 'not found: the cart does not exist',
+				});
+		}
+
 		const user = new UserDTO(userData);
-		let productStockOk = [];
-		let productStockNone = [];
-		let ticket = null;
 
-		// Manejo de stock y carrito resultante
-		for (const productInCart of cart.products) {
-			let product = await ProductService.getProductById(
-				productInCart.product._id
-			);
-
-			if (product.stock < productInCart.quantity) {
-				productStockNone.push(product);
-			} else {
-				product.stock -= productInCart.quantity;
-				await ProductService.updateProduct(
-					productInCart.product._id,
-					product
-				);
-				product.price *= productInCart.quantity;
-				productStockOk.push(product);
-				await CartService.deleteOneProductfromCart(
-					cid,
-					productInCart.product._id
-				);
-			}
-		}
-
-		// Generación de ticket para response
-		let totalPricePurchase = productStockOk.reduce(
-			(total, product) => total + product.price,
-			0
-		);
-
-		const ticketData = {
-			amount: totalPricePurchase,
-			purchaser: user.email,
-		};
-
-		if (ticketData.amount !== 0) {
-			ticket = await TicketService.addTicket(ticketData);
-		}
-
-		// Ids de productos sin stock para response
-		let productStockNoneIDs = productStockNone.map((product) => {
-			return product._id;
-		});
+		const payload = await CartService.purchaseProductsInCart(cid, user);
 
 		res.send({
 			status: 'success',
-			ticket: ticket !== null ? ticket : 'ticket not generated',
-			productsWithoutStock:
-				productStockNoneIDs.length > 0 ? productStockNoneIDs : 'none',
+			payload: payload,
 		});
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);

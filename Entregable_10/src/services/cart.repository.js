@@ -1,6 +1,4 @@
-import ProductMongoDAO from '../DAO/mongo/ProductMongo.dao.js';
-
-let productMongoDAO = new ProductMongoDAO();
+import { ProductService, TicketService } from '../services/index.js';
 
 export default class CartRepository {
 	constructor(dao) {
@@ -46,7 +44,7 @@ export default class CartRepository {
 	async addProductToCart(cartID, productID) {
 		try {
 			const cart = await this.getCartById(cartID);
-			const product = await productMongoDAO.getById(productID);
+			const product = await ProductService.getProductById(productID);
 
 			if (!cart || !product) {
 				throw new Error('The cart and/or the product does not exist');
@@ -77,7 +75,7 @@ export default class CartRepository {
 	async deleteOneProductfromCart(cartID, productID) {
 		try {
 			const cart = await this.getCartById(cartID);
-			const product = await productMongoDAO.getById(productID);
+			const product = await ProductService.getProductById(productID);
 
 			if (!cart || !product) {
 				throw new Error('The cart and/or the product does not exist');
@@ -140,7 +138,7 @@ export default class CartRepository {
 	async updateQuantityOfProduct(cartID, productID, newQuantity) {
 		try {
 			const cart = await this.getCartById(cartID);
-			const product = await productMongoDAO.getById(productID);
+			const product = await ProductService.getProductById(productID);
 
 			if (!cart || !product) {
 				throw new Error('The cart and/or the product does not exist');
@@ -196,5 +194,69 @@ export default class CartRepository {
 		}
 	}
 
-	async updateCartAfterPurchase(cartID, productsWithoutStock) {}
+	async purchaseProductsInCart(cartID, user) {
+		try {
+			const cart = await this.getCartById(cartID);
+			let productStockOk = [];
+			let productStockNone = [];
+			let ticket = null;
+
+			// Manejo de stock y carrito resultante
+			for (const productInCart of cart.products) {
+				let product = await ProductService.getProductById(
+					productInCart.product._id
+				);
+
+				if (product.stock < productInCart.quantity) {
+					productStockNone.push(product);
+				} else {
+					product.stock -= productInCart.quantity;
+					await ProductService.updateProduct(
+						productInCart.product._id,
+						product
+					);
+					product.price *= productInCart.quantity;
+					productStockOk.push(product);
+					await this.deleteOneProductfromCart(
+						cartID,
+						productInCart.product._id
+					);
+				}
+			}
+
+			// Generación de ticket para response
+			let totalPricePurchase = productStockOk.reduce(
+				(total, product) => total + product.price,
+				0
+			);
+
+			const ticketData = {
+				amount: totalPricePurchase,
+				purchaser: user.email,
+			};
+
+			if (ticketData.amount !== 0) {
+				ticket = await TicketService.addTicket(ticketData);
+			}
+
+			// Ids de productos sin stock para response
+			let productStockNoneIDs = productStockNone.map((product) => {
+				return product._id;
+			});
+
+			const payload = {
+				status: 'success',
+				ticket: ticket !== null ? ticket : 'ticket not generated',
+				productsWithoutStock:
+					productStockNoneIDs.length > 0 ? productStockNoneIDs : 'none',
+			};
+			return payload;
+		} catch (error) {
+			console.error(
+				`it is not possible to make the purchase.\n 
+			Error: ${error}`
+			);
+			return;
+		}
+	}
 }
