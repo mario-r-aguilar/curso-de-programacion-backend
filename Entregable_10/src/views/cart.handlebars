@@ -8,16 +8,13 @@
 	>Seguir comprando</button>
 </div>
 
-{{! Por el momento solo muestra la id y cantidad de los productos que están en el carrito }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerCartProducts'
 >
 
 	{{#if cart.products.length}}
-
 		{{#each cart.products}}
-
 			<div
 				class='card p-3 mb-3 shadow-lg'
 				id='cardCartProduct'
@@ -25,24 +22,24 @@
 			>
 				<div class='card-body'>
 					<h6 class='card-title mb-3 ps-1 pb-1 text-light bg-secondary'>
-						<b class='card-title'>ID: {{this.product._id}}</b>
+						<b class='card-title'>{{this.product.title}}</b>
 					</h6>
-					<span class='card-text'>Cantidad: </span>
-					<p class='card-text'>
-						<b>{{this.quantity}}</b>
-					</p>
+					<img
+						class='card-img-top'
+						src='{{this.product.thumbnail}}'
+						alt='{{this.product.title}}'
+					/>
+					<p class='card-text'><b>Precio unitario: ${{this.product.price}}</b></p>
+					<p class='card-text'><b>Cantidad: {{this.quantity}}</b></p>
 					<button class='btn btn-danger btnRemoveProductToCart'>Quitar del
 						Carrito</button>
-
 				</div>
 			</div>
 
 		{{/each}}
 	{{else}}
-
 		<h4 class='text-bg-danger p-3 text-start'>No tienes productos en el
 			carrito</h4>
-
 	{{/if}}
 
 </div>
