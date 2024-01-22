@@ -1,5 +1,6 @@
 import { ProductService, CartService } from '../services/index.js';
 import selectedPersistence from '../config/persistence.js';
+import UserDTO from '../DTO/user.dto.js';
 
 // Vista para loguear un usuario
 export const renderLogin = (req, res) => {
@@ -23,7 +24,8 @@ export const renderRegister = (req, res) => {
 export const renderProductsPage = async (req, res) => {
 	try {
 		if (selectedPersistence.persistence === 'MONGO') {
-			const user = req.session.user;
+			const userData = req.session.user;
+			const user = new UserDTO(userData);
 
 			const { limit, page, sort, category, status, title } = req.query;
 
@@ -57,9 +59,11 @@ export const renderProductsPage = async (req, res) => {
 export const renderCart = async (req, res) => {
 	try {
 		const { cid } = req.params;
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
 		const cart = await CartService.getCartById(cid);
 
-		res.render('cart', { cart, title: 'Carrito' });
+		res.render('cart', { cart, user, title: 'Carrito' });
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}

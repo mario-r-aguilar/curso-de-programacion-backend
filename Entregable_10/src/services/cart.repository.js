@@ -145,7 +145,7 @@ export default class CartRepository {
 			}
 
 			const productExistInCart = cart.products.find(
-				(item) => String(item.product._id) === String(productId)
+				(item) => String(item.product._id) === String(productID)
 			);
 
 			// Almaceno el valor de la nueva cantidad

@@ -1,18 +1,28 @@
-<h1 class='text-center'>Carrito</h1>
+<h1 class='text-center mt-3 mb-3'>Carrito</h1>
+<div class='alert alert-info w-50' id='totalPurchase'></div>
 
 {{! Vuelve a la página de inicio }}
-<div>
+<div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'>
 	<button
-		class='btn btn-dark border border-dark shadow ms-5 mb-2'
+		class='btn btn-dark border border-dark shadow ms-5 mb-3'
 		id='btnBackToBuy'
 	>Seguir comprando</button>
+
+	<button
+		class='btn btn-primary border border-dark shadow ms-5 mb-3'
+		id='btnFinishBuy'
+	>Finalizar la compra</button>
+
 </div>
+
+<div id='purchaseDetail'></div>
 
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerCartProducts'
 >
 
+	<input type='hidden' id='getCartId' value='{{user.cart}}' />
 	{{#if cart.products.length}}
 		{{#each cart.products}}
 			<div
@@ -30,9 +40,25 @@
 						alt='{{this.product.title}}'
 					/>
 					<p class='card-text'><b>Precio unitario: ${{this.product.price}}</b></p>
-					<p class='card-text'><b>Cantidad: {{this.quantity}}</b></p>
-					<button class='btn btn-danger btnRemoveProductToCart'>Quitar del
-						Carrito</button>
+					<p class='card-text'><b>Cantidad: {{this.quantity}} </b>
+					</p>
+					<span>
+						<input
+							type='number'
+							class='productInCartQuantity w-25'
+							id='productQty_{{this.product._id}}'
+							min='1'
+							value='{{this.quantity}}'
+						/>
+					</span>
+					<button
+						class='btn btn-success btnProductInCart btnChangeProductQty mb-3 mt-3'
+						data-product-id='{{this.product._id}}'
+					>Cambiar cantidad</button>
+					<button
+						class='btn btn-danger btnProductInCart btnRemoveProduct mb-3'
+						data-product-id='{{this.product._id}}'
+					>Quitar Producto</button>
 				</div>
 			</div>
 
