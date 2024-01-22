@@ -1,3 +1,5 @@
+const cartID = document.querySelector('#getCartId').value;
+
 // Función para la navegación por las páginas y uso de filtros
 function navigateToPage(pageValue) {
 	const page = document.querySelector('#' + pageValue).value;
@@ -17,31 +19,6 @@ function resetPage() {
 	const url = '/products';
 	document.location.href = url;
 }
-
-// Manejo de los botones para el desplazamiento entre páginas
-document.querySelector('#btnPrev').onclick = () => navigateToPage('prevPage');
-document.querySelector('#btnNext').onclick = () => navigateToPage('nextPage');
-
-// Manejo del botón de filtros
-document.querySelector('#btnApplyFilters').onclick = () => {
-	const totalPages = document.querySelector('#pageErrorAux').value;
-	const pageInput = document.querySelector('#page').value;
-
-	if (parseInt(pageInput) > parseInt(totalPages) || parseInt(pageInput) < 1) {
-		const messageError = document.getElementById('pageError');
-		messageError.innerHTML = '';
-		const div = document.createElement('div');
-		div.innerHTML = `
-			<p class='text-bg-danger ms-5 mt-3 p-1 text-start w-75'>La página no existe</p>
-		`;
-		messageError.append(div);
-	} else {
-		navigateToPage('page');
-	}
-};
-
-// Manejo del botón para volver a la página de inicio
-document.querySelector('#btnCleanFilters').onclick = () => resetPage();
 
 // Renderización de la página para ver los detalles de un producto
 const renderOneProduct = (id) => {
@@ -100,11 +77,8 @@ const renderOneProduct = (id) => {
 					<span class='card-text'>Categoría: </span>
 					<p class='card-text'>
 						<b>${data.category}</b>
-					</p>
-					<span class='card-text'>ID: </span>
-					<p class='card-text'>
-						<b>${data.id || data._id}</b>
-					</p>
+					</p>									
+					<input type="hidden" id="getProductId" value="${data._id}">
 					<button class="btn btn-success shadow mb-3 d-block btnAddProductToCart">Agregar al Carrito</button>
 					<button class="btn btn-primary border border-dark shadow mb-3 d-block " id="btnBack">Volver</button>
 				</div>
@@ -118,15 +92,71 @@ const renderOneProduct = (id) => {
 		});
 };
 
+const addProductToCart = async (id) => {
+	fetch(`/api/carts/${cartID}/products/${id}`, { method: 'post' })
+		.then((res) => {
+			if (res.ok) {
+				const productAddMessage = document.getElementById(
+					`productAddSuccess_${id}`
+				);
+				productAddMessage.innerHTML = '';
+				const div = document.createElement('div');
+				div.classList.add('alert', 'alert-success');
+				div.innerHTML = `
+			<p>Producto agregado</p>
+			`;
+				productAddMessage.appendChild(div);
+
+				setTimeout(() => {
+					productAddMessage.innerHTML = '';
+				}, 1500);
+			}
+		})
+		.catch((error) => {
+			console.error(error);
+		});
+};
+
+// Manejo de los botones para el desplazamiento entre páginas
+document.querySelector('#btnPrev').onclick = () => navigateToPage('prevPage');
+document.querySelector('#btnNext').onclick = () => navigateToPage('nextPage');
+
+// Manejo del botón de filtros
+document.querySelector('#btnApplyFilters').onclick = () => {
+	const totalPages = document.querySelector('#pageErrorAux').value;
+	const pageInput = document.querySelector('#page').value;
+
+	if (parseInt(pageInput) > parseInt(totalPages) || parseInt(pageInput) < 1) {
+		const messageError = document.getElementById('pageError');
+		messageError.innerHTML = '';
+		const div = document.createElement('div');
+		div.innerHTML = `
+			<p class='text-bg-danger ms-5 mt-3 p-1 text-start w-75'>La página no existe</p>
+		`;
+		messageError.append(div);
+	} else {
+		navigateToPage('page');
+	}
+};
+
+// Manejo del botón para volver a la página de inicio
+document.querySelector('#btnCleanFilters').onclick = () => resetPage();
+
 // Manejo del botón para ver los detalles de un producto
-document.querySelectorAll('.btnProductDetail').forEach((button) => {
-	// Escucha los eventos clic de los botones de detalle de las card
-	button.addEventListener('click', (event) => {
-		// Guarda la id de la card donde se presiono el botón
-		const id = event.target
-			.closest('.card')
-			.querySelector('#getProductId').value;
-		// Ejecuta la función para renderizar el producto elegido
-		renderOneProduct(id);
+document
+	.querySelectorAll('.btnProductDetail, .btnAddProductToCart')
+	.forEach((button) => {
+		// Escucha los eventos clic de los botones de detalle de las card
+		button.addEventListener('click', (event) => {
+			// Guarda la id de la card donde se presiono el botón
+			const id = event.target
+				.closest('.card')
+				.querySelector('#getProductId').value;
+
+			if (button.classList.contains('btnProductDetail')) {
+				renderOneProduct(id);
+			} else if (button.classList.contains('btnAddProductToCart')) {
+				addProductToCart(id);
+			}
+		});
 	});
-});

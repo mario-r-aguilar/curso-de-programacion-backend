@@ -94,6 +94,8 @@
 
 	</div>
 
+	<input type='hidden' id='getCartId' value='{{user.cart}}' />
+
 	{{! Bloque de renderizado de productos }}
 	<div
 		class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
@@ -135,6 +137,7 @@
 						{{/if}}
 					
 						<button class="btn btn-success shadow mb-3 btnAddProductToCart">Agregar al Carrito</button>
+						<p id="productAddSuccess_{{this._id}}"></p>
 						<button class="btn btn-primary shadow mb-3 btnProductDetail">Ver detalles</button>
 					</div>
 				</div>
