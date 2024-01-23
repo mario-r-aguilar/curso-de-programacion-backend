@@ -30,10 +30,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 			} else {
 				return productList;
 			}
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`Products cannot be displayed.\n 
-            Error: ${err}`
+            Error: ${error}`
 			);
 			return;
 		}
@@ -54,10 +54,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				console.error(`ID ${productID} not found`);
 				return;
 			}
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`Product cannot be displayed. \n 
-            Error: ${err}`
+            Error: ${error}`
 			);
 			return;
 		}
@@ -129,10 +129,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 			console.info(`The product ${title} was successfully added`);
 			return newProductWithID;
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to add the product. \n 
-                Error: ${err}`
+                Error: ${error}`
 			);
 			return;
 		}
@@ -150,10 +150,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 			console.info(`The product with the ID ${productID} was removed`);
 			return;
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to delete the product. \n 
-                Error: ${err}`
+                Error: ${error}`
 			);
 			return;
 		}
@@ -204,10 +204,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 			console.info(`The product with ID ${productID} was updated`);
 			return updatedProduct;
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to update the product. \n 
-	Error: ${err}`
+	Error: ${error}`
 			);
 			return;
 		}

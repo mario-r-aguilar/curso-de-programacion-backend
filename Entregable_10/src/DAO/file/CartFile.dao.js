@@ -15,10 +15,10 @@ export default class CartFileDAO {
 		try {
 			const cartsList = await fs.promises.readFile(this.path, 'utf-8');
 			return JSON.parse(cartsList);
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to obtain the carts.\n 
-            Error: ${err}`
+            Error: ${error}`
 			);
 			return;
 		}
@@ -37,10 +37,10 @@ export default class CartFileDAO {
 				console.error(`ID ${cartID} not found`);
 				return;
 			}
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to obtain the cart. \n 
-            Error: ${err}`
+            Error: ${error}`
 			);
 			return;
 		}
@@ -65,10 +65,10 @@ export default class CartFileDAO {
 
 			console.info(`The cart was successfully added`);
 			return newCartWithID;
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to add the cart. \n 
-            Error: ${err}`
+            Error: ${error}`
 			);
 			return;
 		}
@@ -83,10 +83,10 @@ export default class CartFileDAO {
 
 			console.info(`The cart with the ID ${cartID} was removed`);
 			return;
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to delete the cart.\n 
-				Error: ${err}`
+				Error: ${error}`
 			);
 			return;
 		}
@@ -98,7 +98,6 @@ export default class CartFileDAO {
 
 			const cartList = await this.get();
 
-			// Genera un nuevo listado con el producto actualizado
 			const updatedCartList = cartList.map((cart) => {
 				if (cart._id === cartID) {
 					return {
@@ -110,7 +109,6 @@ export default class CartFileDAO {
 				}
 			});
 
-			// Para retornar el producto actualizado
 			const updatedCart = updatedCartList.find(
 				(cart) => cart._id === cartID
 			);
@@ -122,10 +120,10 @@ export default class CartFileDAO {
 
 			console.info(`The cart with ID ${cartID} was updated`);
 			return updatedCart;
-		} catch (err) {
+		} catch (error) {
 			console.error(
 				`It is not possible to update the cart.\n 
-				Error: ${err}`
+				Error: ${error}`
 			);
 			return;
 		}
