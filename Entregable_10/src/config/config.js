@@ -12,6 +12,7 @@ export default {
 	adminLastname: process.env.ADMIN_LASTNAME,
 	adminMail: process.env.ADMIN_MAIL,
 	adminAge: process.env.ADMIN_AGE,
+	adminCart: process.env.ADMIN_CART,
 	adminPass: process.env.ADMIN_PASS,
 	adminRole: process.env.ADMIN_ROLE,
 	gitHubClientId: process.env.CLIEN_ID,

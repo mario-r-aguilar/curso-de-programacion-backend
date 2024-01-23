@@ -78,8 +78,9 @@ const renderOneProduct = (id) => {
 					<p class='card-text'>
 						<b>${data.category}</b>
 					</p>									
-					<input type="hidden" id="getProductId" value="${data._id}">
+					<input type="hidden" id="getProductIdDetail" value="${data._id}">
 					<button class="btn btn-success shadow mb-3 d-block btnAddProductToCart">Agregar al Carrito</button>
+					<p id="productAddSuccess_${data._id}"></p>
 					<button class="btn btn-primary border border-dark shadow mb-3 d-block " id="btnBack">Volver</button>
 				</div>
 			</div>
@@ -87,11 +88,15 @@ const renderOneProduct = (id) => {
 			`;
 			html.appendChild(div);
 
+			const addToCartButton = div.querySelector('.btnAddProductToCart');
+			addToCartButton.addEventListener('click', () => addProductToCart(id));
+
 			// Manejo del botón para volver a la página de inicio desde la página de detalles de un producto
 			document.querySelector('#btnBack').onclick = () => resetPage();
 		});
 };
 
+// Manejo del botón para agregar productos al carrito
 const addProductToCart = async (id) => {
 	fetch(`/api/carts/${cartID}/products/${id}`, { method: 'post' })
 		.then((res) => {
@@ -148,10 +153,15 @@ document
 	.forEach((button) => {
 		// Escucha los eventos clic de los botones de detalle de las card
 		button.addEventListener('click', (event) => {
-			// Guarda la id de la card donde se presiono el botón
-			const id = event.target
-				.closest('.card')
-				.querySelector('#getProductId').value;
+			const closestCard = event.target.closest('.card');
+			const productIdHome = closestCard.querySelector('#getProductId');
+			const productIdDetails = closestCard.querySelector(
+				'#getProductIdDetail'
+			);
+
+			const id = productIdHome
+				? productIdHome.value
+				: productIdDetails.value;
 
 			if (button.classList.contains('btnProductDetail')) {
 				renderOneProduct(id);
