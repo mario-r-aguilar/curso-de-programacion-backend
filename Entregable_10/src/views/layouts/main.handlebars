@@ -19,11 +19,8 @@
 
 				<div class='container-fluid'> 						
 												
-							<div class="collapse navbar-collapse" id="navbarText">
-							<a class="navbar-brand" href="/">
-    							<img src="/static/img/home_img.png" width="30" height="30" alt="home_img.png">
-  							</a>
-							</div>						
+							<div class="collapse navbar-collapse" id="navbarText">					
+							</div>	
 
 							<h2 class='nav-item me-5'>Bienvenido
 								<span class='fw-bold text-primary'>{{user.name}}</span>
@@ -32,7 +29,21 @@
 								>{{user.lastname}}</span>
 							</h2>
 
-							<ul class='navbar-nav ms-auto mb-2 mb-lg-0'>
+							<ul class='navbar-nav ms-auto pt-3 mb-2 mb-lg-0'>
+
+								<li>
+									<a class="navbar-brand me-3 " href="/">
+    									<img src="/static/img/home_img.png" width="30" height="30" alt="home_img.png">
+										<span>Inicio</span>
+  									</a>
+								</li>
+
+								<li>
+									<a class="navbar-brand me-3 " href="/chat">
+    									<img src="/static/img/chat_img.png" width="30" height="30" alt="chat_img.png">
+										<span>Chat</span>
+  									</a>							
+								</li>
 							
 								<li class='nav-item btn-group'>
 
@@ -54,6 +65,9 @@
 									</ul>
 
 								</li>
+
+								
+								
 								<li class='nav-item'>
 									<form action='/api/sessions/logout' method='post'>
 										<button class='btn btn-danger ms-2 mt-2' type='submit'>
