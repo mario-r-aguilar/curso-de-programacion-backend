@@ -23,13 +23,15 @@ export const renderRegister = (req, res) => {
 // Vista para mostrar el listado de productos (permite a filtrar a traves de req.query)
 export const renderProductsPage = async (req, res) => {
 	try {
-		if (selectedPersistence.persistence === 'MONGO') {
-			const userData = req.session.user;
-			const user = new UserDTO(userData);
+		const isMongoPersistence =
+			selectedPersistence.persistence === 'MONGO' ? true : false;
+		let productsList;
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+		const { limit, page, sort, category, status, title } = req.query;
 
-			const { limit, page, sort, category, status, title } = req.query;
-
-			const productsList = await ProductService.getProducts(
+		if (isMongoPersistence === true) {
+			productsList = await ProductService.getProducts(
 				limit,
 				page,
 				parseInt(sort),
@@ -37,19 +39,16 @@ export const renderProductsPage = async (req, res) => {
 				status,
 				title
 			);
-
-			res.render('home', {
-				user,
-				productsList,
-				title: 'Lista de productos disponibles',
-			});
 		} else {
-			const productsList = await ProductService.getProducts(req.query.limit);
-			res.render('home', {
-				productsList,
-				title: 'Lista de productos',
-			});
+			productsList = await ProductService.getProducts(limit);
 		}
+
+		res.render('home', {
+			isMongoPersistence,
+			user,
+			productsList,
+			title: 'Lista de productos disponibles',
+		});
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}

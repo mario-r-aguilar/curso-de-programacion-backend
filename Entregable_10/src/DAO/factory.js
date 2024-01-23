@@ -59,9 +59,17 @@ switch (selectedPersistence.persistence) {
 				'./file/ProductFile.dao.js'
 			);
 			const { default: CartFile } = await import('./file/CartFile.dao.js');
+			const { default: UserFile } = await import('./file/UserFile.dao.js');
+			const { default: ChatFile } = await import('./file/ChatFile.dao.js');
+			const { default: TicketFile } = await import(
+				'./file/TicketFile.dao.js'
+			);
 
 			Product = ProductFile;
 			Cart = CartFile;
+			User = UserFile;
+			Chat = ChatFile;
+			Ticket = TicketFile;
 		} catch (error) {
 			selectedPersistence.error('Persistence not available', error);
 		}

@@ -1,5 +1,8 @@
 import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
+import CartFileDAO from './CartFile.dao.js';
+
+const cartFileDAO = new CartFileDAO();
 
 export default class UserFileDAO {
 	constructor() {
@@ -65,19 +68,11 @@ export default class UserFileDAO {
 
 	async add(newUser) {
 		try {
-			const { name, lastname, email, age, password, cart, role } = newUser;
+			let { name, lastname, email, age, password } = newUser;
 
 			age = parseInt(age);
 
-			if (
-				!name ||
-				!lastname ||
-				!email ||
-				!age ||
-				!password ||
-				!cart ||
-				!role
-			)
+			if (!name || !lastname || !email || !age || !password)
 				return console.error('Missing fields in user');
 
 			if (
@@ -85,10 +80,7 @@ export default class UserFileDAO {
 				typeof lastname !== 'string' ||
 				typeof email !== 'string' ||
 				typeof age !== 'number' ||
-				typeof password !== 'string' ||
-				typeof cart !== 'object' ||
-				cart === null ||
-				typeof role !== 'string'
+				typeof password !== 'string'
 			) {
 				return console.error('One or more fields have invalid data types');
 			}
@@ -100,18 +92,29 @@ export default class UserFileDAO {
 					`The email ${email} already exists. Try another email`
 				);
 
-			const _id = uuidv4();
+			let _id = uuidv4();
+			let role = 'USER';
 
-			const newUserWithID = {
+			let newUserWithID = {
 				_id,
 				name,
 				lastname,
 				email,
 				age,
 				password,
-				cart,
-				role: 'USER',
+				role,
 			};
+
+			const cartList = await cartFileDAO.get();
+			const emptyCart = cartList.find((cart) => cart.products.length === 0);
+			if (!emptyCart) {
+				console.error('No empty cart available. Please create a new one.');
+				return;
+			}
+			let cartFound = { _id: emptyCart._id, products: [] };
+
+			newUserWithID.cart = cartFound;
+
 			usersList.push(newUserWithID);
 
 			await fs.promises.writeFile(this.path, JSON.stringify(usersList));

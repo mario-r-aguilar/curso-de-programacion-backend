@@ -1,5 +1,10 @@
 <div id="pageComplete">	
 
+	{{!-- Información necesaria para home.js --}}
+	<input type='hidden' id='getCartId' value='{{user.cart}}' />
+	<input type='hidden' id='getUserRole' value='{{user.role}}' />
+	<input type='hidden' id='isMongoPersistence' value='{{isMongoPersistence}}' />
+
 	<div class='d-flex me-4  mb-3 flex-row justify-content-between flex-wrap'>
 		<h1 class="ps-4 ms-5 mt-3">Lista de productos</h1>
 
@@ -10,6 +15,8 @@
 	</div>
 
 	{{!-- Bloque de filtros --}}
+
+	{{#if isMongoPersistence}}
 	<div class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 		id='containerSearchOptions'>
 
@@ -94,10 +101,27 @@
 
 	</div>
 
-	<input type='hidden' id='getCartId' value='{{user.cart}}' />
-	<input type='hidden' id='getUserRole' value='{{user.role}}' />
+	{{else}}
+
+	<div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'
+		id='containerSearchOptionsFile'>
+
+		<div class="input-group m-3 w-25">
+			<label class="input-group-text" for='limit'>Limitar productos: </label>
+			<input class="form-control" id='limitFile' type='number' value='{{productsList.limit}}' />
+		</div>
+		
+	</div>
+		<div>
+			<button class="btn btn-primary border border-dark shadow ms-5 me-3" id="btnApplyFiltersFile">Aplicar límite</button>
+		</div>
+
+	{{/if}}
+
+	
 
 	{{! Bloque de renderizado de productos }}
+	{{#if isMongoPersistence}}
 	<div
 		class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 		id='containerProducts'
@@ -151,6 +175,64 @@
 		{{/if}}
 
 	</div>
+
+	{{else}}
+
+	<div
+		class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
+		id='containerProductsFile'
+	>
+
+		{{#if productsList.length}}
+
+			{{#each productsList}}
+
+				<div
+					class='card p-3 mb-3 shadow-lg'				
+					style='width: 18rem;'
+				>
+					<img				
+						src='{{this.thumbnail}}'
+						class='card-img-top'
+						alt='{{this.title}}'
+					/>
+					<div class='card-body'>
+						<h5 class='card-title mb-3 ps-1 pb-1 text-light bg-dark'>
+							<b class='card-title'>{{this.title}}</b>
+						</h5>
+						<span class='card-text'>Descripción: </span>
+						<p class='card-text'>
+							<b>{{this.description}}</b>
+						</p>					
+						<span class='card-text'>Precio: </span>
+						<p class='card-text'>
+							<b>$ {{this.price}}</b>
+						</p>					
+						<span class='card-text'>Categoría: </span>
+						<p class='card-text'>
+							<b>{{this.category}}</b>
+						</p>
+
+						{{#if this._id}}
+							<input type="hidden" id="getProductIdFile" value="{{this._id}}">
+						{{/if}}
+					
+						<button class="btn btn-success shadow mb-3 btnAddProductToCart">Agregar al Carrito</button>
+						<p id="productAddSuccess_{{this._id}}"></p>
+						<button class="btn btn-primary shadow mb-3 btnProductDetail">Ver detalles</button>
+					</div>
+				</div>
+
+			{{/each}}
+		{{else}}
+
+			<h4 class='text-bg-danger p-3 text-start'>No tienes productos disponibles</h4>
+
+		{{/if}}
+
+	</div>
+
+	{{/if}}
 </div>
 
 <script src="/static/js/home.js"></script>
