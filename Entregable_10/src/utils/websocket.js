@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import { ProductService, ChatService } from '../services/index.js';
+import selectedPersistence from '../config/persistence.js';
 
 export function socketServer(server) {
 	const io = new Server(server);
@@ -12,14 +13,22 @@ export function socketServer(server) {
 		let limitValue = 50;
 		let productList = await ProductService.getProducts(limitValue);
 		// Envía la lista de productos cuando un cliente se conecta
-		socket.emit('productList', productList);
+
+		if (selectedPersistence.persistence === 'MONGO') {
+			socket.emit('productList', productList);
+		} else {
+			socket.emit('productListFile', productList);
+		}
 
 		socket.on('updatedList', async (data) => {
 			let limitValue = 50;
 			let productList = await ProductService.getProducts(limitValue);
 			// Envía la lista de productos cada vez que es modificada
-			console.info(data);
-			socket.emit('productList', productList);
+			if (selectedPersistence.persistence === 'MONGO') {
+				socket.emit('productList', productList);
+			} else {
+				socket.emit('productListFile', productList);
+			}
 		});
 
 		// Manejo del chat

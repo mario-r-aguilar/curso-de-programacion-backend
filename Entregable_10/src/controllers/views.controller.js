@@ -71,7 +71,10 @@ export const renderCart = async (req, res) => {
 // Vista para mostrar el listado de productos y actualizarlos en tiempo real
 export const renderRealTimeProducts = (req, res) => {
 	try {
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
 		res.render('realTimeProducts', {
+			user,
 			title: 'Lista de productos en tiempo real',
 		});
 	} catch (error) {
@@ -82,7 +85,9 @@ export const renderRealTimeProducts = (req, res) => {
 // Vista para mostrar el chat e interactuar en él
 export const renderChat = (req, res) => {
 	try {
-		res.render('chat', { title: 'Chat' });
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+		res.render('chat', { user, title: 'Chat' });
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}

@@ -120,7 +120,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				status: true,
 				stock,
 				category,
-				thumbnail: [],
+				thumbnail,
 			};
 
 			productList.push(newProductWithID);

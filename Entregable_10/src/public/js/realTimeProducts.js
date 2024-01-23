@@ -5,6 +5,9 @@ const socket = io();
 socket.on('productList', (data) => {
 	renderProducts(data.docs);
 });
+socket.on('productListFile', (data) => {
+	renderProducts(data);
+});
 
 const renderProducts = async (data) => {
 	const productsList = document.getElementById('productsList');
