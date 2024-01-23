@@ -1,4 +1,17 @@
 const cartID = document.querySelector('#getCartId').value;
+const userRole = document.querySelector('#getUserRole').value;
+
+const adminButtonOption = () => {
+	if (userRole === 'ADMIN') {
+		const addProductButtonAdmin = document.querySelectorAll(
+			'.btnAddProductToCart'
+		);
+
+		addProductButtonAdmin.forEach((button) => {
+			button.setAttribute('disabled', 'disabled');
+		});
+	}
+};
 
 // Función para la navegación por las páginas y uso de filtros
 function navigateToPage(pageValue) {
@@ -89,7 +102,14 @@ const renderOneProduct = (id) => {
 			html.appendChild(div);
 
 			const addToCartButton = div.querySelector('.btnAddProductToCart');
-			addToCartButton.addEventListener('click', () => addProductToCart(id));
+
+			if (userRole === 'ADMIN') {
+				adminButtonOption();
+			} else {
+				addToCartButton.addEventListener('click', () =>
+					addProductToCart(id)
+				);
+			}
 
 			// Manejo del botón para volver a la página de inicio desde la página de detalles de un producto
 			document.querySelector('#btnBack').onclick = () => resetPage();
@@ -170,3 +190,5 @@ document
 			}
 		});
 	});
+
+adminButtonOption();
