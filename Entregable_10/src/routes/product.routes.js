@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import passport from 'passport';
 import {
 	getProducts,
 	getProductById,
@@ -9,10 +10,30 @@ import {
 
 const productRouter = Router();
 
-productRouter.get('/', getProducts);
-productRouter.get('/:pid', getProductById);
-productRouter.post('/', addProduct);
-productRouter.put('/:pid', updateProduct);
-productRouter.delete('/:pid', deleteProduct);
+productRouter.get(
+	'/',
+	passport.authenticate('current', { session: false }),
+	getProducts
+);
+productRouter.get(
+	'/:pid',
+	passport.authenticate('current', { session: false }),
+	getProductById
+);
+productRouter.post(
+	'/',
+	passport.authenticate('current', { session: false }),
+	addProduct
+);
+productRouter.put(
+	'/:pid',
+	passport.authenticate('current', { session: false }),
+	updateProduct
+);
+productRouter.delete(
+	'/:pid',
+	passport.authenticate('current', { session: false }),
+	deleteProduct
+);
 
 export { productRouter };

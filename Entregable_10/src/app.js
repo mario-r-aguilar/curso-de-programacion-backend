@@ -12,6 +12,7 @@ import session from 'express-session';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import config from './config/config.js';
+import cors from 'cors';
 
 const app = express();
 
@@ -21,6 +22,9 @@ const __dirname = getDirname(import.meta.url);
 app.use('/static', express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Inicializo cors
+app.use(cors());
 
 // Handlebars config
 app.engine('handlebars', handlebars.engine());
