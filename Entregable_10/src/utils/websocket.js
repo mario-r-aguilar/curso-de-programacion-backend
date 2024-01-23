@@ -31,6 +31,16 @@ export function socketServer(server) {
 			}
 		});
 
+		socket.on('productsLimit', async (data) => {
+			let productList = await ProductService.getProducts(data);
+			// Envía la lista de productos si se establece un límite
+			if (selectedPersistence.persistence === 'MONGO') {
+				socket.emit('productList', productList);
+			} else {
+				socket.emit('productListFile', productList);
+			}
+		});
+
 		// Manejo del chat
 		socket.on('message', async (data) => {
 			await ChatService.createMessage(data);

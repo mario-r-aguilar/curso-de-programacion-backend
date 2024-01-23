@@ -1,24 +1,58 @@
-<h1 class='mb-3'>Lista de productos en tiempo real</h1>
+<h1 class='mb-5 mt-3'>Lista de productos en tiempo real</h1>
 
+<div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'>
+	<div class='input-group m-3 w-25'>
+		<label class='input-group-text' for='limitProducts'>Productos por
+			pantalla:
+		</label>
+		<input
+			class='form-control'
+			id='limitProducts'
+			type='number'
+			min='0'
+			placeholder='50'
+		/>
+		<button
+			class='btn btn-dark border border-dark shadow'
+			id='btnLimitProducts'
+		>Limitar</button>
+	</div>
+
+	<div class='input-group m-3 w-50'>
+		<label class='input-group-text' for='searchInput'>Buscar en la página:
+		</label>
+		<input
+			class='form-control'
+			type='text'
+			id='searchInput'
+			placeholder='Buscar'
+		/>
+		<button
+			class='btn btn-dark border border-dark shadow'
+			id='btnSearchOnPage'
+		>Buscar
+		</button>
+	</div>
+</div>
+
+{{! Secciones donde se renderizaran los formularios y la lista de productos respectivamente }}
+<div class='w-50 ms-3' id='form'></div>
 {{! Según el botón que presionemos ejecuta la función de renderizado de su formulario }}
 <button
-	class='btn btn-success border border-dark shadow me-1 mb-3'
+	class='btn btn-success border border-dark shadow ms-3 mb-3'
 	id='btnAdd'
 	onclick='renderAddForm()'
 >Agregar Productos</button>
 <button
-	class='btn btn-warning border border-dark shadow ms-1 mb-3'
+	class='btn btn-warning border border-dark shadow ms-3 mb-3'
 	id='btnUpdate'
 	onclick='renderUpdateForm()'
 >Actualizar Productos</button>
 <button
-	class='btn btn-danger border border-dark shadow ms-1 mb-3'
+	class='btn btn-danger border border-dark shadow ms-3 mb-3'
 	id='btnDel'
 	onclick='renderDelForm()'
 >Eliminar Productos</button>
-
-{{! Secciones donde se renderizaran los formularios y la lista de productos respectivamente }}
-<div class='w-50' id='form'></div>
 
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'

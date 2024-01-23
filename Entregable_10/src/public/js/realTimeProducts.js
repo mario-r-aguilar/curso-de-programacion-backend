@@ -91,7 +91,7 @@ const renderAddForm = () => {
 		<input class="form-control mb-1 w-50" type='text' required id='category' name='category' placeholder='Categoría' />
         <input class="form-control mb-1 w-50" type='text' id='thumbnail' name='thumbnail' placeholder='Ubicación de la imagen' />        	
 		<button class='btn btn-primary border border-dark shadow me-1 mt-2' type='submit'>Agregar</button>
-        <button class='btn btn-primary border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+        <button class='btn btn-dark border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
 	</form>
     `;
 	form.appendChild(newForm);
@@ -238,7 +238,7 @@ const renderDelForm = () => {
 	<form id='delForm' method='post' action='/api/products/:pid'>
 		<input class="form-control mb-1 w-50" type='text' required id='id' name='id' placeholder='Id del producto' />
 		<button class='btn btn-primary border border-dark shadow me-1 mt-2' type='submit'>Eliminar</button>
-        <button class='btn btn-primary border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+        <button class='btn btn-dark border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
 	</form>
     `;
 	form.appendChild(newForm);
@@ -285,3 +285,36 @@ const renderDelForm = () => {
 		}
 	});
 };
+
+// Para limitar la cantidad de productos por pantalla
+const limitProducts = () => {
+	let limit = document.querySelector('#limitProducts').value;
+	socket.emit('productsLimit', limit);
+};
+
+document
+	.getElementById('btnLimitProducts')
+	.addEventListener('click', limitProducts);
+
+const searchOnPage = () => {
+	let searchTerm = document.getElementById('searchInput').value.toLowerCase();
+	// Argumentos de window.find: término de búsqueda, sensibilidad a mayúsculas y minúsculas (false),
+	// dirección hacia adelante (false), resaltar (true), retroceder (false), coincidencia exacta (false), buscar en enlaces (false)
+	let searchResult = window.find(
+		searchTerm,
+		false,
+		false,
+		true,
+		false,
+		false,
+		false
+	);
+
+	if (!searchResult) {
+		alert('No se encontraron coincidencias.');
+	}
+};
+
+document
+	.getElementById('btnSearchOnPage')
+	.addEventListener('click', searchOnPage);
