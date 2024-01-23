@@ -1,11 +1,18 @@
 <h1 class='text-center mt-3 mb-3'>Carrito</h1>
 
+{{! Información necesaria para cart.js }}
+<input type='hidden' id='getCartId' value='{{user.cart}}' />
+<input type='hidden' id='getUserRole' value='{{user.role}}' />
+
+{{! Aquí se mostrará el total de la compra }}
 <div class='alert alert-info w-50' id='totalPurchase'></div>
 
-{{! Vuelve a la página de inicio }}
-<div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'>
+{{! Botones de navegación y finalización de la compra }}
+<div
+	class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap buttonsSecction'
+>
 	<button
-		class='btn btn-dark border border-dark shadow ms-5 mb-3'
+		class='btn btn-dark btnBack border border-dark shadow ms-5 mb-3'
 		id='btnBackToBuy'
 	>Seguir comprando</button>
 
@@ -16,14 +23,15 @@
 
 </div>
 
+{{! Aquí se mostrará el detalle de la compra }}
 <div id='purchaseDetail'></div>
 
+{{! Aquí se renderizan los productos del carrito }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='containerCartProducts'
 >
 
-	<input type='hidden' id='getCartId' value='{{user.cart}}' />
 	{{#if cart.products.length}}
 		{{#each cart.products}}
 			<div

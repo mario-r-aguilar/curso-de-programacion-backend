@@ -1,12 +1,40 @@
 const cartID = document.querySelector('#getCartId').value;
+const userRole = document.querySelector('#getUserRole').value;
+const cartPage = document.body;
 
-// Actualizar la página
+// Vista del carrito para administradores
+const adminView = () => {
+	if (userRole === 'ADMIN') {
+		const totalCash = document.querySelector('#totalPurchase');
+		totalCash.innerHTML = '';
+		totalCash.classList.remove('alert', 'alert-info', 'w-50');
+		const btnSection = document.querySelector('.buttonsSecction');
+		btnSection.innerHTML = '';
+		btnSection.innerHTML = `
+		<button
+		class='btn btn-dark btnBack border border-dark shadow ms-5 mb-3'
+		id='btnBackToHome'
+		>
+			Volver al Inicio
+		</button>
+		`;
+		const productSection = document.querySelector('.text-bg-danger');
+		productSection.innerHTML = '';
+		productSection.innerHTML = `
+		Los administradores no pueden agregar productos al carrito
+		`;
+	} else {
+		renderTotalPurchase();
+	}
+};
+
+// Actualiza la página
 const refreshCartPage = (cartID) => {
 	const url = `/carts/${cartID}`;
 	document.location.href = url;
 };
 
-// Mostrar detalle de la compra
+// Muestra el detalle de la compra
 const showPurchaseDetail = (data) => {
 	const purchaseDetail = document.getElementById('purchaseDetail');
 	purchaseDetail.innerHTML = '';
@@ -29,7 +57,7 @@ const showPurchaseDetail = (data) => {
 	purchaseDetail.appendChild(div);
 };
 
-// Calcular el total de la compra
+// Calcula el total de la compra
 const calculateTotalPurchase = async () => {
 	return fetch(`/api/carts/${cartID}`)
 		.then((response) => response.json())
@@ -46,6 +74,7 @@ const calculateTotalPurchase = async () => {
 		});
 };
 
+// Muestra el total de la compra
 const renderTotalPurchase = () => {
 	const totalPurchase = document.getElementById('totalPurchase');
 	totalPurchase.innerHTML = '';
@@ -57,21 +86,33 @@ const renderTotalPurchase = () => {
 	});
 };
 
-// Manejo de botones de las cards (Cambiar cantidad / Quitar producto del carrito)
+// Funcionalidad del botón volver al Inicio
+cartPage.addEventListener('click', (event) => {
+	if (event.target.classList.contains('btnBack')) {
+		const url = '/';
+		document.location.href = url;
+	}
+});
+
+// Funcionalidad de botones para cambiar la cantidad y para quitar el producto del carrito
 document.querySelectorAll('.btnProductInCart').forEach((button) => {
 	button.addEventListener('click', async (event) => {
+		// Obtiene el ID del producto
 		const productID = event.target.getAttribute('data-product-id');
+		// Asigna un valor según la clase que tenga el botón presionado
 		const action = event.target.classList.contains('btnChangeProductQty')
 			? 'change'
 			: 'remove';
 
-		// Obtener la cantidad actualizada
+		// Obtiene la cantidad actualizada
 		let productQty = document.querySelector(`#productQty_${productID}`).value;
 
+		// Asigna el valor 1 en caso de ingresos de números negativos, cero o ningún valor
 		if (productQty <= 0 || productQty === null) {
 			productQty = 1;
 		}
 
+		// Realiza la petición y tanto el método como el body dependen de la accion seleccionada
 		await fetch(`/api/carts/${cartID}/products/${productID}`, {
 			method: action === 'change' ? 'put' : 'delete',
 			body:
@@ -83,24 +124,21 @@ document.querySelectorAll('.btnProductInCart').forEach((button) => {
 			console.error(error);
 		});
 
+		// Actualiza la página con cada cambio
 		refreshCartPage(cartID);
 	});
 });
 
-document.querySelector('#btnBackToBuy').onclick = () => {
-	const url = '/';
-	document.location.href = url;
-};
-
-// Funcionalidad del botón de finalizar compra
+// Funcionalidad para el botón de finalizar compra
 document.querySelector('#btnFinishBuy').onclick = () => {
 	fetch(`/api/carts/${cartID}/purchase`)
 		.then((response) => response.json())
 		.then((data) => {
+			// Muestra los detalles de la compra durante 9 segundos y actualiza la página
 			showPurchaseDetail(data);
 			setTimeout(() => {
 				refreshCartPage(cartID);
-			}, 9000);
+			}, 8000);
 		})
 		.catch((error) =>
 			console.error(
@@ -109,4 +147,4 @@ document.querySelector('#btnFinishBuy').onclick = () => {
 		);
 };
 
-renderTotalPurchase();
+adminView();
