@@ -26,9 +26,9 @@ export default class CartFileDAO {
 
 	async getById(cartID) {
 		try {
-			const cartsList = await this.getCarts();
+			const cartsList = await this.get();
 
-			const cartSearch = cartsList.find((cart) => cart._id == cartID);
+			const cartSearch = cartsList.find((cart) => cart._id === cartID);
 
 			if (cartSearch) {
 				console.info('Cart found!');
@@ -37,7 +37,7 @@ export default class CartFileDAO {
 				console.error(`ID ${cartID} not found`);
 				return;
 			}
-		} catch {
+		} catch (err) {
 			console.error(
 				`It is not possible to obtain the cart. \n 
             Error: ${err}`
@@ -46,13 +46,13 @@ export default class CartFileDAO {
 		}
 	}
 
-	async addCart(newCart) {
+	async add(newCart) {
 		try {
 			const { products } = newCart;
 
 			if (!products) return console.error('Products element is missing');
 
-			const cartsList = await this.getCarts();
+			const cartsList = await this.get();
 
 			const _id = uuidv4();
 			const newCartWithID = {
@@ -69,6 +69,63 @@ export default class CartFileDAO {
 			console.error(
 				`It is not possible to add the cart. \n 
             Error: ${err}`
+			);
+			return;
+		}
+	}
+
+	async delete(cartID) {
+		try {
+			const cartList = await this.get();
+			const newCartList = cartList.filter((cart) => cart._id != cartID);
+
+			await fs.promises.writeFile(this.path, JSON.stringify(newCartList));
+
+			console.info(`The cart with the ID ${cartID} was removed`);
+			return;
+		} catch (err) {
+			console.error(
+				`It is not possible to delete the cart.\n 
+				Error: ${err}`
+			);
+			return;
+		}
+	}
+
+	async update(cartID, cartUpdated) {
+		try {
+			const { products } = cartUpdated;
+
+			const cartList = await this.get();
+
+			// Genera un nuevo listado con el producto actualizado
+			const updatedCartList = cartList.map((cart) => {
+				if (cart._id === cartID) {
+					return {
+						...cart,
+						products,
+					};
+				} else {
+					return cart;
+				}
+			});
+
+			// Para retornar el producto actualizado
+			const updatedCart = updatedCartList.find(
+				(cart) => cart._id === cartID
+			);
+
+			await fs.promises.writeFile(
+				this.path,
+				JSON.stringify(updatedCartList)
+			);
+
+			console.info(`The cart with ID ${cartID} was updated`);
+			return updatedCart;
+		} catch (err) {
+			console.error(
+				`It is not possible to update the cart.\n 
+				Error: ${err}`
 			);
 			return;
 		}

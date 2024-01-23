@@ -41,10 +41,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 	async getById(productID) {
 		try {
-			const productList = await this.getProducts();
+			const productList = await this.get();
 
 			const productSearch = productList.find(
-				(product) => product._id == productID
+				(product) => product._id === productID
 			);
 
 			if (productSearch) {
@@ -54,7 +54,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				console.error(`ID ${productID} not found`);
 				return;
 			}
-		} catch {
+		} catch (err) {
 			console.error(
 				`Product cannot be displayed. \n 
             Error: ${err}`
@@ -103,7 +103,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				return console.error('One or more fields have invalid data types');
 			}
 
-			const productList = await this.getProducts();
+			const productList = await this.get();
 
 			if (productList.some((product) => product.code === code))
 				return console.error(
@@ -128,7 +128,6 @@ export default class ProductFileDAO extends ProductDAOInterface {
 			await fs.promises.writeFile(this.path, JSON.stringify(productList));
 
 			console.info(`The product ${title} was successfully added`);
-
 			return newProductWithID;
 		} catch (err) {
 			console.error(
@@ -141,7 +140,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 	async delete(productID) {
 		try {
-			const productList = await this.getProducts();
+			const productList = await this.get();
 			// Crea un nuevo listado sin el producto cuya id se ingreso
 			const newProductList = productList.filter(
 				(product) => product._id != productID
@@ -173,7 +172,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				thumbnail,
 			} = productUpdated;
 
-			const productList = await this.getProducts();
+			const productList = await this.get();
 
 			// Genera un nuevo listado con el producto actualizado
 			const updatedProductList = productList.map((product) => {
