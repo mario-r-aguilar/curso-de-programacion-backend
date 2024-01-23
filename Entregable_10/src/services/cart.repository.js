@@ -237,6 +237,7 @@ export default class CartRepository {
 
 			if (ticketData.amount !== 0) {
 				ticket = await TicketService.addTicket(ticketData);
+				await TicketService.sendTicketByMail(ticket, user.email);
 			}
 
 			// Ids de productos sin stock para response

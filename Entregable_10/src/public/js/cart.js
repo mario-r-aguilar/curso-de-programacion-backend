@@ -51,7 +51,7 @@ const showPurchaseDetail = (data) => {
 	 	<p><b>Comprador: ${data.payload.ticket.purchaser}</b></p>
 		<p><b>Fecha de compra: ${data.payload.ticket.purchase_datetime}</b></p>
 		<p><b>Nº de Ticket: ${data.payload.ticket.code}</b></p>
-		<h5>Se proceso la compra solo con los productos que tenían stock</h5>		
+		<h5>Se proceso la compra solo con los productos que tenían stock disponible</h5>		
 		`;
 	}
 	purchaseDetail.appendChild(div);
@@ -81,7 +81,7 @@ const renderTotalPurchase = () => {
 
 	calculateTotalPurchase().then((total) => {
 		const div = document.createElement('div');
-		div.innerHTML = `<h3>Total de la compra: $${total}</h3>`;
+		div.innerHTML = `<h3>Total del carrito: $${total}</h3>`;
 		totalPurchase.appendChild(div);
 	});
 };

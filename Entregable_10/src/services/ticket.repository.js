@@ -1,3 +1,6 @@
+import nodemailer from 'nodemailer';
+import config from '../config/config.js';
+
 export default class TicketRepository {
 	constructor(dao) {
 		this.dao = dao;
@@ -48,7 +51,7 @@ export default class TicketRepository {
 		}
 	}
 
-	async update(ticketID, ticketUpdated) {
+	async updateTicket(ticketID, ticketUpdated) {
 		try {
 			return await this.dao.update(ticketID, ticketUpdated);
 		} catch (error) {
@@ -57,6 +60,39 @@ export default class TicketRepository {
 				Error: ${error}`
 			);
 			return;
+		}
+	}
+
+	async sendTicketByMail(ticket, email) {
+		const transport = nodemailer.createTransport({
+			service: 'gmail',
+			port: 587,
+			auth: {
+				user: config.nodemailerUser,
+				pass: config.nodemailerPass,
+			},
+		});
+
+		try {
+			const detailPurchase = await transport.sendMail({
+				from: 'Cba E-commerce <config.nodemailerUser>',
+				to: email,
+				subject: 'Ticket de compra',
+				html: `
+					<h3>Muchas Gracias por su Compra!</h3>	
+					<p><b>Total: $${ticket.amount}</b></p>
+	 				<p><b>Comprador: ${ticket.purchaser}</b></p>
+					<p><b>Fecha de compra: ${ticket.purchase_datetime}</b></p>
+					<p><b>Nº de Ticket: ${ticket.code}</b></p>
+					<h4>Se proceso la compra solo con los productos que tenían stock disponible</h4>
+				`,
+			});
+			return detailPurchase;
+		} catch (error) {
+			console.error(
+				`It is not possible to send the ticket.\n 
+				Error: ${error}`
+			);
 		}
 	}
 }

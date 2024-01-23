@@ -18,4 +18,6 @@ export default {
 	gitHubClientId: process.env.CLIEN_ID,
 	gitHubClientSecret: process.env.CLIENT_SECRET,
 	gitHubCallbackUrl: process.env.CALLBACK_URL,
+	nodemailerUser: process.env.USER_NODEMAILER,
+	nodemailerPass: process.env.PASS_NODEMAILER,
 };
