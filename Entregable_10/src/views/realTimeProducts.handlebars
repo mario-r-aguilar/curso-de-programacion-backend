@@ -7,13 +7,18 @@
 	onclick='renderAddForm()'
 >Agregar Productos</button>
 <button
+	class='btn btn-warning border border-dark shadow ms-1 mb-3'
+	id='btnUpdate'
+	onclick='renderUpdateForm()'
+>Actualizar Productos</button>
+<button
 	class='btn btn-danger border border-dark shadow ms-1 mb-3'
 	id='btnDel'
 	onclick='renderDelForm()'
 >Eliminar Productos</button>
 
 {{! Secciones donde se renderizaran los formularios y la lista de productos respectivamente }}
-<div id='form'></div>
+<div class='w-50' id='form'></div>
 
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'

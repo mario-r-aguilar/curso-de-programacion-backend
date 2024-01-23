@@ -143,11 +143,86 @@ const renderAddForm = () => {
 				// Envía por socket.io el aviso de actualización de la lista de productos
 				socket.emit('updatedList', 'Se actualizo la lista de productos');
 			} else {
-				console.error('No fue posible agregar el producto');
+				console.error('Could not add product');
 			}
 		} catch (error) {
 			console.error({ error: error });
 		}
+	});
+};
+
+const renderUpdateForm = () => {
+	const form = document.getElementById('form');
+	form.innerHTML = '';
+	const newForm = document.createElement('div');
+	newForm.innerHTML = `
+	<form id='updateForm' method='post' action='/api/products/:pid'>
+		<input class="form-control mb-1 w-50" type='text' required id='id' name='id' placeholder='Id del producto' />
+		<input class="form-control mb-1 w-50" type='text' required id='title' name='title' placeholder='Nombre' />
+		<input class="form-control mb-1 w-50" type='text' required id='description' name='description' placeholder='Descripción' />
+		<input class="form-control mb-1 w-50" type='text' required id='code' name='code' placeholder='Código' />
+		<input class="form-control mb-1 w-50" type='number' required id='price' name='price' placeholder='Precio' />		
+        <input class="form-check-input mb-1" type='checkbox' id='status' name='status' checked readonly />
+        <label class="form-check-label mb-1 w-50" for="status">Status</label>
+		<input class="form-control mb-1 w-50" type='number' required id='stock' name='stock' placeholder='Stock' />
+		<input class="form-control mb-1 w-50" type='text' required id='category' name='category' placeholder='Categoría' />
+        <input class="form-control mb-1 w-50" type='text' id='thumbnail' name='thumbnail' placeholder='Ubicación de la imagen' />        	
+		<button class='btn btn-primary border border-dark shadow me-1 mt-2' type='submit'>Actualizar</button>
+        <button class='btn btn-dark border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+	</form>
+	`;
+	form.appendChild(newForm);
+
+	const updateForm = document.getElementById('updateForm');
+	updateForm.addEventListener('submit', function (event) {
+		event.preventDefault();
+
+		const formData = new FormData(updateForm);
+		const productData = {};
+
+		formData.forEach((value, key) => {
+			if (key === 'price' || key === 'stock') {
+				productData[key] = Number(value);
+			} else if (key === 'thumbnail') {
+				productData[key] = value.split(',').map((s) => s.trim());
+			} else if (key === 'status') {
+				productData[key] = value === 'on' ? true : false;
+			} else if (key !== 'id') {
+				// Para excluir el campo 'id' del objeto productData
+				productData[key] = value;
+			} else {
+				productData[key] = value;
+			}
+		});
+
+		const idInput = document.getElementById('id');
+		if (!idInput) return console.error('You must include the product ID');
+		const productId = idInput.value;
+
+		fetch(`/api/products/${productId}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(productData),
+		})
+			.then((response) => {
+				if (response.ok) {
+					form.innerHTML = '';
+					const responseMessage = document.createElement('div');
+					responseMessage.innerHTML = `
+                <div class="alert alert-success w-50" role="alert">Producto actualizado</div>
+                <button class='btn btn-primary border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+                `;
+					form.appendChild(responseMessage);
+					updateForm.reset();
+					// Envía por socket.io el aviso de actualización de la lista de productos
+					socket.emit('updatedList', 'Se actualizo la lista de productos');
+				}
+			})
+			.catch((err) => {
+				console.error({ error: err });
+			});
 	});
 };
 
@@ -198,7 +273,7 @@ const renderDelForm = () => {
 							'Se actualizo la lista de productos'
 						);
 					} else {
-						console.error('No fue posible eliminar el producto');
+						console.error('Product could not be removed');
 					}
 				})
 				.catch((err) => {
