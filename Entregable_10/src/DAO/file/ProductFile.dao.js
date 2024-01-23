@@ -148,7 +148,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
 
-			console.info(`The product with the ID ${productID} was removed`);
+			console.info(`The product ID ${productID} was removed`);
 			return;
 		} catch (error) {
 			console.error(
@@ -202,7 +202,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				JSON.stringify(updatedProductList)
 			);
 
-			console.info(`The product with ID ${productID} was updated`);
+			console.info(`The product ID ${productID} was updated`);
 			return updatedProduct;
 		} catch (error) {
 			console.error(

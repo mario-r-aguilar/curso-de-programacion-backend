@@ -1,0 +1,156 @@
+import fs from 'node:fs';
+import { v4 as uuidv4 } from 'uuid';
+
+export default class TicketFileDAO {
+	constructor() {
+		this.path = './src/DAO/file/db/tickets.json';
+
+		// Si el usuario no brinda una ruta, crea el archivo
+		if (!fs.existsSync(this.path)) {
+			fs.writeFileSync(this.path, JSON.stringify([]));
+		}
+	}
+
+	async get() {
+		try {
+			const ticketList = await fs.promises.readFile(this.path, 'utf-8');
+			return JSON.parse(ticketList);
+		} catch (error) {
+			console.error(
+				`It is not possible to obtain the tickets.\n 
+				Error: ${error}`
+			);
+		}
+	}
+
+	async getById(ticketID) {
+		try {
+			const ticketList = await this.get();
+			const ticketSearch = ticketList.find(
+				(ticket) => ticket._id === ticketID
+			);
+
+			if (ticketSearch) {
+				console.info('Ticket found!');
+				return ticketSearch;
+			} else {
+				console.error(`Ticket ID ${ticketID} not found`);
+				return;
+			}
+		} catch (error) {
+			console.error(
+				`Unable to get the ticket.\n 
+				Error: ${error}`
+			);
+		}
+	}
+
+	async add(newTicket) {
+		try {
+			const { code, purchase_datetime, amount, purchaser } = newTicket;
+
+			if (!code || !purchase_datetime || !amount || !purchaser)
+				return console.error('Missing fields in ticket');
+
+			const ticketList = await this.get();
+
+			const _id = uuidv4();
+
+			const newTicketWithID = {
+				_id,
+				code: 'TKT_' + uuidv4(),
+				purchase_datetime: Date.now(),
+				amount,
+				purchaser,
+			};
+			ticketList.push(newTicketWithID);
+
+			await fs.promises.writeFile(this.path, JSON.stringify(ticketList));
+
+			console.info(`The ticket was successfully added`);
+			return newTicketWithID;
+		} catch (error) {
+			console.error(
+				`It is not possible to create the ticket.\n 
+				Error: ${error}`
+			);
+		}
+	}
+
+	async delete(ticketID) {
+		try {
+			const ticketList = await this.get();
+
+			const ticketToDelete = ticketList.find(
+				(ticket) => ticket._id === ticketID
+			);
+			if (!ticketToDelete) {
+				console.error(`Ticket ID ${ticketID} not found`);
+				return;
+			}
+
+			const newTicketList = ticketList.filter(
+				(ticket) => ticket._id != ticketID
+			);
+
+			await fs.promises.writeFile(this.path, JSON.stringify(newTicketList));
+
+			console.info(`The ticket ID ${ticketID} was removed`);
+			return;
+		} catch (error) {
+			console.error(
+				`It is not possible to delete the ticket.\n 
+				Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	async update(ticketID, ticketUpdated) {
+		try {
+			const { code, purchase_datetime, amount, purchaser } = ticketUpdated;
+
+			const ticketList = await this.get();
+
+			const ticketToUpdate = ticketList.find(
+				(ticket) => ticket._id === ticketID
+			);
+			if (!ticketToUpdate) {
+				console.error(`Ticket ID ${ticketID} not found`);
+				return;
+			}
+
+			const updatedTicketList = ticketList.map((ticket) => {
+				if (ticket._id === ticketID) {
+					return {
+						...ticket,
+						code,
+						purchase_datetime,
+						amount,
+						purchaser,
+					};
+				} else {
+					return ticket;
+				}
+			});
+
+			const updatedTicket = updatedTicketList.find(
+				(ticket) => ticket._id === ticketID
+			);
+
+			await fs.promises.writeFile(
+				this.path,
+				JSON.stringify(updatedTicketList)
+			);
+
+			console.info(`The ticket ID ${ticketID} was updated`);
+			return updatedTicket;
+		} catch (error) {
+			console.error(
+				`It is not possible to update the ticket.\n 
+				Error: ${error}`
+			);
+			return;
+		}
+	}
+}

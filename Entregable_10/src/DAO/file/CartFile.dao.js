@@ -81,7 +81,7 @@ export default class CartFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newCartList));
 
-			console.info(`The cart with the ID ${cartID} was removed`);
+			console.info(`The cart ID ${cartID} was removed`);
 			return;
 		} catch (error) {
 			console.error(
@@ -118,7 +118,7 @@ export default class CartFileDAO {
 				JSON.stringify(updatedCartList)
 			);
 
-			console.info(`The cart with ID ${cartID} was updated`);
+			console.info(`The cart ID ${cartID} was updated`);
 			return updatedCart;
 		} catch (error) {
 			console.error(

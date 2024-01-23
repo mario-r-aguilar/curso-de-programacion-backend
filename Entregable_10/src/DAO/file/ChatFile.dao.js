@@ -127,7 +127,7 @@ export default class ChatFileDAO {
 				JSON.stringify(updatedMessagesList)
 			);
 
-			console.info(`The message with ID ${messageID} was updated`);
+			console.info(`The message ID ${messageID} was updated`);
 			return updatedMessage;
 		} catch (error) {
 			console.error(
