@@ -36,7 +36,7 @@ export default class ChatFileDAO {
 				return messageSearch;
 			} else {
 				console.error(`Message ID ${messageID} not found`);
-				return;
+				return null;
 			}
 		} catch (error) {
 			console.error(

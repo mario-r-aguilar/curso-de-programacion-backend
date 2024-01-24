@@ -35,7 +35,7 @@ export default class TicketFileDAO {
 				return ticketSearch;
 			} else {
 				console.error(`Ticket ID ${ticketID} not found`);
-				return;
+				return null;
 			}
 		} catch (error) {
 			console.error(

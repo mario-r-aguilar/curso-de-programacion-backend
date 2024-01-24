@@ -52,7 +52,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				return productSearch;
 			} else {
 				console.error(`ID ${productID} not found`);
-				return;
+				return null;
 			}
 		} catch (error) {
 			console.error(

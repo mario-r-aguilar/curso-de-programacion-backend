@@ -38,7 +38,7 @@ export default class CartFileDAO {
 				return cartSearch;
 			} else {
 				console.error(`Cart ID ${cartID} not found`);
-				return;
+				return null;
 			}
 		} catch (error) {
 			console.error(

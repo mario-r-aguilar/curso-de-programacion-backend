@@ -35,7 +35,7 @@ export default class UserFileDAO {
 				return userSearch;
 			} else {
 				console.error(`User ID ${userID} not found`);
-				return;
+				return null;
 			}
 		} catch (error) {
 			console.error(
@@ -54,7 +54,7 @@ export default class UserFileDAO {
 				return userSearch;
 			} else {
 				console.error(`User ${userEmail} not found`);
-				return;
+				return null;
 			}
 		} catch (error) {
 			console.error(
