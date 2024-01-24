@@ -128,8 +128,8 @@ const addProductToCart = async (id) => {
 				const div = document.createElement('div');
 				div.classList.add('alert', 'alert-success');
 				div.innerHTML = `
-			<p>Producto agregado</p>
-			`;
+					<p>Producto agregado</p>
+				`;
 				productAddMessage.appendChild(div);
 
 				setTimeout(() => {
@@ -206,6 +206,40 @@ if (btnCards) {
 			}
 		});
 	});
+}
+
+// Para limitar la cantidad de productos por pantalla
+const limitProducts = () => {
+	let limit = document.querySelector('#limitProducts').value;
+	const url = `/products?limit=${limit}`;
+	document.location.href = url;
+};
+const btnLimitProducts = document.getElementById('btnLimitProducts');
+if (btnLimitProducts) {
+	btnLimitProducts.addEventListener('click', limitProducts);
+}
+
+// Para buscar en la página con window.find
+const searchOnPage = () => {
+	let searchTerm = document.getElementById('searchInput').value.toLowerCase();
+	let searchResult = window.find(
+		searchTerm, // término de búsqueda
+		false, // sensibilidad a mayúsculas y minúsculas
+		false, // dirección hacia adelante
+		true, // resaltar
+		false, // retroceder
+		false, // coincidencia exacta
+		false //buscar en enlaces
+	);
+
+	if (!searchResult) {
+		alert('No se encontraron coincidencias.');
+	}
+};
+
+const btnSearchOnPage = document.getElementById('btnSearchOnPage');
+if (btnSearchOnPage) {
+	btnSearchOnPage.addEventListener('click', searchOnPage);
 }
 
 adminButtonOption();

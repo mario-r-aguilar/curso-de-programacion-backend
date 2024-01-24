@@ -72,6 +72,7 @@ const closeForm = () => {
 	// Cierra (borra) el formulario mediante el uso del DOM
 	const form = document.getElementById('form');
 	form.innerHTML = '';
+	// Refresca la página
 	const url = '/realtimeproducts';
 	document.location.href = url;
 };
@@ -294,9 +295,10 @@ const limitProducts = () => {
 	socket.emit('productsLimit', limit);
 };
 
-document
-	.getElementById('btnLimitProducts')
-	.addEventListener('click', limitProducts);
+const btnLimitProducts = document.getElementById('btnLimitProducts');
+if (btnLimitProducts) {
+	btnLimitProducts.addEventListener('click', limitProducts);
+}
 
 const searchOnPage = () => {
 	let searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -317,6 +319,7 @@ const searchOnPage = () => {
 	}
 };
 
-document
-	.getElementById('btnSearchOnPage')
-	.addEventListener('click', searchOnPage);
+const btnSearchOnPage = document.getElementById('btnSearchOnPage');
+if (btnSearchOnPage) {
+	btnSearchOnPage.addEventListener('click', searchOnPage);
+}

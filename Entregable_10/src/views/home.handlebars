@@ -112,20 +112,43 @@
 
 	</div>
 
+	{{!-- visualizacion para persistencia FILE --}}
 	{{else}}
 
-	<div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'
-		id='containerSearchOptionsFile'>
-
-		<div class="input-group m-3 w-25">
-			<label class="input-group-text" for='limit'>Limitar productos: </label>
-			<input class="form-control" id='limitFile' type='number' value='{{productsList.limit}}' />
-		</div>
-		
+	<div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'>
+	<div class='input-group m-3 w-25'>
+		<label class='input-group-text' for='limitProducts'>Productos por
+			pantalla:
+		</label>
+		<input
+			class='form-control'
+			id='limitProducts'
+			type='number'
+			min='0'
+			placeholder='50'
+		/>
+		<button
+			class='btn btn-dark border border-dark shadow'
+			id='btnLimitProducts'
+		>Limitar</button>
 	</div>
-		<div>
-			<button class="btn btn-primary border border-dark shadow ms-5 me-3" id="btnApplyFiltersFile">Aplicar límite</button>
-		</div>
+
+	<div class='input-group m-3 w-50'>
+		<label class='input-group-text' for='searchInput'>Buscar en la página:
+		</label>
+		<input
+			class='form-control'
+			type='text'
+			id='searchInput'
+			placeholder='Buscar'
+		/>
+		<button
+			class='btn btn-dark border border-dark shadow'
+			id='btnSearchOnPage'
+		>Buscar
+		</button>
+	</div>
+</div>
 
 	{{/if}}
 
