@@ -101,14 +101,21 @@ export default class UserFileDAO {
 			};
 
 			const cartList = await cartFileDAO.get();
-			const emptyCart = cartList.find((cart) => cart.products.length === 0);
-			if (!emptyCart) {
+
+			// Encuentra el último carrito vacío en el array y se lo asigna al usuario
+			let lastEmptyCart = null;
+			for (let i = cartList.length - 1; i >= 0; i--) {
+				if (cartList[i].products.length === 0) {
+					lastEmptyCart = cartList[i];
+					break;
+				}
+			}
+			if (!lastEmptyCart) {
 				console.error('No empty cart available. Please create a new one.');
 				return;
 			}
-			let cartFound = { _id: emptyCart._id, products: [] };
 
-			newUserWithID.cart = cartFound;
+			newUserWithID.cart = { _id: lastEmptyCart._id, products: [] };
 
 			usersList.push(newUserWithID);
 

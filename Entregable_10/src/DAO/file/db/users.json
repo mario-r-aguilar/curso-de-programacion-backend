@@ -1,1 +1,22 @@
-[{"_id":"f099d62f-f6d2-4566-bf63-93ef8093ea8b","name":"test2","lastname":"test2","email":"test2@test.com","age":20,"password":"$2b$10$gPbDsxxaNjNLihqdbCtgbup1Dc40i3T9pOPVTN6v5hTBgcJaB1Cei","role":"USER","cart":{"_id":"f8acc50c-a8b7-4855-b5ea-0cee9e38a93f","products":[]}},{"_id":"fe3ce89b-aa23-4dd6-bc00-17959fbbfa28","name":"Mario Aguilar","lastname":"","email":"mariocba150@gmail.com","age":18,"password":"","role":"USER","cart":{"_id":"f8acc50c-a8b7-4855-b5ea-0cee9e38a93f","products":[]}}]
+[
+	{
+		"_id": "f099d62f-f6d2-4566-bf63-93ef8093ea8b",
+		"name": "test2",
+		"lastname": "test2",
+		"email": "test2@test.com",
+		"age": 20,
+		"password": "$2b$10$gPbDsxxaNjNLihqdbCtgbup1Dc40i3T9pOPVTN6v5hTBgcJaB1Cei",
+		"role": "USER",
+		"cart": { "_id": "f8acc50c-a8b7-4855-b5ea-0cee9e38a93f", "products": [] }
+	},
+	{
+		"_id": "fe3ce89b-aa23-4dd6-bc00-17959fbbfa28",
+		"name": "Mario Aguilar",
+		"lastname": "",
+		"email": "mariocba150@gmail.com",
+		"age": 18,
+		"password": "",
+		"role": "USER",
+		"cart": { "_id": "8ac86e54-f34e-406c-a497-e9367189cbae", "products": [] }
+	}
+]
