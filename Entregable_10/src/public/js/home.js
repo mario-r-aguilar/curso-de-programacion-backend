@@ -143,34 +143,50 @@ const addProductToCart = async (id) => {
 };
 
 // Manejo de los botones para el desplazamiento entre páginas
-document.querySelector('#btnPrev').onclick = () => navigateToPage('prevPage');
-document.querySelector('#btnNext').onclick = () => navigateToPage('nextPage');
+const btnPrev = document.querySelector('#btnPrev');
+const btnNext = document.querySelector('#btnNext');
+if (btnPrev && btnNext) {
+	btnPrev.onclick = () => navigateToPage('prevPage');
+	btnNext.onclick = () => navigateToPage('nextPage');
+}
 
 // Manejo del botón de filtros
-document.querySelector('#btnApplyFilters').onclick = () => {
-	const totalPages = document.querySelector('#pageErrorAux').value;
-	const pageInput = document.querySelector('#page').value;
+const btnFilters = document.querySelector('#btnApplyFilters');
+if (btnFilters) {
+	btnFilters.onclick = () => {
+		const totalPages = document.querySelector('#pageErrorAux').value;
+		const pageInput = document.querySelector('#page').value;
 
-	if (parseInt(pageInput) > parseInt(totalPages) || parseInt(pageInput) < 1) {
-		const messageError = document.getElementById('pageError');
-		messageError.innerHTML = '';
-		const div = document.createElement('div');
-		div.innerHTML = `
-			<p class='text-bg-danger ms-5 mt-3 p-1 text-start w-75'>La página no existe</p>
-		`;
-		messageError.append(div);
-	} else {
-		navigateToPage('page');
-	}
-};
+		if (
+			parseInt(pageInput) > parseInt(totalPages) ||
+			parseInt(pageInput) < 1
+		) {
+			const messageError = document.getElementById('pageError');
+			messageError.innerHTML = '';
+			const div = document.createElement('div');
+			div.innerHTML = `
+				<p class='text-bg-danger ms-5 mt-3 p-1 text-start w-75'>La página no existe</p>
+			`;
+			messageError.append(div);
+		} else {
+			navigateToPage('page');
+		}
+	};
+}
 
-// Manejo del botón para volver a la página de inicio
-document.querySelector('#btnCleanFilters').onclick = () => resetPage();
+// Manejo del botón para refrescar la página
+const btnRefresh = document.querySelector('#btnCleanFilters');
+if (btnRefresh) {
+	btnRefresh.onclick = () => resetPage();
+}
 
 // Manejo del botón para ver los detalles de un producto
-document
-	.querySelectorAll('.btnProductDetail, .btnAddProductToCart')
-	.forEach((button) => {
+const btnCards = document.querySelectorAll(
+	'.btnProductDetail, .btnAddProductToCart'
+);
+
+if (btnCards) {
+	btnCards.forEach((button) => {
 		// Escucha los eventos clic de los botones de detalle de las card
 		button.addEventListener('click', (event) => {
 			const closestCard = event.target.closest('.card');
@@ -190,5 +206,6 @@ document
 			}
 		});
 	});
+}
 
 adminButtonOption();

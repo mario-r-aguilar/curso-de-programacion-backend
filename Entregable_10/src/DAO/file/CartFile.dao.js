@@ -14,6 +14,10 @@ export default class CartFileDAO {
 	async get() {
 		try {
 			const cartsList = await fs.promises.readFile(this.path, 'utf-8');
+			if (!cartsList) {
+				console.error('The file is empty.');
+				return;
+			}
 			return JSON.parse(cartsList);
 		} catch (error) {
 			console.error(
@@ -27,14 +31,13 @@ export default class CartFileDAO {
 	async getById(cartID) {
 		try {
 			const cartsList = await this.get();
-
 			const cartSearch = cartsList.find((cart) => cart._id === cartID);
 
 			if (cartSearch) {
 				console.info('Cart found!');
 				return cartSearch;
 			} else {
-				console.error(`ID ${cartID} not found`);
+				console.error(`Cart ID ${cartID} not found`);
 				return;
 			}
 		} catch (error) {

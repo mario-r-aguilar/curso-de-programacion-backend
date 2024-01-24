@@ -1,7 +1,11 @@
 <h1 class='text-center mt-3 mb-3'>Carrito</h1>
 
 {{! Información necesaria para cart.js }}
-<input type='hidden' id='getCartId' value='{{user.cart}}' />
+{{#if isMongoPersistence}}
+	<input type='hidden' id='getCartId' value='{{user.cart}}' />
+{{else}}
+	<input type='hidden' id='getCartId' value='{{user.cart._id}}' />
+{{/if}}
 <input type='hidden' id='getUserRole' value='{{user.role}}' />
 
 {{! Aquí se mostrará el total de la compra }}

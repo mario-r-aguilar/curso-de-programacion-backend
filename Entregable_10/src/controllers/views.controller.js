@@ -57,12 +57,14 @@ export const renderProductsPage = async (req, res) => {
 // Vista para mostrar el contenido del carrito (solo funciona con mongoDb)
 export const renderCart = async (req, res) => {
 	try {
+		const isMongoPersistence =
+			selectedPersistence.persistence === 'MONGO' ? true : false;
 		const { cid } = req.params;
 		const userData = req.session.user;
 		const user = new UserDTO(userData);
 		const cart = await CartService.getCartById(cid);
 
-		res.render('cart', { cart, user, title: 'Carrito' });
+		res.render('cart', { isMongoPersistence, cart, user, title: 'Carrito' });
 	} catch (error) {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}

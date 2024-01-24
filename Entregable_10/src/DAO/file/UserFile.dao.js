@@ -32,7 +32,6 @@ export default class UserFileDAO {
 			const userSearch = usersList.find((user) => user._id === userID);
 
 			if (userSearch) {
-				console.info('User found!');
 				return userSearch;
 			} else {
 				console.error(`User ID ${userID} not found`);
@@ -52,7 +51,6 @@ export default class UserFileDAO {
 			const userSearch = usersList.find((user) => user.email === userEmail);
 
 			if (userSearch) {
-				console.info('User found!');
 				return userSearch;
 			} else {
 				console.error(`User ${userEmail} not found`);

@@ -72,6 +72,8 @@ const closeForm = () => {
 	// Cierra (borra) el formulario mediante el uso del DOM
 	const form = document.getElementById('form');
 	form.innerHTML = '';
+	const url = '/realtimeproducts';
+	document.location.href = url;
 };
 
 const renderAddForm = () => {
