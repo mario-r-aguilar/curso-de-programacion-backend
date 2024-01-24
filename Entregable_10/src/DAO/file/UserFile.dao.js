@@ -89,6 +89,9 @@ export default class UserFileDAO {
 
 			let _id = uuidv4();
 			let role = 'USER';
+			let cart = await cartFileDAO.add({
+				products: [],
+			});
 
 			let newUserWithID = {
 				_id,
@@ -96,30 +99,30 @@ export default class UserFileDAO {
 				lastname,
 				email,
 				age,
+				cart,
 				password,
 				role,
 			};
 
-			const cartList = await cartFileDAO.get();
-
-			// Encuentra el último carrito vacío en el array y se lo asigna al usuario
-			let lastEmptyCart = null;
-			for (let i = cartList.length - 1; i >= 0; i--) {
-				if (cartList[i].products.length === 0) {
-					lastEmptyCart = cartList[i];
-					break;
-				}
-			}
-			if (!lastEmptyCart) {
-				console.error('No empty cart available. Please create a new one.');
-				return;
-			}
-
-			newUserWithID.cart = { _id: lastEmptyCart._id, products: [] };
-
 			usersList.push(newUserWithID);
 
 			await fs.promises.writeFile(this.path, JSON.stringify(usersList));
+
+			// const cartList = await cartFileDAO.get();
+			// // Encuentra el último carrito vacío en el array y se lo asigna al usuario
+			// let lastEmptyCart = null;
+			// for (let i = cartList.length - 1; i >= 0; i--) {
+			// 	if (cartList[i].products.length === 0) {
+			// 		lastEmptyCart = cartList[i];
+			// 		break;
+			// 	}
+			// }
+			// if (!lastEmptyCart) {
+			// 	console.error('No empty cart available. Please create a new one.');
+			// 	return;
+			// }
+
+			// newUserWithID.cart = { _id: lastEmptyCart._id, products: [] };
 
 			console.info(`The user was successfully added`);
 			return newUserWithID;

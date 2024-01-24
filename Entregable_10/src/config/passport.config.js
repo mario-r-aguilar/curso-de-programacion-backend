@@ -5,6 +5,7 @@ import passportJWT from 'passport-jwt';
 import { UserService, CartService } from '../services/index.js';
 import { createHash, checkPassword, generateToken } from '../utils/utils.js';
 import config from './config.js';
+import selectedPersistence from './persistence.js';
 
 // Core de las estrategias
 const LocalStrategy = local.Strategy;
@@ -59,10 +60,13 @@ const initializePassport = () => {
 					// Almacena los datos del nuevo usuario y hashea su password
 					const newUser = req.body;
 					newUser.password = createHash(password);
-					// Crea un carrito nuevo y lo asigna al usuario recientemente creado
-					newUser.cart = await CartService.addCart({
-						products: [],
-					});
+
+					if (selectedPersistence.persistence === 'MONGO') {
+						// Crea un carrito nuevo y lo asigna al usuario recientemente creado
+						newUser.cart = await CartService.addCart({
+							products: [],
+						});
+					}
 
 					// Almacena el nuevo usuario y lo devuelve
 					const result = await UserService.addUser(newUser);
