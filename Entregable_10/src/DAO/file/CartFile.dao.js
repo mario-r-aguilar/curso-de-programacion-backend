@@ -58,9 +58,15 @@ export default class CartFileDAO {
 			const cartsList = await this.get();
 
 			const _id = uuidv4();
+			let product;
 			const newCartWithID = {
 				_id,
-				products: [],
+				products: [
+					{
+						product,
+						quantity: 1,
+					},
+				],
 			};
 			cartsList.push(newCartWithID);
 
