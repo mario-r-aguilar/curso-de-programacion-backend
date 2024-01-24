@@ -70,9 +70,6 @@ export default class UserFileDAO {
 
 			age = parseInt(age);
 
-			if (!name || !lastname || !email || !age || !password)
-				return console.error('Missing fields in user');
-
 			if (
 				typeof name !== 'string' ||
 				typeof lastname !== 'string' ||

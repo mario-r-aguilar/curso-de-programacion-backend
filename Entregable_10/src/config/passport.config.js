@@ -151,7 +151,7 @@ const initializePassport = () => {
 					}
 
 					// Si no existe genera uno con los datos que obtiene desde GitHub
-					const newUser = await UserService.createUser({
+					const newUser = await UserService.addUser({
 						name: profile._json.name,
 						lastname: '',
 						email: profile._json.email,
@@ -163,7 +163,7 @@ const initializePassport = () => {
 						role: 'USER',
 					});
 
-					const token = generateToken(user);
+					const token = generateToken(newUser); //modif
 					user.token = token;
 
 					// Autentica el usuario
