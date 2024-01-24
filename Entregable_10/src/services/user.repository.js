@@ -3,6 +3,10 @@ export default class UserRepository {
 		this.dao = dao;
 	}
 
+	/**
+	 * Busca el listado de usuarios
+	 * @returns {Array} Listado de usuarios
+	 */
 	async getAll() {
 		try {
 			return await this.dao.get();
@@ -14,6 +18,11 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Busca un usuario mediante su ID
+	 * @param {String} ID del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getUserById(userID) {
 		try {
 			return await this.dao.getById(userID);
@@ -25,6 +34,11 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Busca un usuario mediante su email
+	 * @param {String} Email del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getUserByEmail(userEmail) {
 		try {
 			return await this.dao.getByEmail(userEmail);
@@ -36,6 +50,11 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Agrega un usuario
+	 * @param {Object} Usuario
+	 * @returns {Object} Usuario creado
+	 */
 	async addUser(newUser) {
 		try {
 			return await this.dao.add(newUser);

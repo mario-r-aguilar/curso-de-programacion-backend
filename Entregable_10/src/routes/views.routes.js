@@ -13,9 +13,8 @@ import {
 
 const viewsRouter = Router();
 
-// El middleware isUserAuth redirige a /products en caso de que el usuario esté logueado
-// La estrategia current valida la existencia de un token antes de dar acceso a la ruta
 viewsRouter.get('/', isUserAuth, renderLogin);
+
 viewsRouter.get('/register', isUserAuth, renderRegister);
 
 viewsRouter.get(

@@ -29,7 +29,8 @@
 		"patrones de diseño",
 		"commander",
 		"uuid",
-		"cors"
+		"cors",
+		"nodemailer"
 	],
 	"author": "Mario Aguilar",
 	"license": "ISC",

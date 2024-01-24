@@ -1,3 +1,4 @@
+// Información necesaria obtenida desde el archivo handlebars
 const cartID = document.querySelector('#getCartId').value;
 const userRole = document.querySelector('#getUserRole').value;
 const cartPage = document.body;
@@ -57,11 +58,13 @@ const showPurchaseDetail = (data) => {
 	purchaseDetail.appendChild(div);
 };
 
-// Calcula el total de la compra
+// Calcula el precio total de los productos que se encuentran en el carrito
 const calculateTotalPurchase = async () => {
+	// obtiene el contenido del carrito
 	return fetch(`/api/carts/${cartID}`)
 		.then((response) => response.json())
 		.then((cart) => {
+			// realiza el cálculo
 			let totalPrice = cart.products.reduce(
 				(total, product) =>
 					total + product.product.price * product.quantity,
@@ -74,11 +77,12 @@ const calculateTotalPurchase = async () => {
 		});
 };
 
-// Muestra el total de la compra
+// Muestra el el precio total de los productos que se encuentran en el carrito
 const renderTotalPurchase = () => {
 	const totalPurchase = document.getElementById('totalPurchase');
 	totalPurchase.innerHTML = '';
 
+	// maneja el resultado de la función con then porque devuelve una promesa
 	calculateTotalPurchase().then((total) => {
 		const div = document.createElement('div');
 		div.innerHTML = `<h3>Total del carrito: $${total}</h3>`;
@@ -86,7 +90,7 @@ const renderTotalPurchase = () => {
 	});
 };
 
-// Funcionalidad del botón volver al Inicio
+// Funcionalidad del botón volver al inicio
 cartPage.addEventListener('click', (event) => {
 	if (event.target.classList.contains('btnBack')) {
 		const url = '/';
@@ -95,56 +99,66 @@ cartPage.addEventListener('click', (event) => {
 });
 
 // Funcionalidad de botones para cambiar la cantidad y para quitar el producto del carrito
-document.querySelectorAll('.btnProductInCart').forEach((button) => {
-	button.addEventListener('click', async (event) => {
-		// Obtiene el ID del producto
-		const productID = event.target.getAttribute('data-product-id');
-		// Asigna un valor según la clase que tenga el botón presionado
-		const action = event.target.classList.contains('btnChangeProductQty')
-			? 'change'
-			: 'remove';
+const btnProductInCart = document.querySelectorAll('.btnProductInCart');
+if (btnProductInCart) {
+	btnProductInCart.forEach((button) => {
+		button.addEventListener('click', async (event) => {
+			// Obtiene el ID del producto
+			const productID = event.target.getAttribute('data-product-id');
+			// Asigna un valor según la clase que tenga el botón presionado
+			const action = event.target.classList.contains('btnChangeProductQty')
+				? 'change'
+				: 'remove';
 
-		// Obtiene la cantidad actualizada
-		let productQty = document.querySelector(`#productQty_${productID}`).value;
+			// Obtiene la cantidad actualizada
+			let productQty = document.querySelector(
+				`#productQty_${productID}`
+			).value;
 
-		// Asigna el valor 1 en caso de ingresos de números negativos, cero o ningún valor
-		if (productQty <= 0 || productQty === null) {
-			productQty = 1;
-		}
+			// Asigna el valor 1 en caso de ingresos de números negativos, cero o ningún valor
+			if (productQty <= 0 || productQty === null) {
+				productQty = 1;
+			}
 
-		// Realiza la petición y tanto el método como el body dependen de la accion seleccionada
-		await fetch(`/api/carts/${cartID}/products/${productID}`, {
-			method: action === 'change' ? 'put' : 'delete',
-			body:
-				action === 'change' ? JSON.stringify({ quantity: productQty }) : '',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}).catch((error) => {
-			console.error(error);
+			// Realiza la petición según la accion seleccionada
+			await fetch(`/api/carts/${cartID}/products/${productID}`, {
+				method: action === 'change' ? 'put' : 'delete',
+				body:
+					action === 'change'
+						? JSON.stringify({ quantity: productQty })
+						: '',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}).catch((error) => {
+				console.error(error);
+			});
+
+			// Actualiza la página con cada cambio
+			refreshCartPage(cartID);
 		});
-
-		// Actualiza la página con cada cambio
-		refreshCartPage(cartID);
 	});
-});
+}
 
 // Funcionalidad para el botón de finalizar compra
-document.querySelector('#btnFinishBuy').onclick = () => {
-	fetch(`/api/carts/${cartID}/purchase`)
-		.then((response) => response.json())
-		.then((data) => {
-			// Muestra los detalles de la compra durante 9 segundos y actualiza la página
-			showPurchaseDetail(data);
-			setTimeout(() => {
-				refreshCartPage(cartID);
-			}, 8000);
-		})
-		.catch((error) =>
-			console.error(
-				`It was not possible to complete the purchase. Error ${error}`
-			)
-		);
-};
+const btnFinishBuy = document.querySelector('#btnFinishBuy');
+if (btnFinishBuy) {
+	btnFinishBuy.onclick = () => {
+		fetch(`/api/carts/${cartID}/purchase`)
+			.then((response) => response.json())
+			.then((data) => {
+				// Muestra los detalles de la compra durante 8 segundos y actualiza la página
+				showPurchaseDetail(data);
+				setTimeout(() => {
+					refreshCartPage(cartID);
+				}, 8000);
+			})
+			.catch((error) =>
+				console.error(
+					`It was not possible to complete the purchase. Error ${error}`
+				)
+			);
+	};
+}
 
 adminView();

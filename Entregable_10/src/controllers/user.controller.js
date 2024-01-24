@@ -1,6 +1,6 @@
 import UserDTO from '../DTO/user.dto.js';
 
-// Estrategia local
+// Estrategia local (logueo de usuario)
 export const loginUser = async (req, res) => {
 	try {
 		if (!req.user) return res.status(401).send('Invalid Credentials');
@@ -17,7 +17,7 @@ export const loginUser = async (req, res) => {
 	}
 };
 
-// Estrategia GitHub
+// Estrategia GitHub (logueo de usuario)
 export const loginGithub = (req, res) => {
 	try {
 	} catch (error) {
@@ -39,7 +39,7 @@ export const loginGithubCallBack = (req, res) => {
 	}
 };
 
-// Para registrar un nuevo usuario
+// Estrategia local (registro de usuario)
 export const registerUser = async (req, res) => {
 	try {
 		return res.status(201).redirect('/');
@@ -48,7 +48,7 @@ export const registerUser = async (req, res) => {
 	}
 };
 
-// Se muestra si hubo errores en el registro de un usuario
+// Para informar errores en el registro de un usuario
 export const failRegister = (req, res) => {
 	try {
 		return res.status(400).json({ error: 'Registration Failed' });

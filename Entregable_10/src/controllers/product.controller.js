@@ -1,9 +1,10 @@
 import selectedPersistence from '../config/persistence.js';
 import { ProductService } from '../services/index.js';
 
-// Muestra el listado de productos y permite aplicar filtros al hacerlo
+// Muestra el listado de productos y permite aplicar filtros
 export const getProducts = async (req, res) => {
 	try {
+		// código para persistencia MONGO
 		if (selectedPersistence.persistence === 'MONGO') {
 			const { limit, page, sort, category, status, title } = req.query;
 
@@ -21,17 +22,18 @@ export const getProducts = async (req, res) => {
 					? 'success'
 					: 'error';
 			const result = { status: statusProductList, payload: productList };
-			res.send(result);
+			res.status(200).send(result);
 		} else {
+			// código para persistencia FILE
 			let productList = await ProductService.getProducts(req.query.limit);
-			res.send({ productList });
+			res.status(200).send({ productList });
 		}
 	} catch (error) {
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
 
-// Muestra un producto según la id que le pasemos por req.params
+// Muestra un producto según la id enviada por req.params
 export const getProductById = async (req, res) => {
 	try {
 		let { pid } = req.params;
@@ -52,7 +54,7 @@ export const addProduct = async (req, res) => {
 	}
 };
 
-// Actualiza un producto existente obteniendo su ID por req.params y los nuevos valores por req.body
+// Actualiza un producto según la ID enviada por req.params con los nuevos valores (req.body)
 export const updateProduct = async (req, res) => {
 	try {
 		let { pid } = req.params;
@@ -66,7 +68,7 @@ export const updateProduct = async (req, res) => {
 	}
 };
 
-// Elimina un producto obteniendo su ID por req.params
+// Elimina un producto según la ID enviada por req.params
 export const deleteProduct = async (req, res) => {
 	try {
 		let { pid } = req.params;

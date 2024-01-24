@@ -11,6 +11,10 @@ export default class TicketFileDAO {
 		}
 	}
 
+	/**
+	 * Busca el listado de tickets
+	 * @returns {Array} Listado de tickets
+	 */
 	async get() {
 		try {
 			const ticketList = await fs.promises.readFile(this.path, 'utf-8');
@@ -23,6 +27,11 @@ export default class TicketFileDAO {
 		}
 	}
 
+	/**
+	 * Busca un ticket mediante su ID
+	 * @param {String} ID del ticket
+	 * @returns {Object} Ticket
+	 */
 	async getById(ticketID) {
 		try {
 			const ticketList = await this.get();
@@ -45,6 +54,11 @@ export default class TicketFileDAO {
 		}
 	}
 
+	/**
+	 * Agrega un nuevo ticket
+	 * @param {Object} Ticket
+	 * @returns {Object} Ticket creado
+	 */
 	async add(newTicket) {
 		try {
 			const { code, purchase_datetime, amount, purchaser } = newTicket;
@@ -77,6 +91,11 @@ export default class TicketFileDAO {
 		}
 	}
 
+	/**
+	 * Elimina un ticket
+	 * @param {String} ID del ticket
+	 * @returns {@type void}
+	 */
 	async delete(ticketID) {
 		try {
 			const ticketList = await this.get();
@@ -86,7 +105,7 @@ export default class TicketFileDAO {
 			);
 			if (!ticketToDelete) {
 				console.error(`Ticket ID ${ticketID} not found`);
-				return;
+				return null;
 			}
 
 			const newTicketList = ticketList.filter(
@@ -106,6 +125,12 @@ export default class TicketFileDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un ticket
+	 * @param {String} ID del ticket
+	 * @param {Object} Ticket editado
+	 * @returns {Object} Ticket actualizado
+	 */
 	async update(ticketID, ticketUpdated) {
 		try {
 			const { code, purchase_datetime, amount, purchaser } = ticketUpdated;
@@ -117,7 +142,7 @@ export default class TicketFileDAO {
 			);
 			if (!ticketToUpdate) {
 				console.error(`Ticket ID ${ticketID} not found`);
-				return;
+				return null;
 			}
 
 			const updatedTicketList = ticketList.map((ticket) => {

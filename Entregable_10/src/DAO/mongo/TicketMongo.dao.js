@@ -5,6 +5,10 @@ export default class TicketMongoDAO {
 		this.model = ticketModel;
 	}
 
+	/**
+	 * Busca el listado de tickets
+	 * @returns {Array} Listado de tickets
+	 */
 	async get() {
 		try {
 			return await this.model.find().lean().exec();
@@ -16,6 +20,11 @@ export default class TicketMongoDAO {
 		}
 	}
 
+	/**
+	 * Busca un ticket mediante su ID
+	 * @param {String} ID del ticket
+	 * @returns {Object} Ticket
+	 */
 	async getById(ticketID) {
 		try {
 			return await this.model.findById(ticketID);
@@ -27,6 +36,11 @@ export default class TicketMongoDAO {
 		}
 	}
 
+	/**
+	 * Agrega un ticket
+	 * @param {Object} Ticket
+	 * @returns {Object} Ticket creado
+	 */
 	async add(newTicket) {
 		try {
 			return await this.model.create(newTicket);
@@ -38,6 +52,11 @@ export default class TicketMongoDAO {
 		}
 	}
 
+	/**
+	 * Elimina un ticket
+	 * @param {String} ID del ticket
+	 * @returns {@type void}
+	 */
 	async delete(ticketID) {
 		try {
 			return await this.model.deleteOne({ _id: ticketID });
@@ -50,6 +69,12 @@ export default class TicketMongoDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un ticket
+	 * @param {String} ID del ticket
+	 * @param {Object} Ticket editado
+	 * @returns {Object} Ticket actualizado
+	 */
 	async update(ticketID, ticketUpdated) {
 		try {
 			return await this.model.updateOne(

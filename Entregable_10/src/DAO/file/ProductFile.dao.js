@@ -13,6 +13,16 @@ export default class ProductFileDAO extends ProductDAOInterface {
 		}
 	}
 
+	/**
+	 * Busca el listado de productos y permite limitar la cantidad de productos por pantalla
+	 * @param {Number} Cantidad de productos por pantalla
+	 * @param {Number} Número de página (solo para persistencia MONGO)
+	 * @param {Number} Ordenar por precio de producto (solo para persistencia MONGO)
+	 * @param {String} Categoría del producto (solo para persistencia MONGO)
+	 * @param {Boolean} Disponibilidad del producto (solo para persistencia MONGO)
+	 * @param {String} Nombre del producto (solo para persistencia MONGO)
+	 * @returns {Array} Listado de productos
+	 */
 	async get(
 		limit,
 		page = null,
@@ -39,6 +49,11 @@ export default class ProductFileDAO extends ProductDAOInterface {
 		}
 	}
 
+	/**
+	 * Busca un producto mediante su ID
+	 * @param {String} ID del producto
+	 * @returns {Object} Producto
+	 */
 	async getById(productID) {
 		try {
 			const productList = await this.get();
@@ -63,6 +78,11 @@ export default class ProductFileDAO extends ProductDAOInterface {
 		}
 	}
 
+	/**
+	 * Agrega un nuevo producto
+	 * @param {Object} Producto
+	 * @returns {Object} Producto creado
+	 */
 	async add(newProduct) {
 		try {
 			const {
@@ -138,6 +158,11 @@ export default class ProductFileDAO extends ProductDAOInterface {
 		}
 	}
 
+	/**
+	 * Elimina un producto
+	 * @param {String} ID del producto
+	 * @returns {@type void}
+	 */
 	async delete(productID) {
 		try {
 			const productList = await this.get();
@@ -159,6 +184,12 @@ export default class ProductFileDAO extends ProductDAOInterface {
 		}
 	}
 
+	/**
+	 * Actualiza un producto
+	 * @param {String} ID del producto
+	 * @param {Object} Producto editado
+	 * @returns {Object} Producto actualizado
+	 */
 	async update(productID, productUpdated) {
 		try {
 			const {

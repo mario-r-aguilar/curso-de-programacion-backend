@@ -5,6 +5,10 @@ export default class CartRepository {
 		this.dao = dao;
 	}
 
+	/**
+	 * Busca el listado de carritos
+	 * @returns {Array} Listado de carritos
+	 */
 	async getCarts() {
 		try {
 			return await this.dao.get();
@@ -17,6 +21,11 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Busca un carrito mediante su ID
+	 * @param {String} ID del carrito
+	 * @returns {Object} Carrito
+	 */
 	async getCartById(cartID) {
 		try {
 			return await this.dao.getById(cartID);
@@ -29,6 +38,11 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Agrega un carrito
+	 * @param {Object} Carrito
+	 * @returns {Object} Carrito creado
+	 */
 	async addCart(newCart) {
 		try {
 			return await this.dao.add(newCart);
@@ -41,6 +55,12 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Agrega un producto al carrito
+	 * @param {String} ID del carrito
+	 * @param {String} ID del producto
+	 * @returns {Object} Carrito actualizado
+	 */
 	async addProductToCart(cartID, productID) {
 		try {
 			const cart = await this.getCartById(cartID);
@@ -55,6 +75,7 @@ export default class CartRepository {
 				(item) => String(item.product._id) === String(productID)
 			);
 
+			// Si el producto existe incrementa su cantidad
 			if (productExist) {
 				productExist.quantity++;
 			} else {
@@ -72,6 +93,12 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Elimina un producto del carrito
+	 * @param {String} ID del carrito
+	 * @param {String} ID del producto
+	 * @returns {Object} Carrito actualizado
+	 */
 	async deleteOneProductfromCart(cartID, productID) {
 		try {
 			const cart = await this.getCartById(cartID);
@@ -102,6 +129,12 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Actualiza todo el contenido de un carrito
+	 * @param {String} ID del carrito
+	 * @param {Object} Lista completa que se obtiene de un getProducts()
+	 * @returns {Object} Carrito actualizado
+	 */
 	async updateAllProductsOfCart(cartID, newProductList) {
 		try {
 			const cart = await this.getCartById(cartID);
@@ -135,6 +168,13 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Actualiza la cantidad de un producto que se encuentra en el carrito
+	 * @param {String} ID del carrito
+	 * @param {String} ID del producto
+	 * @param {Number} Nueva cantidad del producto
+	 * @returns {Object} Carrito actualizado
+	 */
 	async updateQuantityOfProduct(cartID, productID, newQuantity) {
 		try {
 			const cart = await this.getCartById(cartID);
@@ -173,6 +213,11 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Elimina todos los productos del carrito
+	 * @param {String} ID del carrito
+	 * @returns {Object} Carrito actualizado
+	 */
 	async deleteAllProductsfromCart(cartID) {
 		try {
 			const cart = await this.getCartById(cartID);
@@ -194,6 +239,12 @@ export default class CartRepository {
 		}
 	}
 
+	/**
+	 * Efectua la compra de los productos que posean stock y muestra el detalle de la misma
+	 * @param {String} ID del carrito
+	 * @param {Object} Usuario
+	 * @returns {Object} Detalle de la compra
+	 */
 	async purchaseProductsInCart(cartID, user) {
 		try {
 			const cart = await this.getCartById(cartID);

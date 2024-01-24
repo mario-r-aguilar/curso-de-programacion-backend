@@ -1,7 +1,7 @@
 let socket;
 
+// Verifica si en el storage si el usuario ya se identifico y sino lo hizo le pide que lo haga
 let user = sessionStorage.getItem('user') || '';
-
 if (user) {
 	document.querySelector('#username').innerHTML = user + ': ';
 	initIO();
@@ -32,22 +32,26 @@ if (user) {
 	});
 }
 
+// Almacena lo que el usuario escribe
 const input = document.querySelector('#chatInput');
 input.addEventListener('keyup', (event) => {
 	if (event.key === 'Enter') sendMessage(event.currentTarget.value);
 });
 
-document
-	.querySelector('#send')
-	.addEventListener('click', (event) => sendMessage(input.value));
+// Funcionalidad del botón enviar mensaje
+const btnSend = document.querySelector('#send');
+btnSend.addEventListener('click', (event) => sendMessage(input.value));
 
+// Envía el mensaje usando socket.io
 function sendMessage(message) {
+	// no envía mensajes vacíos
 	if (message.trim().length > 0) {
 		socket.emit('message', { user, message });
 		input.value = '';
 	}
 }
 
+// Inicia socket y renderiza los mensajes del chat
 function initIO() {
 	socket = io();
 
@@ -55,6 +59,7 @@ function initIO() {
 		const chatBox = document.querySelector('#chatBox');
 		let html = '';
 
+		// renderiza los mensajes comenzando desde el último al primero
 		messages.reverse().forEach((message) => {
 			html += `<p><i class="fw-bold p-1">${message.user}</i>: ${message.message}</p>`;
 		});

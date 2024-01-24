@@ -5,6 +5,10 @@ export default class ChatMongoDAO {
 		this.model = chatModel;
 	}
 
+	/**
+	 * Busca el listado de mensajes
+	 * @returns {Array} Listado de mensajes
+	 */
 	async get() {
 		try {
 			return await this.model.find().limit(15).lean().exec();
@@ -17,6 +21,11 @@ export default class ChatMongoDAO {
 		}
 	}
 
+	/**
+	 * Busca un mensaje mediante su ID
+	 * @param {String} ID del mensaje
+	 * @returns {Object} Mensaje
+	 */
 	async getById(messageID) {
 		try {
 			return await this.model.findById(messageID);
@@ -29,6 +38,11 @@ export default class ChatMongoDAO {
 		}
 	}
 
+	/**
+	 * Agrega un mensaje
+	 * @param {Object} Mensaje
+	 * @returns {Object} Mensaje creado
+	 */
 	async add(newMessage) {
 		try {
 			return await this.model.create(newMessage);
@@ -41,6 +55,11 @@ export default class ChatMongoDAO {
 		}
 	}
 
+	/**
+	 * Elimina un mensaje
+	 * @param {String} ID del mensaje
+	 * @returns {@type void}
+	 */
 	async delete(messageID) {
 		try {
 			return await this.model.deleteOne({ _id: messageID });
@@ -53,6 +72,12 @@ export default class ChatMongoDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un mensaje
+	 * @param {String} ID del mensaje
+	 * @param {Object} Mensaje editado
+	 * @returns {Object} Mensaje actualizado
+	 */
 	async update(messageID, messageUpdated) {
 		try {
 			return await this.model.updateOne(

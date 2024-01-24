@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
 import CartFileDAO from './CartFile.dao.js';
 
+// Creo instancia para poder agregar un carrito al usuario al crearlo
+// Evito así que se asigne el mismo carrito a dos o más usuarios
 const cartFileDAO = new CartFileDAO();
 
 export default class UserFileDAO {
@@ -14,6 +16,10 @@ export default class UserFileDAO {
 		}
 	}
 
+	/**
+	 * Busca el listado de usuarios
+	 * @returns {Array} Listado de usuarios
+	 */
 	async get() {
 		try {
 			const usersList = await fs.promises.readFile(this.path, 'utf-8');
@@ -26,6 +32,11 @@ export default class UserFileDAO {
 		}
 	}
 
+	/**
+	 * Busca un usuario mediante su ID
+	 * @param {String} ID del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getById(userID) {
 		try {
 			const usersList = await this.get();
@@ -45,6 +56,11 @@ export default class UserFileDAO {
 		}
 	}
 
+	/**
+	 * Busca un usuario mediante su email
+	 * @param {String} Email del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getByEmail(userEmail) {
 		try {
 			const usersList = await this.get();
@@ -64,11 +80,15 @@ export default class UserFileDAO {
 		}
 	}
 
+	/**
+	 * Agrega un nuevo usuario
+	 * @param {Object} Usuario
+	 * @returns {Object} Usuario creado
+	 */
 	async add(newUser) {
 		try {
 			let { name, lastname, email, age, password } = newUser;
-
-			age = parseInt(age);
+			age = parseInt(age); // para garantizar el tipo de valor
 
 			if (
 				typeof name !== 'string' ||
@@ -82,11 +102,13 @@ export default class UserFileDAO {
 
 			const usersList = await this.get();
 
+			// para garantizar que el email sea único en la base de datos
 			if (usersList.some((emails) => emails.email === email))
 				return console.error(
 					`The email ${email} already exists. Try another email`
 				);
 
+			// valores predeteminados
 			let _id = uuidv4();
 			let role = 'USER';
 			let cart = await cartFileDAO.add({
@@ -108,22 +130,6 @@ export default class UserFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(usersList));
 
-			// const cartList = await cartFileDAO.get();
-			// // Encuentra el último carrito vacío en el array y se lo asigna al usuario
-			// let lastEmptyCart = null;
-			// for (let i = cartList.length - 1; i >= 0; i--) {
-			// 	if (cartList[i].products.length === 0) {
-			// 		lastEmptyCart = cartList[i];
-			// 		break;
-			// 	}
-			// }
-			// if (!lastEmptyCart) {
-			// 	console.error('No empty cart available. Please create a new one.');
-			// 	return;
-			// }
-
-			// newUserWithID.cart = { _id: lastEmptyCart._id, products: [] };
-
 			console.info(`The user was successfully added`);
 			return newUserWithID;
 		} catch (error) {
@@ -134,6 +140,11 @@ export default class UserFileDAO {
 		}
 	}
 
+	/**
+	 * Elimina un usuario
+	 * @param {String} ID del usuario
+	 * @returns {@type void}
+	 */
 	async delete(userID) {
 		try {
 			const usersList = await this.get();
@@ -141,7 +152,7 @@ export default class UserFileDAO {
 			const userToDelete = usersList.find((user) => user._id === userID);
 			if (!userToDelete) {
 				console.error(`User ID ${userID} not found`);
-				return;
+				return null;
 			}
 
 			const newUserList = usersList.filter((user) => user._id != userID);
@@ -159,6 +170,12 @@ export default class UserFileDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un usuario
+	 * @param {String} ID del usuario
+	 * @param {Object} Usuario editado
+	 * @returns {Object} Usuario actualizado
+	 */
 	async update(userID, userUpdated) {
 		try {
 			const { name, lastname, email, age, password, cart, role } =
@@ -169,7 +186,7 @@ export default class UserFileDAO {
 			const userToUpdate = usersList.find((user) => user._id === userID);
 			if (!userToUpdate) {
 				console.error(`User ID ${userID} not found`);
-				return;
+				return null;
 			}
 
 			const updatedUsersList = usersList.map((user) => {

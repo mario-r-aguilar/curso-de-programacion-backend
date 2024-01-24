@@ -1,3 +1,4 @@
+// Patrón DTO para evitar enviar datos sensibles del usuario en las req y res
 export default class UserDTO {
 	constructor(user) {
 		this.name = user?.name ?? 'You are not logged in.';

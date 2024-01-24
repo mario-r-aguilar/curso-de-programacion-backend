@@ -13,6 +13,6 @@ const productSchema = new mongoose.Schema({
 	thumbnail: { type: Array, required: false, default: [] },
 });
 
-productSchema.plugin(mongoosePaginate);
+productSchema.plugin(mongoosePaginate); // realiza una paginación de los productos
 
 export const productModel = mongoose.model(productCollection, productSchema);

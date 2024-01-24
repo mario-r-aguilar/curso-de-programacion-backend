@@ -5,6 +5,10 @@ export default class CartMongoDAO {
 		this.model = cartModel;
 	}
 
+	/**
+	 * Busca el listado de carritos
+	 * @returns {Array} Listado de carritos
+	 */
 	async get() {
 		try {
 			return await this.model.find().lean().exec();
@@ -17,6 +21,11 @@ export default class CartMongoDAO {
 		}
 	}
 
+	/**
+	 * Busca un carrito mediante su ID
+	 * @param {String} ID del carrito
+	 * @returns {Object} Carrito
+	 */
 	async getById(cartID) {
 		try {
 			return await this.model
@@ -33,6 +42,11 @@ export default class CartMongoDAO {
 		}
 	}
 
+	/**
+	 * Agrega un carrito
+	 * @param {Object} Carrito
+	 * @returns {Object} Carrito creado
+	 */
 	async add(newCart) {
 		try {
 			return await this.model.create(newCart);
@@ -45,6 +59,11 @@ export default class CartMongoDAO {
 		}
 	}
 
+	/**
+	 * Elimina un carrito
+	 * @param {String} ID del carrito
+	 * @returns {@type void}
+	 */
 	async delete(cartID) {
 		try {
 			return await this.model.deleteOne({ _id: cartID });
@@ -57,6 +76,12 @@ export default class CartMongoDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un carrito
+	 * @param {String} ID del carrito
+	 * @param {Object} Carrito editado
+	 * @returns {Object} Carrito actualizado
+	 */
 	async update(cartID, cartUpdated) {
 		try {
 			return await this.model.updateOne(

@@ -5,6 +5,10 @@ export default class UserMongoDAO {
 		this.model = userModel;
 	}
 
+	/**
+	 * Busca el listado de usuarios
+	 * @returns {Array} Listado de usuarios
+	 */
 	async get() {
 		try {
 			return await this.model.find().lean().exec();
@@ -16,6 +20,11 @@ export default class UserMongoDAO {
 		}
 	}
 
+	/**
+	 * Busca un usuario mediante su ID
+	 * @param {String} ID del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getById(userID) {
 		try {
 			return await this.model.findById(userID);
@@ -27,6 +36,11 @@ export default class UserMongoDAO {
 		}
 	}
 
+	/**
+	 * Busca un usuario mediante su email
+	 * @param {String} Email del usuario
+	 * @returns {Object} Usuario
+	 */
 	async getByEmail(userEmail) {
 		try {
 			return await this.model.findOne({ email: userEmail }).lean().exec();
@@ -38,6 +52,11 @@ export default class UserMongoDAO {
 		}
 	}
 
+	/**
+	 * Agrega un usuario
+	 * @param {Object} Usuario
+	 * @returns {Object} Usuario creado
+	 */
 	async add(newUser) {
 		try {
 			return await this.model.create(newUser);
@@ -49,6 +68,11 @@ export default class UserMongoDAO {
 		}
 	}
 
+	/**
+	 * Elimina un usuario
+	 * @param {String} ID del usuario
+	 * @returns {@type void}
+	 */
 	async delete(userID) {
 		try {
 			return await this.model.deleteOne({ _id: userID });
@@ -61,6 +85,12 @@ export default class UserMongoDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un usuario
+	 * @param {String} ID del usuario
+	 * @param {Object} Usuario editado
+	 * @returns {Object} Usuario actualizado
+	 */
 	async update(userID, userUpdated) {
 		try {
 			return await this.model.updateOne(

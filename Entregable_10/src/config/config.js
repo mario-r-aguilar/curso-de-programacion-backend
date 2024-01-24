@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
-	mongoPass: process.env.MONGO_PASS,
-	mongoUser: process.env.MONGO_USER,
+	mongoUrl: process.env.MONGO_URL,
 	mongoDbName: process.env.MONGO_DB_NAME,
 	sessionSecret: process.env.SESSION_SECRET,
 	privateKey: process.env.PRIVATE_KEY_JWT,

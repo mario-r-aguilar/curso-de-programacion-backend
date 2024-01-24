@@ -1,7 +1,7 @@
 // Instanciamos socket.io del lado cliente
 const socket = io();
 
-// Recibe la lista de productos y la renderiza con la función renderProducts()
+// Recibe la lista de productos (data.docs para persistencia MONGO y data para persistencia FILE)
 socket.on('productList', (data) => {
 	renderProducts(data.docs);
 });
@@ -9,6 +9,7 @@ socket.on('productListFile', (data) => {
 	renderProducts(data);
 });
 
+// Renderiza los productos
 const renderProducts = async (data) => {
 	const productsList = document.getElementById('productsList');
 	productsList.innerHTML = '';
@@ -18,7 +19,6 @@ const renderProducts = async (data) => {
 		elementHtml.innerHTML = `<h4 class='text-bg-danger p-3 text-start'>No es posible mostrar los productos</h4>`;
 		productsList.appendChild(elementHtml);
 	} else {
-		// Si contiene los productos, recorre el array y los renderiza
 		data.forEach((element) => {
 			const elementHtml = document.createElement('div');
 			elementHtml.innerHTML = `
@@ -68,8 +68,9 @@ const renderProducts = async (data) => {
 	}
 };
 
+// Funcionalidad del botón cerrar formularios
 const closeForm = () => {
-	// Cierra (borra) el formulario mediante el uso del DOM
+	// Borra el formulario en el DOM
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	// Refresca la página
@@ -77,11 +78,11 @@ const closeForm = () => {
 	document.location.href = url;
 };
 
+// Renderiza el formulario agregar productos y permite hacerlo
 const renderAddForm = () => {
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	const newForm = document.createElement('div');
-	// Renderiza el formulario para agregar productos
 	newForm.innerHTML = `
     <form id='addForm' method='post' action='/api/products' target="_blank">
 		<input class="form-control mb-1 w-50" type='text' required id='title' name='title' placeholder='Nombre' />
@@ -105,8 +106,6 @@ const renderAddForm = () => {
 		event.preventDefault();
 		// Captura el contenido de nuestro formulario
 		const formData = new FormData(addForm);
-
-		// Crea el objeto que contendrá la información del formulario
 		const productData = {};
 
 		//Recorre formData y guarda key y valor en productData
@@ -157,6 +156,7 @@ const renderAddForm = () => {
 	});
 };
 
+// Renderiza el formulario para actualizar productos y permite hacerlo
 const renderUpdateForm = () => {
 	const form = document.getElementById('form');
 	form.innerHTML = '';
@@ -222,7 +222,7 @@ const renderUpdateForm = () => {
                 `;
 					form.appendChild(responseMessage);
 					updateForm.reset();
-					// Envía por socket.io el aviso de actualización de la lista de productos
+
 					socket.emit('updatedList', 'Se actualizo la lista de productos');
 				}
 			})
@@ -232,11 +232,11 @@ const renderUpdateForm = () => {
 	});
 };
 
+// Renderiza el formulario para eliminar productos y permite hacerlo
 const renderDelForm = () => {
 	const form = document.getElementById('form');
 	form.innerHTML = '';
 	const newForm = document.createElement('div');
-	// Renderiza el formulario para eliminar productos
 	newForm.innerHTML = `
 	<form id='delForm' method='post' action='/api/products/:pid'>
 		<input class="form-control mb-1 w-50" type='text' required id='id' name='id' placeholder='Id del producto' />
@@ -246,14 +246,13 @@ const renderDelForm = () => {
     `;
 	form.appendChild(newForm);
 
-	document.getElementById('delForm');
+	const delForm = document.getElementById('delForm');
 	// Escucha el evento submit al presionar el botón eliminar
-	document.addEventListener('submit', function (event) {
+	delForm.addEventListener('submit', function (event) {
 		event.preventDefault();
 		// Selecciona la sección id del formulario
 		const idInput = document.getElementById('id');
 		if (idInput !== null) {
-			// Si existe, guarda el valor de id
 			const productId = idInput.value;
 
 			// Elimina el producto indicado según su id
@@ -261,7 +260,7 @@ const renderDelForm = () => {
 				method: 'DELETE',
 			})
 				.then((res) => {
-					// Si la promesa se resolvio renderiza un mensaje informándolo
+					// Si la promesa se resolvio correctamente renderiza un mensaje informándolo
 					if (res.ok) {
 						const form = document.getElementById('form');
 						form.innerHTML = '';
@@ -289,36 +288,33 @@ const renderDelForm = () => {
 	});
 };
 
-// Para limitar la cantidad de productos por pantalla
+// Funcionalidad del botón para limitar la cantidad de productos por pantalla
 const limitProducts = () => {
 	let limit = document.querySelector('#limitProducts').value;
 	socket.emit('productsLimit', limit);
 };
-
 const btnLimitProducts = document.getElementById('btnLimitProducts');
 if (btnLimitProducts) {
 	btnLimitProducts.addEventListener('click', limitProducts);
 }
 
+// Funcionalidad del botón para buscar una palabra en la página mediante window.find
 const searchOnPage = () => {
 	let searchTerm = document.getElementById('searchInput').value.toLowerCase();
-	// Argumentos de window.find: término de búsqueda, sensibilidad a mayúsculas y minúsculas (false),
-	// dirección hacia adelante (false), resaltar (true), retroceder (false), coincidencia exacta (false), buscar en enlaces (false)
 	let searchResult = window.find(
-		searchTerm,
-		false,
-		false,
-		true,
-		false,
-		false,
-		false
+		searchTerm, // término a buscar
+		false, // sensibilidad a mayúsculas y minúsculas
+		false, // dirección hacia adelante
+		true, // resaltar
+		false, // retroceder
+		false, // coincidencia exacta
+		false //buscar en enlaces
 	);
 
 	if (!searchResult) {
 		alert('No se encontraron coincidencias.');
 	}
 };
-
 const btnSearchOnPage = document.getElementById('btnSearchOnPage');
 if (btnSearchOnPage) {
 	btnSearchOnPage.addEventListener('click', searchOnPage);

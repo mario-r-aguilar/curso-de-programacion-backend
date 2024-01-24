@@ -61,8 +61,8 @@ const initializePassport = () => {
 					const newUser = req.body;
 					newUser.password = createHash(password);
 
+					// Crea un carrito nuevo y lo asigna al usuario creado (solo en persistencia MONGO)
 					if (selectedPersistence.persistence === 'MONGO') {
-						// Crea un carrito nuevo y lo asigna al usuario recientemente creado
 						newUser.cart = await CartService.addCart({
 							products: [],
 						});
@@ -167,7 +167,7 @@ const initializePassport = () => {
 						role: 'USER',
 					});
 
-					const token = generateToken(newUser); //modif
+					const token = generateToken(newUser);
 					user.token = token;
 
 					// Autentica el usuario
@@ -186,7 +186,7 @@ const initializePassport = () => {
 
 	// Deserializa el usuario
 	passport.deserializeUser(async (id, done) => {
-		// Este bloque se usa para poder usar el usuario administrador que no está en la base de datos
+		// Este bloque se usa para poder usar el usuario administrador
 		if (id === config.adminId) {
 			return done(null, false);
 		}

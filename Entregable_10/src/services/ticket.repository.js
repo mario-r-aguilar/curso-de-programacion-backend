@@ -6,6 +6,10 @@ export default class TicketRepository {
 		this.dao = dao;
 	}
 
+	/**
+	 * Busca el listado de tickets
+	 * @returns {Array} Listado de tickets
+	 */
 	async getTickets() {
 		try {
 			return await this.dao.get();
@@ -17,6 +21,11 @@ export default class TicketRepository {
 		}
 	}
 
+	/**
+	 * Busca un ticket mediante su ID
+	 * @param {String} ID del ticket
+	 * @returns {Object} Ticket
+	 */
 	async getTicketById(ticketID) {
 		try {
 			return await this.dao.getById(ticketID);
@@ -28,6 +37,11 @@ export default class TicketRepository {
 		}
 	}
 
+	/**
+	 * Agrega un ticket
+	 * @param {Object} Ticket
+	 * @returns {Object} Ticket creado
+	 */
 	async addTicket(newTicket) {
 		try {
 			return await this.dao.add(newTicket);
@@ -39,6 +53,11 @@ export default class TicketRepository {
 		}
 	}
 
+	/**
+	 * Elimina un ticket
+	 * @param {String} ID del ticket
+	 * @returns {@type void}
+	 */
 	async deleteTicket(ticketID) {
 		try {
 			return await this.dao.delete(ticketID);
@@ -51,6 +70,12 @@ export default class TicketRepository {
 		}
 	}
 
+	/**
+	 * Actualiza un ticket
+	 * @param {String} ID del ticket
+	 * @param {Object} Ticket editado
+	 * @returns {Object} Ticket actualizado
+	 */
 	async updateTicket(ticketID, ticketUpdated) {
 		try {
 			return await this.dao.update(ticketID, ticketUpdated);
@@ -63,6 +88,12 @@ export default class TicketRepository {
 		}
 	}
 
+	/**
+	 * Envía un mail con los detalles del ticket al usuario
+	 * @param {Object} Ticket a enviar
+	 * @param {String} Email del usuario
+	 * @returns {Object} Detalles del mail enviado
+	 */
 	async sendTicketByMail(ticket, email) {
 		const transport = nodemailer.createTransport({
 			service: 'gmail',

@@ -1,5 +1,6 @@
 <h1 class='mb-5 mt-3'>Lista de productos en tiempo real</h1>
 
+{{! Botón para limitar la cantidad de productos por pantalla y botón de búsqueda }}
 <div class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap'>
 	<div class='input-group m-3 w-25'>
 		<label class='input-group-text' for='limitProducts'>Productos por
@@ -30,30 +31,33 @@
 		<button
 			class='btn btn-dark border border-dark shadow'
 			id='btnSearchOnPage'
-		>Buscar
-		</button>
+		>Buscar </button>
 	</div>
 </div>
 
-{{! Secciones donde se renderizaran los formularios y la lista de productos respectivamente }}
+{{! Aquí se renderizará el formulario según el botón que presionemos }}
 <div class='w-50 ms-3' id='form'></div>
-{{! Según el botón que presionemos ejecuta la función de renderizado de su formulario }}
+
+{{! Botones para manejo de formularios }}
 <button
 	class='btn btn-success border border-dark shadow ms-3 mb-3'
 	id='btnAdd'
 	onclick='renderAddForm()'
 >Agregar Productos</button>
+
 <button
 	class='btn btn-warning border border-dark shadow ms-3 mb-3'
 	id='btnUpdate'
 	onclick='renderUpdateForm()'
 >Actualizar Productos</button>
+
 <button
 	class='btn btn-danger border border-dark shadow ms-3 mb-3'
 	id='btnDel'
 	onclick='renderDelForm()'
 >Eliminar Productos</button>
 
+{{! Aquí se renderizarán los productos }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-evenly flex-wrap'
 	id='productsList'

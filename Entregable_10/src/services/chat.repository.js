@@ -3,6 +3,10 @@ export default class ChatRepository {
 		this.dao = dao;
 	}
 
+	/**
+	 * Busca el listado de mensajes
+	 * @returns {Array} Listado de mensajes
+	 */
 	async getMessages() {
 		try {
 			return await this.dao.get();
@@ -15,6 +19,11 @@ export default class ChatRepository {
 		}
 	}
 
+	/**
+	 * Crea un mensaje
+	 * @param {Object} Mensaje
+	 * @returns {Object} Mensaje creado
+	 */
 	async createMessage(newMessage) {
 		try {
 			return await this.dao.add(newMessage);

@@ -11,12 +11,16 @@ export default class CartFileDAO {
 		}
 	}
 
+	/**
+	 * Busca el listado de carritos
+	 * @returns {Array} Listado de carritos
+	 */
 	async get() {
 		try {
 			const cartsList = await fs.promises.readFile(this.path, 'utf-8');
 			if (!cartsList) {
 				console.error('The file is empty.');
-				return;
+				return null;
 			}
 			return JSON.parse(cartsList);
 		} catch (error) {
@@ -28,6 +32,11 @@ export default class CartFileDAO {
 		}
 	}
 
+	/**
+	 * Busca un carrito mediante su ID
+	 * @param {String} ID del carrito
+	 * @returns {Object} Carrito
+	 */
 	async getById(cartID) {
 		try {
 			const cartsList = await this.get();
@@ -49,10 +58,14 @@ export default class CartFileDAO {
 		}
 	}
 
+	/**
+	 * Agrega un nuevo carrito
+	 * @param {Object} Carrito
+	 * @returns {Object} Carrito creado
+	 */
 	async add(newCart) {
 		try {
 			const { products } = newCart;
-
 			if (!products) return console.error('Products element is missing');
 
 			const cartsList = await this.get();
@@ -77,6 +90,11 @@ export default class CartFileDAO {
 		}
 	}
 
+	/**
+	 * Elimina un carrito
+	 * @param {String} ID del carrito
+	 * @returns {@type void}
+	 */
 	async delete(cartID) {
 		try {
 			const cartList = await this.get();
@@ -95,6 +113,12 @@ export default class CartFileDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un carrito
+	 * @param {String} ID del carrito
+	 * @param {Object} Carrito editado
+	 * @returns {Object} Carrito actualizado
+	 */
 	async update(cartID, cartUpdated) {
 		try {
 			const { products } = cartUpdated;

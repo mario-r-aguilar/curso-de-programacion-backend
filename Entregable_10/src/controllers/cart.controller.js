@@ -32,7 +32,7 @@ export const addCart = async (req, res) => {
 	}
 };
 
-// Agrega un producto a un carrito mediante sus IDs envíadas por req.params
+// Agrega un producto a un carrito usando las IDs envíadas por req.params
 export const addProductToCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -43,7 +43,7 @@ export const addProductToCart = async (req, res) => {
 	}
 };
 
-// Elimina un producto del carrito
+// Elimina un producto de un carrito
 export const deleteOneProductfromCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -56,7 +56,7 @@ export const deleteOneProductfromCart = async (req, res) => {
 	}
 };
 
-// Actualiza el contenido completo de un carrito
+// Actualiza el contenido completo de un carrito usando el objeto completo que devuelve getProducts()
 export const updateAllProductsOfCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -67,7 +67,7 @@ export const updateAllProductsOfCart = async (req, res) => {
 	}
 };
 
-// Actualiza la cantidad de un producto que se encuentra en el carrito
+// Actualiza la cantidad de un producto que se encuentra en un carrito
 export const updateQuantityOfProduct = async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -91,6 +91,7 @@ export const deleteAllProductsfromCart = async (req, res) => {
 	}
 };
 
+// Finaliza la compra de los productos que se encuentran en un carrito
 export const purchaseProductsInCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
@@ -98,24 +99,19 @@ export const purchaseProductsInCart = async (req, res) => {
 		const userData = req.session.user;
 
 		if (!userData) {
-			return res
-				.status(401)
-				.send({
-					status: 'error',
-					message: 'unauthorized: you are not logged in',
-				});
+			return res.status(401).send({
+				status: 'error',
+				message: 'unauthorized: you are not logged in',
+			});
 		}
 		if (!cart) {
-			return res
-				.status(404)
-				.send({
-					status: 'error',
-					message: 'not found: the cart does not exist',
-				});
+			return res.status(404).send({
+				status: 'error',
+				message: 'not found: the cart does not exist',
+			});
 		}
 
 		const user = new UserDTO(userData);
-
 		const payload = await CartService.purchaseProductsInCart(cid, user);
 
 		res.send({

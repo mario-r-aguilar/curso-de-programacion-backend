@@ -15,21 +15,25 @@ productRouter.get(
 	passport.authenticate('current', { session: false }),
 	getProducts
 );
+
 productRouter.get(
 	'/:pid',
 	passport.authenticate('current', { session: false }),
 	getProductById
 );
+
 productRouter.post(
 	'/',
 	passport.authenticate('current', { session: false }),
 	addProduct
 );
+
 productRouter.put(
 	'/:pid',
 	passport.authenticate('current', { session: false }),
 	updateProduct
 );
+
 productRouter.delete(
 	'/:pid',
 	passport.authenticate('current', { session: false }),

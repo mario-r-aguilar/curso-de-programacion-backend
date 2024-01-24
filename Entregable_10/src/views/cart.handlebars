@@ -1,6 +1,6 @@
 <h1 class='text-center mt-3 mb-3'>Carrito</h1>
 
-{{! Información necesaria para cart.js }}
+{{! Información necesaria para cart.js (getCartId varía según la persistencia seleccionada)}}
 {{#if isMongoPersistence}}
 	<input type='hidden' id='getCartId' value='{{user.cart}}' />
 {{else}}
@@ -8,10 +8,10 @@
 {{/if}}
 <input type='hidden' id='getUserRole' value='{{user.role}}' />
 
-{{! Aquí se mostrará el total de la compra }}
+{{! Aquí se mostrará el precio total de los productos que se encuentran en el carrito }}
 <div class='alert alert-info w-50' id='totalPurchase'></div>
 
-{{! Botones de navegación y finalización de la compra }}
+{{! Botón para volver al listado de productos y botón de finalización de la compra }}
 <div
 	class='d-flex p-2 mb-2 flex-row justify-content-start flex-wrap buttonsSecction'
 >
@@ -19,15 +19,13 @@
 		class='btn btn-dark btnBack border border-dark shadow ms-5 mb-3'
 		id='btnBackToBuy'
 	>Seguir comprando</button>
-
 	<button
 		class='btn btn-primary border border-dark shadow ms-5 mb-3'
 		id='btnFinishBuy'
 	>Finalizar la compra</button>
-
 </div>
 
-{{! Aquí se mostrará el detalle de la compra }}
+{{! Aquí se mostrará el detalle de la compra una vez finalizada}}
 <div id='purchaseDetail'></div>
 
 {{! Aquí se renderizan los productos del carrito }}
@@ -38,6 +36,7 @@
 
 	{{#if cart.products.length}}
 		{{#each cart.products}}
+
 			<div
 				class='card p-3 mb-3 shadow-lg'
 				id='cardCartProduct'
@@ -53,8 +52,7 @@
 						alt='{{this.product.title}}'
 					/>
 					<p class='card-text'><b>Precio unitario: ${{this.product.price}}</b></p>
-					<p class='card-text'><b>Cantidad: {{this.quantity}} </b>
-					</p>
+					<p class='card-text'><b>Cantidad: {{this.quantity}} </b> </p>
 					<span>
 						<input
 							type='number'
@@ -77,6 +75,7 @@
 
 		{{/each}}
 	{{else}}
+
 		<h4 class='text-bg-danger p-3 text-start'>No tienes productos en el
 			carrito</h4>
 	{{/if}}

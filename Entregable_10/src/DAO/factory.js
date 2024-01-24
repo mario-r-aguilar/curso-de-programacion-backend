@@ -2,19 +2,19 @@ import config from '../config/config.js';
 import selectedPersistence from '../config/persistence.js';
 import mongoose from 'mongoose';
 
+// Nombres de los daos para usar por los services
 export let Product;
 export let Cart;
 export let User;
 export let Chat;
 export let Ticket;
 
-const urlMongoDb = `mongodb+srv://${config.mongoUser}:${config.mongoPass}@ecommerce-coder.1dfmp8r.mongodb.net/?retryWrites=true&w=majority`;
-
+// Patrón fábrica para el uso de los daos según la persistencia seleccionada
 switch (selectedPersistence.persistence) {
 	case 'MONGO':
 		try {
 			mongoose
-				.connect(urlMongoDb, { dbName: config.mongoDbName })
+				.connect(config.mongoUrl, { dbName: config.mongoDbName })
 				.then(() => {
 					console.info('Mongo DB connected');
 				})
@@ -25,6 +25,7 @@ switch (selectedPersistence.persistence) {
 					);
 				});
 
+			// importe dinámico de daos de mongo
 			const { default: ProductMongo } = await import(
 				'./mongo/ProductMongo.dao.js'
 			);
@@ -55,6 +56,8 @@ switch (selectedPersistence.persistence) {
 	case 'FILE':
 		try {
 			console.info('File DB connected');
+
+			// importe dinámico de daos de file
 			const { default: ProductFile } = await import(
 				'./file/ProductFile.dao.js'
 			);

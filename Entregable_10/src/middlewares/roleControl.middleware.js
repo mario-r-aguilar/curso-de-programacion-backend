@@ -1,5 +1,6 @@
 import UserDTO from '../DTO/user.dto.js';
 
+// Manejo de permisos según el rol del usuario
 export const roleControl = (...authRoles) => {
 	return (req, res, next) => {
 		const userData = req.session.user;

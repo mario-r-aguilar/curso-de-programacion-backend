@@ -39,7 +39,6 @@ userRouter.post(
 
 userRouter.get('/failregister', failRegister);
 
-// Valida la existencia del token con la estrategia current, antes de dar acceso a la ruta
 userRouter.get(
 	'/current',
 	passport.authenticate('current', { session: false }),

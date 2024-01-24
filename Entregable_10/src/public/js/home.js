@@ -1,6 +1,8 @@
+// Información necesaria obtenida desde el archivo handlebars
 const cartID = document.querySelector('#getCartId').value;
 const userRole = document.querySelector('#getUserRole').value;
 
+// Desactiva los botones de agregar producto a los administradores para mejorar la UI
 const adminButtonOption = () => {
 	if (userRole === 'ADMIN') {
 		const addProductButtonAdmin = document.querySelectorAll(
@@ -13,7 +15,7 @@ const adminButtonOption = () => {
 	}
 };
 
-// Función para la navegación por las páginas y uso de filtros
+// Función para la navegación por la página y uso de filtros
 function navigateToPage(pageValue) {
 	const page = document.querySelector('#' + pageValue).value;
 	const limit = document.querySelector('#limit').value;
@@ -27,19 +29,18 @@ function navigateToPage(pageValue) {
 	document.location.href = url;
 }
 
-// Función para volver a la página de inicio
+// Función para refrescar la página
 function resetPage() {
 	const url = '/products';
 	document.location.href = url;
 }
 
-// Renderización de la página para ver los detalles de un producto
+// Muestra los detalles de un producto
 const renderOneProduct = (id) => {
-	// Realiza un GET con la id del producto al endpoint correspondiente para obtenerlo
+	// Obtiene el producto
 	fetch(`/api/products/${id}`, {
 		method: 'get',
 	})
-		// Convierte la respuesta a JSON
 		.then((res) => res.json())
 		// Renderiza el producto
 		.then((data) => {
@@ -101,8 +102,8 @@ const renderOneProduct = (id) => {
 			`;
 			html.appendChild(div);
 
+			// Activa o desactiva el botón de agregar al carrito según el rol del usuario
 			const addToCartButton = div.querySelector('.btnAddProductToCart');
-
 			if (userRole === 'ADMIN') {
 				adminButtonOption();
 			} else {
@@ -111,8 +112,9 @@ const renderOneProduct = (id) => {
 				);
 			}
 
-			// Manejo del botón para volver a la página de inicio desde la página de detalles de un producto
-			document.querySelector('#btnBack').onclick = () => resetPage();
+			// Funcionalidad del botón para volver a la página de inicio
+			const btnBackToHome = document.querySelector('#btnBack');
+			btnBackToHome.onclick = () => resetPage();
 		});
 };
 
@@ -120,6 +122,7 @@ const renderOneProduct = (id) => {
 const addProductToCart = async (id) => {
 	fetch(`/api/carts/${cartID}/products/${id}`, { method: 'post' })
 		.then((res) => {
+			// muestra un mensaje de confirmación por 1 segundo
 			if (res.ok) {
 				const productAddMessage = document.getElementById(
 					`productAddSuccess_${id}`
@@ -134,15 +137,15 @@ const addProductToCart = async (id) => {
 
 				setTimeout(() => {
 					productAddMessage.innerHTML = '';
-				}, 1500);
+				}, 1000);
 			}
 		})
 		.catch((error) => {
-			console.error(error);
+			console.error('Could not add product to cart', error);
 		});
 };
 
-// Manejo de los botones para el desplazamiento entre páginas
+// Funcionalidad de los botones para el desplazamiento entre páginas
 const btnPrev = document.querySelector('#btnPrev');
 const btnNext = document.querySelector('#btnNext');
 if (btnPrev && btnNext) {
@@ -150,11 +153,11 @@ if (btnPrev && btnNext) {
 	btnNext.onclick = () => navigateToPage('nextPage');
 }
 
-// Manejo del botón de filtros
+// Funcionalidad para ir a una página en específico
 const btnFilters = document.querySelector('#btnApplyFilters');
 if (btnFilters) {
 	btnFilters.onclick = () => {
-		const totalPages = document.querySelector('#pageErrorAux').value;
+		const totalPages = document.querySelector('#totalPageValue').value;
 		const pageInput = document.querySelector('#page').value;
 
 		if (
@@ -174,20 +177,20 @@ if (btnFilters) {
 	};
 }
 
-// Manejo del botón para refrescar la página
-const btnRefresh = document.querySelector('#btnCleanFilters');
-if (btnRefresh) {
-	btnRefresh.onclick = () => resetPage();
+// Funcionalidad del botón para limpiar los filtros (actualiza la página)
+const btnCleanFilters = document.querySelector('#btnCleanFilters');
+if (btnCleanFilters) {
+	btnCleanFilters.onclick = () => resetPage();
 }
 
-// Manejo del botón para ver los detalles de un producto
+// Funcionalidad del botón para ver los detalles de un producto
 const btnCards = document.querySelectorAll(
 	'.btnProductDetail, .btnAddProductToCart'
 );
 
 if (btnCards) {
 	btnCards.forEach((button) => {
-		// Escucha los eventos clic de los botones de detalle de las card
+		// Escucha los eventos clic de los botones de las cards
 		button.addEventListener('click', (event) => {
 			const closestCard = event.target.closest('.card');
 			const productIdHome = closestCard.querySelector('#getProductId');
@@ -195,10 +198,12 @@ if (btnCards) {
 				'#getProductIdDetail'
 			);
 
+			// Guarda el Id del producto que aparece en la card, donde se hizo clic a uno de sus botones
 			const id = productIdHome
 				? productIdHome.value
 				: productIdDetails.value;
 
+			// De acuerdo al botón presionado ejecuta la función
 			if (button.classList.contains('btnProductDetail')) {
 				renderOneProduct(id);
 			} else if (button.classList.contains('btnAddProductToCart')) {
@@ -208,7 +213,7 @@ if (btnCards) {
 	});
 }
 
-// Para limitar la cantidad de productos por pantalla
+// Limita la cantidad de productos por pantalla (función para persistencia FILE)
 const limitProducts = () => {
 	let limit = document.querySelector('#limitProducts').value;
 	const url = `/products?limit=${limit}`;
@@ -219,11 +224,11 @@ if (btnLimitProducts) {
 	btnLimitProducts.addEventListener('click', limitProducts);
 }
 
-// Para buscar en la página con window.find
+// Busca una palabra en la página con window.find (función para persistencia FILE)
 const searchOnPage = () => {
 	let searchTerm = document.getElementById('searchInput').value.toLowerCase();
 	let searchResult = window.find(
-		searchTerm, // término de búsqueda
+		searchTerm, // término a buscar
 		false, // sensibilidad a mayúsculas y minúsculas
 		false, // dirección hacia adelante
 		true, // resaltar
@@ -236,7 +241,6 @@ const searchOnPage = () => {
 		alert('No se encontraron coincidencias.');
 	}
 };
-
 const btnSearchOnPage = document.getElementById('btnSearchOnPage');
 if (btnSearchOnPage) {
 	btnSearchOnPage.addEventListener('click', searchOnPage);

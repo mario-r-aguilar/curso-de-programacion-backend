@@ -12,8 +12,8 @@ export function socketServer(server) {
 		// Modifico el valor por defecto del límite
 		let limitValue = 50;
 		let productList = await ProductService.getProducts(limitValue);
-		// Envía la lista de productos cuando un cliente se conecta
 
+		// Envía la lista de productos cuando un cliente se conecta (el mensaje depende de la persistencia seleccionada)
 		if (selectedPersistence.persistence === 'MONGO') {
 			socket.emit('productList', productList);
 		} else {
@@ -42,6 +42,8 @@ export function socketServer(server) {
 		});
 
 		// Manejo del chat
+		socket.emit('messages', await ChatService.getMessages());
+
 		socket.on('message', async (data) => {
 			await ChatService.createMessage(data);
 			io.emit('messages', await ChatService.getMessages());

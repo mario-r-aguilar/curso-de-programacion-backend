@@ -11,6 +11,10 @@ export default class ChatFileDAO {
 		}
 	}
 
+	/**
+	 * Busca el listado de mensajes
+	 * @returns {Array} Listado de mensajes
+	 */
 	async get() {
 		try {
 			const messagesList = await fs.promises.readFile(this.path, 'utf-8');
@@ -24,6 +28,11 @@ export default class ChatFileDAO {
 		}
 	}
 
+	/**
+	 * Busca un mensaje mediante su ID
+	 * @param {String} ID del mensaje
+	 * @returns {Object} Mensaje
+	 */
 	async getById(messageID) {
 		try {
 			const messagesList = await this.get();
@@ -47,6 +56,11 @@ export default class ChatFileDAO {
 		}
 	}
 
+	/**
+	 * Agrega un nuevo mensaje
+	 * @param {Object} Mensaje
+	 * @returns {Object} Mensaje creado
+	 */
 	async add(newMessage) {
 		try {
 			const { user, message } = newMessage;
@@ -77,6 +91,11 @@ export default class ChatFileDAO {
 		}
 	}
 
+	/**
+	 * Elimina un mensaje
+	 * @param {*} ID del mensaje
+	 * @returns {@type void}
+	 */
 	async delete(messageID) {
 		try {
 			const messagesList = await this.get();
@@ -100,6 +119,12 @@ export default class ChatFileDAO {
 		}
 	}
 
+	/**
+	 * Actualiza un mensaje
+	 * @param {String} ID del mensaje
+	 * @param {Object} Mensaje editado
+	 * @returns {Object} Mensaje actualizado
+	 */
 	async update(messageID, messageUpdated) {
 		try {
 			const { user, message } = messageUpdated;

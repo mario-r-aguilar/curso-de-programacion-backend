@@ -2,7 +2,7 @@ import { ProductService, CartService } from '../services/index.js';
 import selectedPersistence from '../config/persistence.js';
 import UserDTO from '../DTO/user.dto.js';
 
-// Vista para loguear un usuario
+// Vista para el logueo de usuarios
 export const renderLogin = (req, res) => {
 	try {
 		return res.render('login', {});
@@ -11,7 +11,7 @@ export const renderLogin = (req, res) => {
 	}
 };
 
-// Vista para registrar un usuario
+// Vista para el registro de usuarios
 export const renderRegister = (req, res) => {
 	try {
 		return res.render('register', {});
@@ -20,16 +20,19 @@ export const renderRegister = (req, res) => {
 	}
 };
 
-// Vista para mostrar el listado de productos (permite a filtrar a traves de req.query)
+// Vista del listado de productos (permite a filtrar a traves de req.query)
 export const renderProductsPage = async (req, res) => {
 	try {
+		// código para ambas persistencias
 		const isMongoPersistence =
-			selectedPersistence.persistence === 'MONGO' ? true : false;
+			selectedPersistence.persistence === 'MONGO' ? true : false; // Para uso en handlebars
+
 		let productsList;
 		const userData = req.session.user;
 		const user = new UserDTO(userData);
 		const { limit, page, sort, category, status, title } = req.query;
 
+		// código para persistencia MONGO
 		if (isMongoPersistence === true) {
 			productsList = await ProductService.getProducts(
 				limit,
@@ -40,6 +43,7 @@ export const renderProductsPage = async (req, res) => {
 				title
 			);
 		} else {
+			// código para persistencia FILE
 			productsList = await ProductService.getProducts(limit);
 		}
 
@@ -54,7 +58,7 @@ export const renderProductsPage = async (req, res) => {
 	}
 };
 
-// Vista para mostrar el contenido del carrito (solo funciona con mongoDb)
+// Vista del contenido del carrito
 export const renderCart = async (req, res) => {
 	try {
 		const isMongoPersistence =
@@ -70,7 +74,7 @@ export const renderCart = async (req, res) => {
 	}
 };
 
-// Vista para mostrar el listado de productos y actualizarlos en tiempo real
+// Vista del listado de productos en tiempo real (solo para el administrador)
 export const renderRealTimeProducts = (req, res) => {
 	try {
 		const userData = req.session.user;
@@ -84,7 +88,7 @@ export const renderRealTimeProducts = (req, res) => {
 	}
 };
 
-// Vista para mostrar el chat e interactuar en él
+// Vista del chat (solo para usuarios)
 export const renderChat = (req, res) => {
 	try {
 		const userData = req.session.user;
