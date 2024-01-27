@@ -9,6 +9,7 @@ import {
 	renderCart,
 	renderRealTimeProducts,
 	renderChat,
+	renderMockingProducts,
 } from '../controllers/views.controller.js';
 
 const viewsRouter = Router();
@@ -41,6 +42,12 @@ viewsRouter.get(
 	passport.authenticate('current', { session: false }),
 	roleControl('USER'),
 	renderChat
+);
+
+viewsRouter.get(
+	'/mockingproducts',
+	passport.authenticate('current', { session: false }),
+	renderMockingProducts
 );
 
 export { viewsRouter };

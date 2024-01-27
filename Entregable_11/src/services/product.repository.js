@@ -1,3 +1,5 @@
+import { fakerES_MX as faker } from '@faker-js/faker';
+
 export default class ProductRepository {
 	constructor(dao) {
 		this.dao = dao;
@@ -91,6 +93,27 @@ export default class ProductRepository {
 				Error: ${error}`
 			);
 			return;
+		}
+	}
+
+	async mockingproducts() {
+		try {
+			return {
+				_id: faker.database.mongodbObjectId(),
+				title: faker.commerce.productName(),
+				description: faker.commerce.productDescription(),
+				code: faker.string.alphanumeric(10),
+				price: faker.commerce.price(),
+				status: faker.datatype.boolean(),
+				stock: faker.number.int({ max: 100 }),
+				category: faker.commerce.department(),
+				thumbnail: faker.image.url(),
+			};
+		} catch (error) {
+			console.error(
+				`It is not possible to show the moking of products.\n 
+				Error: ${error}`
+			);
 		}
 	}
 }

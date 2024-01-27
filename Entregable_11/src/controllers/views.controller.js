@@ -98,3 +98,20 @@ export const renderChat = (req, res) => {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
+
+export const renderMockingProducts = async (req, res) => {
+	try {
+		const productsList = [];
+
+		for (let i = 0; i < 100; i++) {
+			productsList.push(await ProductService.mockingproducts());
+		}
+
+		res.render('mockingProducts', {
+			productsList,
+			title: 'Mocking Products',
+		});
+	} catch (error) {
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+};
