@@ -168,4 +168,19 @@ if (btnFinishBuy) {
 	};
 }
 
+const btnEmptyCart = document.querySelector('#btnEmptyCart');
+if (btnEmptyCart) {
+	btnEmptyCart.onclick = () => {
+		fetch(`/api/carts/${cartID}`, {
+			method: 'delete',
+		})
+			.then((res) => refreshCartPage(cartID))
+			.catch((error) =>
+				console.error(
+					`It was not possible to empty the cart. Error ${error}`
+				)
+			);
+	};
+}
+
 adminView();
