@@ -24,7 +24,8 @@ productRouter.get(
 
 productRouter.post(
 	'/',
-	passport.authenticate('current', { session: false }),
+
+	//passport.authenticate('current', { session: false }),
 	addProduct
 );
 

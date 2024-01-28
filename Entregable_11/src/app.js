@@ -13,6 +13,7 @@ import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import config from './config/config.js';
 import cors from 'cors';
+import errorsHandler from './middlewares/errorsHandler.js';
 
 const app = express();
 
@@ -53,6 +54,9 @@ app.use('/api/sessions', userRouter);
 app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);
+
+// Manejador de errores
+app.use(errorsHandler);
 
 const httpServer = app.listen(8080, () => {
 	console.info('Server online and listening');

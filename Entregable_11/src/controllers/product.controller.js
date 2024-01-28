@@ -1,4 +1,6 @@
+import { ne } from '@faker-js/faker';
 import selectedPersistence from '../config/persistence.js';
+import CustomError from '../errors/CustomError.js';
 import { ProductService } from '../services/index.js';
 
 // Muestra el listado de productos y permite aplicar filtros
@@ -45,12 +47,24 @@ export const getProductById = async (req, res) => {
 };
 
 // Agrega un nuevo producto enviado por req.body
-export const addProduct = async (req, res) => {
+export const addProduct = async (req, res, next) => {
 	try {
 		let newProduct = req.body;
+
+		if (
+			!newProduct?.title ||
+			!newProduct?.description ||
+			!newProduct?.code ||
+			!newProduct?.price ||
+			!newProduct?.stock ||
+			!newProduct?.category
+		) {
+			// Uso next() para pasar el error al siguiente middleware que en este caso es errorsHandler
+			next(CustomError.createProductError(newProduct));
+		}
 		res.status(201).send(await ProductService.addProduct(newProduct));
 	} catch (error) {
-		res.status(500).send(`Internal Server Error: ${error}`);
+		next(error);
 	}
 };
 

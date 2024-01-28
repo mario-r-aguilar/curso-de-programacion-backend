@@ -96,6 +96,10 @@ export default class ProductRepository {
 		}
 	}
 
+	/**
+	 * Genera un mock de un producto
+	 * @returns {Object} Mock de un producto
+	 */
 	async mockingproducts() {
 		try {
 			return {
