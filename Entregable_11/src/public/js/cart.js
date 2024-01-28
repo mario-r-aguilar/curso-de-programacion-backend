@@ -144,11 +144,18 @@ if (btnProductInCart) {
 const btnFinishBuy = document.querySelector('#btnFinishBuy');
 if (btnFinishBuy) {
 	btnFinishBuy.onclick = () => {
+		// Muestra un loader hasta que se muestra la información de la operación
+		const waitingPurchasingProcess = document.querySelector(
+			'#waitingPurchasingProcess'
+		);
+		waitingPurchasingProcess.classList.remove('d-none');
 		fetch(`/api/carts/${cartID}/purchase`)
 			.then((response) => response.json())
 			.then((data) => {
 				// Muestra los detalles de la compra durante 8 segundos y actualiza la página
 				showPurchaseDetail(data);
+				// Desactiva el loader de espera
+				waitingPurchasingProcess.classList.add('d-none');
 				setTimeout(() => {
 					refreshCartPage(cartID);
 				}, 8000);

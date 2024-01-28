@@ -23,6 +23,11 @@
 		class='btn btn-primary border border-dark shadow ms-5 mb-3'
 		id='btnFinishBuy'
 	>Finalizar la compra</button>
+	{{! Aquí se mostrará el loader mientras la operación se finaliza}}
+	<span
+		class='ms-3 spinner-border text-dark d-none'
+		id='waitingPurchasingProcess'
+	></span>
 </div>
 
 {{! Aquí se mostrará el detalle de la compra una vez finalizada}}
