@@ -1,7 +1,5 @@
 let socket;
-
-// Verifica si en el storage si el usuario ya se identifico y sino lo hizo le pide que lo haga
-let user = sessionStorage.getItem('user') || '';
+const user = document.querySelector('#userEmail').value;
 if (user) {
 	document.querySelector('#username').innerHTML = user + ': ';
 	initIO();
@@ -17,7 +15,6 @@ if (user) {
 		allowOutsideClick: false,
 	}).then((result) => {
 		user = result.value;
-		sessionStorage.setItem('user', user);
 		document.querySelector('#username').innerHTML = user + ': ';
 		initIO();
 		socket.emit('newUserConnect', user);
