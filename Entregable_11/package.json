@@ -30,7 +30,8 @@
 		"commander",
 		"uuid",
 		"cors",
-		"nodemailer"
+		"nodemailer",
+		"@faker-js/faker"
 	],
 	"author": "Mario Aguilar",
 	"license": "ISC",
