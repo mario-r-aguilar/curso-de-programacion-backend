@@ -9,14 +9,11 @@ import {
 	currentUser,
 	logoutUser,
 } from '../controllers/user.controller.js';
+import handleLoginSession from '../middlewares/login.middleware.js';
 
 const userRouter = Router();
 
-userRouter.post(
-	'/login',
-	passport.authenticate('login', { failureRedirect: '/' }),
-	loginUser
-);
+userRouter.post('/login', handleLoginSession, loginUser);
 
 userRouter.get(
 	'/github',

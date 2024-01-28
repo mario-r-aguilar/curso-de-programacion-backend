@@ -109,13 +109,13 @@ const initializePassport = () => {
 					// Verifica si el usuario existe y si su password es correcto
 					const user = await UserService.getUserByEmail(username);
 					if (!user) {
-						console.error('User does not exist');
-						return done(null, false);
+						// Envía un mensaje con el error
+						return done(null, false, { message: 'Usuario incorrecto' });
 					}
 
 					if (!checkPassword(user, password)) {
-						console.error('Password is invalid');
-						return done(null, false);
+						// Envía un mensaje con el error
+						return done(null, false, { message: 'Password incorrecto' });
 					}
 
 					const token = generateToken(user);
@@ -124,7 +124,9 @@ const initializePassport = () => {
 					// Autentica el usuario
 					return done(null, user);
 				} catch (error) {
-					return done(`Error interno del servidor: ${error}`);
+					return done(null, false, {
+						message: `Error interno del servidor: ${error}`,
+					});
 				}
 			}
 		)
