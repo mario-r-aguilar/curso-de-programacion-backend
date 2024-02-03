@@ -1,0 +1,12 @@
+[
+	{
+		"_id": "6656ca50-7fcc-450a-84b2-5ea451e26cbe",
+		"name": "test2",
+		"lastname": "test2",
+		"email": "test2@test.com",
+		"age": 20,
+		"cart": { "_id": "fa4ca197-843a-41dd-86d0-45a944c7b787", "products": [] },
+		"password": "$2b$10$yQ0MhMaM9kycLcUMcS21/ODG2xefFjXfWEx2pft5gOQVlYbtxJfgu",
+		"role": "USER"
+	}
+]
