@@ -3,10 +3,12 @@ import handlebars from 'express-handlebars';
 import { socketServer } from './utils/websocket.js';
 import path from 'node:path';
 import getDirname from './utils/utils.js';
+import { addLogger, devLogger } from './utils/logger.js';
 import { productRouter } from './routes/product.routes.js';
 import { cartRouter } from './routes/cart.routes.js';
 import { viewsRouter } from './routes/views.routes.js';
 import { userRouter } from './routes/user.routes.js';
+import { loggerTestRouter } from './routes/loggerTest.routes.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
@@ -23,6 +25,7 @@ const __dirname = getDirname(import.meta.url);
 app.use('/static', express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(addLogger);
 
 // Inicializo cors
 app.use(cors());
@@ -54,12 +57,13 @@ app.use('/api/sessions', userRouter);
 app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);
+app.use('/api/loggertest', loggerTestRouter);
 
 // Manejador de errores
 app.use(errorsHandler);
 
 const httpServer = app.listen(8080, () => {
-	console.info('Server online and listening');
+	devLogger.info('Server online and listening');
 });
 
 // Ejecuta función para inicializar socket.io

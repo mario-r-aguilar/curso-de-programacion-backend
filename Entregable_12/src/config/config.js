@@ -19,4 +19,5 @@ export default {
 	gitHubCallbackUrl: process.env.CALLBACK_URL,
 	nodemailerUser: process.env.USER_NODEMAILER,
 	nodemailerPass: process.env.PASS_NODEMAILER,
+	environment: process.env.ENVIRONMENT || 'DEV',
 };
