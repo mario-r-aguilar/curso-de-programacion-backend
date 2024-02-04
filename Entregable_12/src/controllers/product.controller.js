@@ -1,4 +1,3 @@
-import { ne } from '@faker-js/faker';
 import selectedPersistence from '../config/persistence.js';
 import CustomError from '../errors/CustomError.js';
 import { ProductService } from '../services/index.js';
@@ -31,6 +30,7 @@ export const getProducts = async (req, res) => {
 			res.status(200).send({ productList });
 		}
 	} catch (error) {
+		req.logger.fatal('Could not get product list');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -42,6 +42,7 @@ export const getProductById = async (req, res) => {
 		const product = await ProductService.getProductById(pid);
 		res.status(200).send(product);
 	} catch (error) {
+		req.logger.fatal('Could not get product');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -64,6 +65,7 @@ export const addProduct = async (req, res, next) => {
 		}
 		res.status(201).send(await ProductService.addProduct(newProduct));
 	} catch (error) {
+		req.logger.fatal('Product could not be added');
 		next(error);
 	}
 };
@@ -78,6 +80,7 @@ export const updateProduct = async (req, res) => {
 			await ProductService.updateProduct(pid, updatedProduct)
 		);
 	} catch (error) {
+		req.logger.fatal('Product could not be updated');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -88,6 +91,7 @@ export const deleteProduct = async (req, res) => {
 		let { pid } = req.params;
 		res.status(204).send(await ProductService.deleteProduct(pid));
 	} catch (error) {
+		req.logger.fatal('Could not delete product');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

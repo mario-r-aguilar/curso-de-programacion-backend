@@ -7,6 +7,7 @@ export const getCarts = async (req, res) => {
 		const carts = await CartService.getCarts();
 		res.send(carts);
 	} catch (error) {
+		req.logger.fatal('Could not get cart list');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -18,6 +19,7 @@ export const getCartById = async (req, res) => {
 		const cart = await CartService.getCartById(cid);
 		res.send(cart);
 	} catch (error) {
+		req.logger.fatal('Could not get cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -28,6 +30,7 @@ export const addCart = async (req, res) => {
 		let newCart = req.body;
 		res.status(201).send(await CartService.addCart(newCart));
 	} catch (error) {
+		req.logger.fatal('Could not add cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -39,6 +42,7 @@ export const addProductToCart = async (req, res) => {
 		let { pid } = req.params;
 		res.status(201).send(await CartService.addProductToCart(cid, pid));
 	} catch (error) {
+		req.logger.fatal('Could not add product to cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -52,6 +56,7 @@ export const deleteOneProductfromCart = async (req, res) => {
 			await CartService.deleteOneProductfromCart(cid, pid)
 		);
 	} catch (error) {
+		req.logger.fatal('Could not remove product from cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -63,6 +68,7 @@ export const updateAllProductsOfCart = async (req, res) => {
 		let newProductList = req.body;
 		res.send(await CartService.updateAllProductsOfCart(cid, newProductList));
 	} catch (error) {
+		req.logger.fatal('Could not update all products in cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -77,6 +83,7 @@ export const updateQuantityOfProduct = async (req, res) => {
 			await CartService.updateQuantityOfProduct(cid, pid, newQuantity)
 		);
 	} catch (error) {
+		req.logger.fatal('Product quantity could not be updated');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -87,6 +94,7 @@ export const deleteAllProductsfromCart = async (req, res) => {
 		let { cid } = req.params;
 		res.status(204).send(await CartService.deleteAllProductsfromCart(cid));
 	} catch (error) {
+		req.logger.fatal('Could not empty cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -119,6 +127,9 @@ export const purchaseProductsInCart = async (req, res) => {
 			payload: payload,
 		});
 	} catch (error) {
+		req.logger.fatal(
+			'The purchase of the products in the cart could not be made'
+		);
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

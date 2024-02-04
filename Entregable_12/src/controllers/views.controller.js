@@ -7,6 +7,7 @@ export const renderLogin = (req, res) => {
 	try {
 		return res.render('login', {});
 	} catch (error) {
+		req.logger.fatal('Could not render login page');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
@@ -16,6 +17,7 @@ export const renderRegister = (req, res) => {
 	try {
 		return res.render('register', {});
 	} catch (error) {
+		req.logger.fatal('Failed to render registration page');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
@@ -54,6 +56,7 @@ export const renderProductsPage = async (req, res) => {
 			title: 'Lista de productos disponibles',
 		});
 	} catch (error) {
+		req.logger.fatal('Could not render product home');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
@@ -70,6 +73,7 @@ export const renderCart = async (req, res) => {
 
 		res.render('cart', { isMongoPersistence, cart, user, title: 'Carrito' });
 	} catch (error) {
+		req.logger.fatal('Could not render cart page');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
@@ -84,6 +88,7 @@ export const renderRealTimeProducts = (req, res) => {
 			title: 'Lista de productos en tiempo real',
 		});
 	} catch (error) {
+		req.logger.fatal('The page to manage the products could not be rendered');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
@@ -95,6 +100,7 @@ export const renderChat = (req, res) => {
 		const user = new UserDTO(userData);
 		res.render('chat', { user, title: 'Chat' });
 	} catch (error) {
+		req.logger.fatal('Could not render chat page');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
@@ -112,6 +118,7 @@ export const renderMockingProducts = async (req, res) => {
 			title: 'Mocking Products',
 		});
 	} catch (error) {
+		req.logger.fatal('Failed to render product mockup');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };

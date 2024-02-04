@@ -13,6 +13,7 @@ export const loginUser = async (req, res) => {
 			})
 			.redirect('/products');
 	} catch (error) {
+		req.logger.fatal('User could not log in');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -21,6 +22,7 @@ export const loginUser = async (req, res) => {
 export const loginGithub = (req, res) => {
 	try {
 	} catch (error) {
+		req.logger.fatal('The user could not log in using their GitHub account');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -35,6 +37,9 @@ export const loginGithubCallBack = (req, res) => {
 			})
 			.redirect('/products');
 	} catch (error) {
+		req.logger.fatal(
+			'The user could not log in using their GitHub account (callback endpoint)'
+		);
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -44,6 +49,7 @@ export const registerUser = async (req, res) => {
 	try {
 		return res.status(201).redirect('/');
 	} catch (error) {
+		req.logger.fatal('Failed to register user');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -53,6 +59,7 @@ export const failRegister = (req, res) => {
 	try {
 		return res.status(400).json({ error: 'Registration Failed' });
 	} catch (error) {
+		req.logger.fatal('Failed to display failRegister endpoint');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -64,6 +71,7 @@ export const currentUser = async (req, res) => {
 		const user = new UserDTO(userData);
 		return res.send(user);
 	} catch (error) {
+		req.logger.fatal('Could not display data for current user');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -77,6 +85,7 @@ export const logoutUser = (req, res) => {
 			return res.clearCookie('token').redirect('/');
 		});
 	} catch (error) {
+		req.logger.fatal('User could not be logged out');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
