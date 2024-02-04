@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { devLogger } from '../../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class TicketFileDAO {
@@ -20,7 +21,7 @@ export default class TicketFileDAO {
 			const ticketList = await fs.promises.readFile(this.path, 'utf-8');
 			return JSON.parse(ticketList);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the tickets.\n 
 				Error: ${error}`
 			);
@@ -40,14 +41,14 @@ export default class TicketFileDAO {
 			);
 
 			if (ticketSearch) {
-				console.info('Ticket found!');
+				devLogger.info('Ticket found!');
 				return ticketSearch;
 			} else {
-				console.error(`Ticket ID ${ticketID} not found`);
+				devLogger.error(`Ticket ID ${ticketID} not found`);
 				return null;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the ticket.\n 
 				Error: ${error}`
 			);
@@ -64,7 +65,7 @@ export default class TicketFileDAO {
 			const { code, purchase_datetime, amount, purchaser } = newTicket;
 
 			if (!code || !purchase_datetime || !amount || !purchaser)
-				return console.error('Missing fields in ticket');
+				return devLogger.error('Missing fields in ticket');
 
 			const ticketList = await this.get();
 
@@ -81,10 +82,10 @@ export default class TicketFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(ticketList));
 
-			console.info(`The ticket was successfully added`);
+			devLogger.info(`The ticket was successfully added`);
 			return newTicketWithID;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to create the ticket.\n 
 				Error: ${error}`
 			);
@@ -104,7 +105,7 @@ export default class TicketFileDAO {
 				(ticket) => ticket._id === ticketID
 			);
 			if (!ticketToDelete) {
-				console.error(`Ticket ID ${ticketID} not found`);
+				devLogger.error(`Ticket ID ${ticketID} not found`);
 				return null;
 			}
 
@@ -114,10 +115,10 @@ export default class TicketFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newTicketList));
 
-			console.info(`The ticket ID ${ticketID} was removed`);
+			devLogger.info(`The ticket ID ${ticketID} was removed`);
 			return;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the ticket.\n 
 				Error: ${error}`
 			);
@@ -141,7 +142,7 @@ export default class TicketFileDAO {
 				(ticket) => ticket._id === ticketID
 			);
 			if (!ticketToUpdate) {
-				console.error(`Ticket ID ${ticketID} not found`);
+				devLogger.error(`Ticket ID ${ticketID} not found`);
 				return null;
 			}
 
@@ -168,10 +169,10 @@ export default class TicketFileDAO {
 				JSON.stringify(updatedTicketList)
 			);
 
-			console.info(`The ticket ID ${ticketID} was updated`);
+			devLogger.info(`The ticket ID ${ticketID} was updated`);
 			return updatedTicket;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the ticket.\n 
 				Error: ${error}`
 			);

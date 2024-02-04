@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import config from '../config/config.js';
+import { devLogger } from '../utils/logger.js';
 
 export default class TicketRepository {
 	constructor(dao) {
@@ -14,7 +15,7 @@ export default class TicketRepository {
 		try {
 			return await this.dao.get();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the tickets.\n 
 				Error: ${error}`
 			);
@@ -30,7 +31,7 @@ export default class TicketRepository {
 		try {
 			return await this.dao.getById(ticketID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the ticket.\n 
 				Error: ${error}`
 			);
@@ -46,7 +47,7 @@ export default class TicketRepository {
 		try {
 			return await this.dao.add(newTicket);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to create the ticket.\n 
 				Error: ${error}`
 			);
@@ -62,7 +63,7 @@ export default class TicketRepository {
 		try {
 			return await this.dao.delete(ticketID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the ticket.\n 
 				Error: ${error}`
 			);
@@ -80,7 +81,7 @@ export default class TicketRepository {
 		try {
 			return await this.dao.update(ticketID, ticketUpdated);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the ticket.\n 
 				Error: ${error}`
 			);
@@ -120,7 +121,7 @@ export default class TicketRepository {
 			});
 			return detailPurchase;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to send the ticket.\n 
 				Error: ${error}`
 			);

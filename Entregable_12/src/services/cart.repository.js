@@ -1,4 +1,5 @@
 import { ProductService, TicketService } from '../services/index.js';
+import { devLogger } from '../utils/logger.js';
 
 export default class CartRepository {
 	constructor(dao) {
@@ -13,7 +14,7 @@ export default class CartRepository {
 		try {
 			return await this.dao.get();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the carts.\n 
 				Error: ${error}`
 			);
@@ -30,7 +31,7 @@ export default class CartRepository {
 		try {
 			return await this.dao.getById(cartID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to get the cart.\n 
 				Error: ${error}`
 			);
@@ -47,7 +48,7 @@ export default class CartRepository {
 		try {
 			return await this.dao.add(newCart);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to add the cart.\n 
 				Error: ${error}`
 			);
@@ -85,7 +86,7 @@ export default class CartRepository {
 			const updatedCart = await this.dao.update(cartID, cart);
 			return updatedCart;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to add the product to the cart.\n 
 				Error: ${error}`
 			);
@@ -121,7 +122,7 @@ export default class CartRepository {
 			const updatedCart = await this.dao.update(cartID, cart);
 			return updatedCart;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to remove the product from the cart.\n 
 				Error: ${error}`
 			);
@@ -160,7 +161,7 @@ export default class CartRepository {
 			const updatedCart = await this.dao.update(cartID, cart);
 			return updatedCart;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the products in the cart.\n 
 					Error: ${error}`
 			);
@@ -205,7 +206,7 @@ export default class CartRepository {
 			const updatedCart = await this.dao.update(cartID, cart);
 			return updatedCart;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the product quantity.\n 
 				Error: ${error}`
 			);
@@ -231,7 +232,7 @@ export default class CartRepository {
 			const updatedCart = await this.dao.update(cartID, cart);
 			return updatedCart;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to remove products from the cart.\n 
 				Error: ${error}`
 			);
@@ -304,7 +305,7 @@ export default class CartRepository {
 			};
 			return payload;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`it is not possible to make the purchase.\n 
 			Error: ${error}`
 			);

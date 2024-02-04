@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
+import { devLogger } from '../../utils/logger.js';
 import CartFileDAO from './CartFile.dao.js';
 
 // Creo instancia para poder agregar un carrito al usuario al crearlo
@@ -25,7 +26,7 @@ export default class UserFileDAO {
 			const usersList = await fs.promises.readFile(this.path, 'utf-8');
 			return JSON.parse(usersList);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the users.\n 
 				Error: ${error}`
 			);
@@ -45,11 +46,11 @@ export default class UserFileDAO {
 			if (userSearch) {
 				return userSearch;
 			} else {
-				console.error(`User ID ${userID} not found`);
+				devLogger.error(`User ID ${userID} not found`);
 				return null;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the user.\n 
 				Error: ${error}`
 			);
@@ -69,11 +70,11 @@ export default class UserFileDAO {
 			if (userSearch) {
 				return userSearch;
 			} else {
-				console.error(`User ${userEmail} not found`);
+				devLogger.error(`User ${userEmail} not found`);
 				return null;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the user.\n 
 				Error: ${error}`
 			);
@@ -97,14 +98,16 @@ export default class UserFileDAO {
 				typeof age !== 'number' ||
 				typeof password !== 'string'
 			) {
-				return console.error('One or more fields have invalid data types');
+				return devLogger.error(
+					'One or more fields have invalid data types'
+				);
 			}
 
 			const usersList = await this.get();
 
 			// para garantizar que el email sea único en la base de datos
 			if (usersList.some((emails) => emails.email === email))
-				return console.error(
+				return devLogger.error(
 					`The email ${email} already exists. Try another email`
 				);
 
@@ -130,10 +133,10 @@ export default class UserFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(usersList));
 
-			console.info(`The user was successfully added`);
+			devLogger.info(`The user was successfully added`);
 			return newUserWithID;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to create the user.\n 
 				Error: ${error}`
 			);
@@ -151,7 +154,7 @@ export default class UserFileDAO {
 
 			const userToDelete = usersList.find((user) => user._id === userID);
 			if (!userToDelete) {
-				console.error(`User ID ${userID} not found`);
+				devLogger.error(`User ID ${userID} not found`);
 				return null;
 			}
 
@@ -159,10 +162,10 @@ export default class UserFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newUserList));
 
-			console.info(`The user ID ${userID} was removed`);
+			devLogger.info(`The user ID ${userID} was removed`);
 			return;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the user.\n 
 				Error: ${error}`
 			);
@@ -185,7 +188,7 @@ export default class UserFileDAO {
 
 			const userToUpdate = usersList.find((user) => user._id === userID);
 			if (!userToUpdate) {
-				console.error(`User ID ${userID} not found`);
+				devLogger.error(`User ID ${userID} not found`);
 				return null;
 			}
 
@@ -215,10 +218,10 @@ export default class UserFileDAO {
 				JSON.stringify(updatedUsersList)
 			);
 
-			console.info(`The user ID ${userID} was updated`);
+			devLogger.info(`The user ID ${userID} was updated`);
 			return updatedUser;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the user.\n 
 				Error: ${error}`
 			);

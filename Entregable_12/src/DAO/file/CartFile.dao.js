@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
+import { devLogger } from '../../utils/logger.js';
 
 export default class CartFileDAO {
 	constructor() {
@@ -19,12 +20,12 @@ export default class CartFileDAO {
 		try {
 			const cartsList = await fs.promises.readFile(this.path, 'utf-8');
 			if (!cartsList) {
-				console.error('The file is empty.');
+				devLogger.error('The file is empty.');
 				return null;
 			}
 			return JSON.parse(cartsList);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the carts.\n 
             Error: ${error}`
 			);
@@ -43,14 +44,14 @@ export default class CartFileDAO {
 			const cartSearch = cartsList.find((cart) => cart._id === cartID);
 
 			if (cartSearch) {
-				console.info('Cart found!');
+				devLogger.info('Cart found!');
 				return cartSearch;
 			} else {
-				console.error(`Cart ID ${cartID} not found`);
+				devLogger.error(`Cart ID ${cartID} not found`);
 				return null;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the cart. \n 
             Error: ${error}`
 			);
@@ -66,7 +67,7 @@ export default class CartFileDAO {
 	async add(newCart) {
 		try {
 			const { products } = newCart;
-			if (!products) return console.error('Products element is missing');
+			if (!products) return devLogger.error('Products element is missing');
 
 			const cartsList = await this.get();
 
@@ -79,10 +80,10 @@ export default class CartFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(cartsList));
 
-			console.info(`The cart was successfully added`);
+			devLogger.info(`The cart was successfully added`);
 			return newCartWithID;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to add the cart. \n 
             Error: ${error}`
 			);
@@ -102,10 +103,10 @@ export default class CartFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newCartList));
 
-			console.info(`The cart ID ${cartID} was removed`);
+			devLogger.info(`The cart ID ${cartID} was removed`);
 			return;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the cart.\n 
 				Error: ${error}`
 			);
@@ -145,10 +146,10 @@ export default class CartFileDAO {
 				JSON.stringify(updatedCartList)
 			);
 
-			console.info(`The cart ID ${cartID} was updated`);
+			devLogger.info(`The cart ID ${cartID} was updated`);
 			return updatedCart;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the cart.\n 
 				Error: ${error}`
 			);

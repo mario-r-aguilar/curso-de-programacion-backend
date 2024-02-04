@@ -1,3 +1,5 @@
+import { devLogger } from '../utils/logger.js';
+
 export default class ChatRepository {
 	constructor(dao) {
 		this.dao = dao;
@@ -11,7 +13,7 @@ export default class ChatRepository {
 		try {
 			return await this.dao.get();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the messages.\n 
 				Error: ${error}`
 			);
@@ -28,7 +30,7 @@ export default class ChatRepository {
 		try {
 			return await this.dao.add(newMessage);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to send the message.\n 
 				Error: ${error}`
 			);

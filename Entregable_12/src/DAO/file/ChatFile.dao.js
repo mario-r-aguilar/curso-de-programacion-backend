@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { devLogger } from '../../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class ChatFileDAO {
@@ -20,7 +21,7 @@ export default class ChatFileDAO {
 			const messagesList = await fs.promises.readFile(this.path, 'utf-8');
 			return JSON.parse(messagesList);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the messages.\n 
 				Error: ${error}`
 			);
@@ -41,14 +42,14 @@ export default class ChatFileDAO {
 			);
 
 			if (messageSearch) {
-				console.info('Message found!');
+				devLogger.info('Message found!');
 				return messageSearch;
 			} else {
-				console.error(`Message ID ${messageID} not found`);
+				devLogger.error(`Message ID ${messageID} not found`);
 				return null;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the message.\n 
 				Error: ${error}`
 			);
@@ -66,7 +67,7 @@ export default class ChatFileDAO {
 			const { user, message } = newMessage;
 
 			if (!user || !message)
-				return console.error('Missing fields in message');
+				return devLogger.error('Missing fields in message');
 
 			const messagesList = await this.get();
 
@@ -80,10 +81,10 @@ export default class ChatFileDAO {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(messagesList));
 
-			console.info(`The message was successfully added`);
+			devLogger.info(`The message was successfully added`);
 			return newMessageWithID;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to send the message.\n 
 				Error: ${error}`
 			);
@@ -108,10 +109,10 @@ export default class ChatFileDAO {
 				JSON.stringify(newMessagesList)
 			);
 
-			console.info(`The message ID ${messageID} was removed`);
+			devLogger.info(`The message ID ${messageID} was removed`);
 			return;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the message.\n 
 				Error: ${error}`
 			);
@@ -152,10 +153,10 @@ export default class ChatFileDAO {
 				JSON.stringify(updatedMessagesList)
 			);
 
-			console.info(`The message ID ${messageID} was updated`);
+			devLogger.info(`The message ID ${messageID} was updated`);
 			return updatedMessage;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the message.\n 
 				Error: ${error}`
 			);

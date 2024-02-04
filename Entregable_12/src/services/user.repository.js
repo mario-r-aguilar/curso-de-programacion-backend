@@ -1,3 +1,5 @@
+import { devLogger } from '../utils/logger.js';
+
 export default class UserRepository {
 	constructor(dao) {
 		this.dao = dao;
@@ -11,7 +13,7 @@ export default class UserRepository {
 		try {
 			return await this.dao.get();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the users.\n 
 				Error: ${error}`
 			);
@@ -27,7 +29,7 @@ export default class UserRepository {
 		try {
 			return await this.dao.getById(userID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the user.\n 
 					Error: ${error}`
 			);
@@ -43,7 +45,7 @@ export default class UserRepository {
 		try {
 			return await this.dao.getByEmail(userEmail);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the user.\n 
 				Error: ${error}`
 			);
@@ -59,7 +61,7 @@ export default class UserRepository {
 		try {
 			return await this.dao.add(newUser);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to create the user.\n 
 				Error: ${error}`
 			);

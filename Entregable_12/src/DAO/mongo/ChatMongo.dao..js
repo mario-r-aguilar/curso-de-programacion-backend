@@ -1,4 +1,5 @@
 import { chatModel } from './models/chat.model.js';
+import { devLogger } from '../../utils/logger.js';
 
 export default class ChatMongoDAO {
 	constructor() {
@@ -13,7 +14,7 @@ export default class ChatMongoDAO {
 		try {
 			return await this.model.find().limit(15).lean().exec();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the messages.\n 
 				Error: ${error}`
 			);
@@ -30,7 +31,7 @@ export default class ChatMongoDAO {
 		try {
 			return await this.model.findById(messageID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the message.\n 
 				Error: ${error}`
 			);
@@ -47,7 +48,7 @@ export default class ChatMongoDAO {
 		try {
 			return await this.model.create(newMessage);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to send the message.\n 
 				Error: ${error}`
 			);
@@ -64,7 +65,7 @@ export default class ChatMongoDAO {
 		try {
 			return await this.model.deleteOne({ _id: messageID });
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the message.\n 
 				Error: ${error}`
 			);
@@ -85,7 +86,7 @@ export default class ChatMongoDAO {
 				{ $set: messageUpdated }
 			);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the message.\n 
 				Error: ${error}`
 			);

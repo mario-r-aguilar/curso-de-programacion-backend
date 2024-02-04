@@ -6,6 +6,7 @@ import { UserService, CartService } from '../services/index.js';
 import { createHash, checkPassword, generateToken } from '../utils/utils.js';
 import config from './config.js';
 import selectedPersistence from './persistence.js';
+import { devLogger } from '../utils/logger.js';
 
 // Core de las estrategias
 const LocalStrategy = local.Strategy;
@@ -47,13 +48,13 @@ const initializePassport = () => {
 					// Verifica si el usuario ya existe
 					const validUser = await UserService.getUserByEmail(username);
 					if (validUser) {
-						console.info('User already exists');
+						devLogger.info('User already exists');
 						return done(null, false);
 					}
 
 					// Evita la creación de un usuario con el mismo email del administrador
 					if (username === config.adminMail) {
-						console.error('Invalid email. Use another email address');
+						devLogger.error('Invalid email. Use another email address');
 						return done(null, false);
 					}
 
@@ -175,7 +176,7 @@ const initializePassport = () => {
 					// Autentica el usuario
 					return done(null, newUser);
 				} catch (error) {
-					console.error(error);
+					devLogger.error(error);
 				}
 			}
 		)

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
+import { devLogger } from '../../utils/logger.js';
 import ProductDAOInterface from '../productDaoInterface.js';
 
 export default class ProductFileDAO extends ProductDAOInterface {
@@ -41,7 +42,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				return productList;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Products cannot be displayed.\n 
             Error: ${error}`
 			);
@@ -63,14 +64,14 @@ export default class ProductFileDAO extends ProductDAOInterface {
 			);
 
 			if (productSearch) {
-				console.info('Product found!');
+				devLogger.info('Product found!');
 				return productSearch;
 			} else {
-				console.error(`ID ${productID} not found`);
+				devLogger.error(`ID ${productID} not found`);
 				return null;
 			}
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Product cannot be displayed. \n 
             Error: ${error}`
 			);
@@ -106,7 +107,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				!category ||
 				!thumbnail
 			)
-				return console.error(
+				return devLogger.error(
 					'There are missing fields to complete. They are all mandatory'
 				);
 
@@ -120,13 +121,15 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				typeof category !== 'string' ||
 				!Array.isArray(thumbnail)
 			) {
-				return console.error('One or more fields have invalid data types');
+				return devLogger.error(
+					'One or more fields have invalid data types'
+				);
 			}
 
 			const productList = await this.get();
 
 			if (productList.some((product) => product.code === code))
-				return console.error(
+				return devLogger.error(
 					`The code ${code} already exists. Try another code`
 				);
 
@@ -147,10 +150,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(productList));
 
-			console.info(`The product ${title} was successfully added`);
+			devLogger.info(`The product ${title} was successfully added`);
 			return newProductWithID;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to add the product. \n 
                 Error: ${error}`
 			);
@@ -173,10 +176,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 
 			await fs.promises.writeFile(this.path, JSON.stringify(newProductList));
 
-			console.info(`The product ID ${productID} was removed`);
+			devLogger.info(`The product ID ${productID} was removed`);
 			return;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the product. \n 
                 Error: ${error}`
 			);
@@ -233,10 +236,10 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				JSON.stringify(updatedProductList)
 			);
 
-			console.info(`The product ID ${productID} was updated`);
+			devLogger.info(`The product ID ${productID} was updated`);
 			return updatedProduct;
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the product. \n 
 	Error: ${error}`
 			);

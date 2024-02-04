@@ -1,6 +1,7 @@
 import config from '../config/config.js';
 import selectedPersistence from '../config/persistence.js';
 import mongoose from 'mongoose';
+import { devLogger } from '../utils/logger.js';
 
 // Nombres de los daos para usar por los services
 export let Product;
@@ -16,10 +17,10 @@ switch (selectedPersistence.persistence) {
 			mongoose
 				.connect(config.mongoUrl, { dbName: config.mongoDbName })
 				.then(() => {
-					console.info('Mongo DB connected');
+					devLogger.info('Mongo DB connected');
 				})
 				.catch((error) => {
-					console.error(
+					devLogger.error(
 						'No es posible conectarse a la base de datos',
 						error
 					);
@@ -55,7 +56,7 @@ switch (selectedPersistence.persistence) {
 
 	case 'FILE':
 		try {
-			console.info('File DB connected');
+			devLogger.info('File DB connected');
 
 			// importe dinámico de daos de file
 			const { default: ProductFile } = await import(

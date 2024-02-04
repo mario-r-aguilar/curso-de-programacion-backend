@@ -1,4 +1,5 @@
 import ticketModel from './models/ticket.model.js';
+import { devLogger } from '../../utils/logger.js';
 
 export default class TicketMongoDAO {
 	constructor() {
@@ -13,7 +14,7 @@ export default class TicketMongoDAO {
 		try {
 			return await this.model.find().lean().exec();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the tickets.\n 
 				Error: ${error}`
 			);
@@ -29,7 +30,7 @@ export default class TicketMongoDAO {
 		try {
 			return await this.model.findById(ticketID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the ticket.\n 
 				Error: ${error}`
 			);
@@ -45,7 +46,7 @@ export default class TicketMongoDAO {
 		try {
 			return await this.model.create(newTicket);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to create the ticket.\n 
 				Error: ${error}`
 			);
@@ -61,7 +62,7 @@ export default class TicketMongoDAO {
 		try {
 			return await this.model.deleteOne({ _id: ticketID });
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the ticket.\n 
 				Error: ${error}`
 			);
@@ -82,7 +83,7 @@ export default class TicketMongoDAO {
 				{ $set: ticketUpdated }
 			);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the ticket.\n 
 				Error: ${error}`
 			);

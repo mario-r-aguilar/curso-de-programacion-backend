@@ -1,4 +1,5 @@
 import userModel from './models/user.model.js';
+import { devLogger } from '../../utils/logger.js';
 
 export default class UserMongoDAO {
 	constructor() {
@@ -13,7 +14,7 @@ export default class UserMongoDAO {
 		try {
 			return await this.model.find().lean().exec();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the users.\n 
 				Error: ${error}`
 			);
@@ -29,7 +30,7 @@ export default class UserMongoDAO {
 		try {
 			return await this.model.findById(userID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the user.\n 
 				Error: ${error}`
 			);
@@ -45,7 +46,7 @@ export default class UserMongoDAO {
 		try {
 			return await this.model.findOne({ email: userEmail }).lean().exec();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`Unable to get the user.\n 
 				Error: ${error}`
 			);
@@ -61,7 +62,7 @@ export default class UserMongoDAO {
 		try {
 			return await this.model.create(newUser);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to create the user.\n 
 				Error: ${error}`
 			);
@@ -77,7 +78,7 @@ export default class UserMongoDAO {
 		try {
 			return await this.model.deleteOne({ _id: userID });
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the user.\n 
 				Error: ${error}`
 			);
@@ -98,7 +99,7 @@ export default class UserMongoDAO {
 				{ $set: userUpdated }
 			);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the user.\n 
 				Error: ${error}`
 			);

@@ -1,13 +1,14 @@
 import { Server } from 'socket.io';
 import { ProductService, ChatService } from '../services/index.js';
 import selectedPersistence from '../config/persistence.js';
+import { devLogger } from './logger.js';
 
 export function socketServer(server) {
 	const io = new Server(server);
 
 	io.on('connection', async (socket) => {
 		// Mensaje de conexión de un cliente
-		console.info('Cliente conectado');
+		devLogger.info('Cliente conectado');
 
 		// Modifico el valor por defecto del límite
 		let limitValue = 50;
@@ -59,7 +60,7 @@ export function socketServer(server) {
 
 		// Mensaje de desconexión de un cliente
 		socket.on('disconnect', () => {
-			console.info('Cliente desconectado');
+			devLogger.info('Cliente desconectado');
 		});
 	});
 

@@ -1,4 +1,5 @@
 import { productModel } from './models/product.model.js';
+import { devLogger } from '../../utils/logger.js';
 import ProductDAOInterface from '../productDaoInterface.js';
 
 export default class ProductMongoDAO extends ProductDAOInterface {
@@ -45,7 +46,7 @@ export default class ProductMongoDAO extends ProductDAOInterface {
 
 			return await productModel.paginate(query, options);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the products.\n 
 				Error: ${error}`
 			);
@@ -62,7 +63,7 @@ export default class ProductMongoDAO extends ProductDAOInterface {
 		try {
 			return await this.model.findById(productID).lean().exec();
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the product.\n 
 				Error: ${error}`
 			);
@@ -79,7 +80,7 @@ export default class ProductMongoDAO extends ProductDAOInterface {
 		try {
 			return await this.model.create(newProduct);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to add the product.\n 
 				Error: ${error}`
 			);
@@ -96,7 +97,7 @@ export default class ProductMongoDAO extends ProductDAOInterface {
 		try {
 			return await this.model.deleteOne({ _id: productID });
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the product.\n 
 				Error: ${error}`
 			);
@@ -117,7 +118,7 @@ export default class ProductMongoDAO extends ProductDAOInterface {
 				{ $set: productUpdated } // $set: solo actualiza los campos que hayan cambiado
 			);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the product.\n 
 				Error: ${error}`
 			);

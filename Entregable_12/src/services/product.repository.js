@@ -1,4 +1,5 @@
 import { fakerES_MX as faker } from '@faker-js/faker';
+import { devLogger } from '../utils/logger.js';
 
 export default class ProductRepository {
 	constructor(dao) {
@@ -19,7 +20,7 @@ export default class ProductRepository {
 		try {
 			return await this.dao.get(limit, page, sort, category, status, title);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the products.\n 
 				Error: ${error}`
 			);
@@ -36,7 +37,7 @@ export default class ProductRepository {
 		try {
 			return await this.dao.getById(productID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to obtain the product.\n 
 				Error: ${error}`
 			);
@@ -53,7 +54,7 @@ export default class ProductRepository {
 		try {
 			return await this.dao.add(newProduct);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to add the product.\n 
 				Error: ${error}`
 			);
@@ -70,7 +71,7 @@ export default class ProductRepository {
 		try {
 			return await this.dao.delete(productID);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to delete the product.\n 
 				Error: ${error}`
 			);
@@ -88,7 +89,7 @@ export default class ProductRepository {
 		try {
 			return await this.dao.update(productID, productUpdated);
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to update the product.\n 
 				Error: ${error}`
 			);
@@ -114,7 +115,7 @@ export default class ProductRepository {
 				thumbnail: faker.image.url(),
 			};
 		} catch (error) {
-			console.error(
+			devLogger.fatal(
 				`It is not possible to show the moking of products.\n 
 				Error: ${error}`
 			);
