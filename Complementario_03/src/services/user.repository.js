@@ -1,4 +1,7 @@
 import { devLogger } from '../utils/logger.js';
+import config from '../config/config.js';
+import nodemailer from 'nodemailer';
+import { createHash } from '../utils/utils.js';
 
 export default class UserRepository {
 	constructor(dao) {
@@ -105,6 +108,63 @@ export default class UserRepository {
 		} catch (error) {
 			devLogger.fatal(
 				`It is not possible to change the user's role.\n
+				Error: ${error}`
+			);
+			throw error;
+		}
+	}
+
+	async sendResetPassEmail(email, resetPassToken) {
+		try {
+			const resetLink = `${config.serverUrl}/reset-password/${resetPassToken}`;
+
+			const transport = nodemailer.createTransport({
+				service: 'gmail',
+				port: 587,
+				auth: {
+					user: config.nodemailerUser,
+					pass: config.nodemailerPass,
+				},
+			});
+
+			await transport.sendMail({
+				from: 'Cba E-commerce <config.nodemailerUser>',
+				to: email,
+				subject: 'Restablecer contraseña',
+				html: `
+				<h3>Para restablecer su contraseña haga clic aquí:</h3>
+				<a href="${resetLink}" style="display: inline-block; padding:  10px  20px; background-color: #007BFF; color: white; text-decoration: none; border-radius:  4px; font-weight: bold;">
+				Resetear Password
+				</a>          
+				<p><b>El enlace expirará en 1 hora.</b></p>`,
+			});
+
+			devLogger.info('The email to reset your password was sent');
+			return 'Success';
+		} catch (error) {
+			devLogger.fatal(
+				`It is not possible to send the email to reset the password\n
+				Error: ${error}`
+			);
+			throw error;
+		}
+	}
+
+	async resetPassword(email, newPassword) {
+		try {
+			const user = await this.dao.getByEmail(email);
+
+			if (newPassword === user.password) {
+				throw new Error('You cannot use the same password.');
+			}
+
+			newPassword = createHash(newPassword);
+			user.password = newPassword;
+
+			return await this.dao.update(user._id, user);
+		} catch (error) {
+			devLogger.fatal(
+				`It is not possible to reset the user's password\n
 				Error: ${error}`
 			);
 			throw error;

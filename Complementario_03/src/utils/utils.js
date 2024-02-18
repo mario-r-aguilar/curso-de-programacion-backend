@@ -23,6 +23,12 @@ export const checkPassword = (user, password) => {
 
 //jwt - Generar token
 export const generateToken = (user) => {
-	const token = jwt.sign({ user }, config.privateKey, { expiresIn: '24h' });
+	const token = jwt.sign({ user }, config.privateKey, { expiresIn: '1h' });
 	return token;
+};
+
+//jwt - Validar token
+export const verifyToken = (token) => {
+	const decodedToken = jwt.verify(token, config.privateKey);
+	return decodedToken;
 };

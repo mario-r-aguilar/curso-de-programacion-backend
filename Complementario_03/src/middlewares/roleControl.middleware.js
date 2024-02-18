@@ -9,7 +9,7 @@ export const roleControl = (...authRoles) => {
 		if (user && authRoles.includes(user.role)) {
 			return next(); // De ser así permite el acceso a la ruta
 		} else {
-			return res.status(403).json({
+			return res.status(403).send({
 				status: 'error',
 				message: 'Unauthorized access to the resource',
 			});

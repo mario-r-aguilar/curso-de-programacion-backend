@@ -9,6 +9,8 @@ import {
 	currentUser,
 	logoutUser,
 	toggleUserRole,
+	sendResetPassEmail,
+	resetPassword,
 } from '../controllers/user.controller.js';
 import handleLoginSession from '../middlewares/login.middleware.js';
 
@@ -48,6 +50,10 @@ userRouter.put(
 	passport.authenticate('current', { session: false }),
 	toggleUserRole
 );
+
+userRouter.get('/reset-password', sendResetPassEmail);
+
+userRouter.put('/reset-password/:tkn', resetPassword);
 
 userRouter.post('/logout', logoutUser);
 

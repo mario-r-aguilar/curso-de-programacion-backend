@@ -122,3 +122,22 @@ export const renderMockingProducts = async (req, res) => {
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };
+
+export const renderResetPassMail = async (req, res) => {
+	try {
+		res.render('sendResetPassMail', { title: 'Olvide mi password' });
+	} catch (error) {
+		req.logger.fatal('Failed to render page to send email to reset password');
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+};
+
+export const renderResetPassPage = async (req, res) => {
+	try {
+		const token = req.params.tkn;
+		res.render('resetPassword', { token, title: 'Restablecer Password' });
+	} catch (error) {
+		req.logger.fatal('Failed to render page to reset password');
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+};

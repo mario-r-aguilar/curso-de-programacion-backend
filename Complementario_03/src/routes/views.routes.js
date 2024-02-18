@@ -10,6 +10,8 @@ import {
 	renderRealTimeProducts,
 	renderChat,
 	renderMockingProducts,
+	renderResetPassMail,
+	renderResetPassPage,
 } from '../controllers/views.controller.js';
 
 const viewsRouter = Router();
@@ -49,5 +51,9 @@ viewsRouter.get(
 	passport.authenticate('current', { session: false }),
 	renderMockingProducts
 );
+
+viewsRouter.get('/reset-password', renderResetPassMail);
+
+viewsRouter.get('/reset-password/:tkn', renderResetPassPage);
 
 export { viewsRouter };
