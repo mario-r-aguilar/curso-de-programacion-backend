@@ -12,6 +12,7 @@ import {
 	renderMockingProducts,
 	renderResetPassMail,
 	renderResetPassPage,
+	renderToggleUserRole,
 } from '../controllers/views.controller.js';
 
 const viewsRouter = Router();
@@ -55,5 +56,12 @@ viewsRouter.get(
 viewsRouter.get('/reset-password', renderResetPassMail);
 
 viewsRouter.get('/reset-password/:tkn', renderResetPassPage);
+
+viewsRouter.get(
+	'/premium/:uid',
+	passport.authenticate('current', { session: false }),
+	roleControl('ADMIN'),
+	renderToggleUserRole
+);
 
 export { viewsRouter };

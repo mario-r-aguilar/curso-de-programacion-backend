@@ -1,6 +1,5 @@
 import UserDTO from '../DTO/user.dto.js';
 import { UserService } from '../services/index.js';
-import config from '../config/config.js';
 import { generateToken, verifyToken } from '../utils/utils.js';
 
 // Estrategia local (logueo de usuario)
@@ -97,8 +96,8 @@ export const logoutUser = (req, res) => {
 export const toggleUserRole = async (req, res) => {
 	try {
 		const { uid } = req.params;
-		const userData = UserService.addUser(uid);
-		const user = new UserDTO(userData);
+		const user = await UserService.getUserById(uid);
+		if (!user) return res.status(404).send('User is not found');
 
 		await UserService.toggleUserRole(user);
 

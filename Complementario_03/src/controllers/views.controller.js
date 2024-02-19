@@ -105,8 +105,12 @@ export const renderChat = (req, res) => {
 	}
 };
 
+// Vista de la página con un mocking de productos
 export const renderMockingProducts = async (req, res) => {
 	try {
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+
 		const productsList = [];
 
 		for (let i = 0; i < 100; i++) {
@@ -115,6 +119,7 @@ export const renderMockingProducts = async (req, res) => {
 
 		res.render('mockingProducts', {
 			productsList,
+			user,
 			title: 'Mocking Products',
 		});
 	} catch (error) {
@@ -123,6 +128,7 @@ export const renderMockingProducts = async (req, res) => {
 	}
 };
 
+// Vista de la página de envío del correo para reestablecer contraseña
 export const renderResetPassMail = async (req, res) => {
 	try {
 		res.render('sendResetPassMail', { title: 'Olvide mi password' });
@@ -132,12 +138,31 @@ export const renderResetPassMail = async (req, res) => {
 	}
 };
 
+// Vista de la página para reseteo del password
 export const renderResetPassPage = async (req, res) => {
 	try {
 		const token = req.params.tkn;
 		res.render('reset_password', { token, title: 'Restablecer Password' });
 	} catch (error) {
 		req.logger.fatal('Failed to render page to reset password');
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+};
+
+// Vista de la página para cambiar el rol del usuario
+export const renderToggleUserRole = async (req, res) => {
+	try {
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+
+		const userId = req.params.uid;
+		res.render('toggle_role', {
+			user,
+			userId,
+			title: 'Cambiar Rol del Usuario',
+		});
+	} catch (error) {
+		req.logger.fatal('Failed to render page to toggle user role');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };

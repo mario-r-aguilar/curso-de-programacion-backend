@@ -102,8 +102,10 @@ export default class UserRepository {
 				devLogger.info(
 					`El usuario ${user.name} ${user.lastname} cambió su rol a ${newRole}`
 				);
+
 				user.role = newRole;
-				await this.dao.update(user.id, user);
+
+				return await this.dao.update(user._id, user);
 			}
 		} catch (error) {
 			devLogger.fatal(
@@ -114,6 +116,12 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Envía un link para reestablecer la contraseña
+	 * @param {String} Email del usuario
+	 * @param {String} Token
+	 * @returns {String} Resultado del envío del correo
+	 */
 	async sendResetPassEmail(email, resetPassToken) {
 		try {
 			const resetLink = `${config.serverUrl}/reset-password/${resetPassToken}`;
@@ -150,6 +158,12 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Resetea el password del usuario
+	 * @param {String} Email del usuario
+	 * @param {String} Nuevo password
+	 * @returns {Object} Usuario actualizado
+	 */
 	async resetPassword(email, newPassword) {
 		try {
 			const user = await this.dao.getByEmail(email);
