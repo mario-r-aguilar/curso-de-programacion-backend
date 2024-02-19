@@ -6,6 +6,7 @@ const validPassword = document.querySelector('#validPassword');
 
 const sendResetPassForm = () => {
 	if (newPassword.value !== validPassword.value) {
+		resetPassError.innerHTML = '';
 		resetPassError.textContent = 'Las contraseñas no coinciden.';
 		return;
 	}
@@ -20,9 +21,23 @@ const sendResetPassForm = () => {
 		}),
 	})
 		.then((response) => {
-			if (!response.ok) {
-				resetPassError.textContent =
-					'Hubo un error al restablecer la contraseña.';
+			if (response.status === 403) {
+				resetPassError.innerHTML = '';
+				resetPassError.classList.remove('d-none');
+				resetPassError.textContent = 'Link vencido. Envíe un nuevo correo';
+				setTimeout(() => {
+					window.location.href = '/reset-password';
+				}, 2500);
+			}
+
+			if (response.status === 200) {
+				resetPassError.innerHTML = '';
+				resetPassError.classList.remove('d-none', 'alert-danger');
+				resetPassError.classList.add('alert-success');
+				resetPassError.textContent = 'Contraseña Restaurada';
+				setTimeout(() => {
+					window.location.href = '/';
+				}, 2500);
 			}
 		})
 		.catch((error) => {

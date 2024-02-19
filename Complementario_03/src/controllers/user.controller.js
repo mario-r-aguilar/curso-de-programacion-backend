@@ -102,7 +102,7 @@ export const toggleUserRole = async (req, res) => {
 
 		await UserService.toggleUserRole(user);
 
-		res.status(200).send(`The user's role was successfully modified`);
+		return res.status(200).send(`The user's role was successfully modified`);
 	} catch (error) {
 		req.logger.fatal(`It is not possible to change the user's role`);
 		res.status(500).send(`Internal Server Error: ${error}`);
@@ -112,26 +112,30 @@ export const toggleUserRole = async (req, res) => {
 // Envía mail para reseteo de password
 export const sendResetPassEmail = async (req, res) => {
 	try {
-		const userEmail = req.body;
-		const userExist = UserService.getUserByEmail(userEmail);
+		const userEmail = req.body.userEmail;
+		const userExist = await UserService.getUserByEmail(userEmail);
 
-		if (!userExist)
+		if (userExist === null) {
+			req.logger.warning(
+				'The email does not correspond to any registered user.'
+			);
 			return res
 				.status(404)
 				.send('The email does not correspond to any registered user.');
+		} else {
+			const resetToken = generateToken(userEmail);
 
-		const resetToken = generateToken(userEmail);
+			await UserService.sendResetPassEmail(userEmail, resetToken);
 
-		await UserService.sendResetPassEmail(userEmail, resetToken);
-
-		return res
-			.status(200)
-			.send(
-				'An email has been sent to your address with the link to reset your password'
-			);
+			return res
+				.status(200)
+				.send(
+					'An email has been sent to your address with the link to reset your password'
+				);
+		}
 	} catch (error) {
 		req.logger.fatal(
-			`It is not possible to send the link to reset the password`
+			`It is not possible to send the email to reset the password (controller error).`
 		);
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
@@ -142,19 +146,24 @@ export const resetPassword = async (req, res) => {
 	try {
 		const { tkn } = req.params;
 		const { newPassword } = req.body;
-		const userEmail = verifyToken(tkn);
+		const decodedToken = verifyToken(tkn);
 
-		if (!userEmail) {
-			req.logger.warning('Link expired. Generate a new link');
-			return res.status(403).redirect('/reset-password');
+		if (!decodedToken) {
+			req.logger.warning(
+				'Invalid token. Generate a new link (controller error)'
+			);
+			return res.status(403).send('Invalid token');
 		}
 
+		const userEmail = decodedToken.user;
 		await UserService.resetPassword(userEmail, newPassword);
 
 		req.logger.info('Password successfully restored');
-		return res.status(200).redirect('/');
+		return res.status(200).send('Success');
 	} catch (error) {
-		req.logger.fatal(`It is not possible to reset the password`);
+		req.logger.fatal(
+			`It is not possible to reset the password (controller error)`
+		);
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

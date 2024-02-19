@@ -135,7 +135,7 @@ export const renderResetPassMail = async (req, res) => {
 export const renderResetPassPage = async (req, res) => {
 	try {
 		const token = req.params.tkn;
-		res.render('resetPassword', { token, title: 'Restablecer Password' });
+		res.render('reset_password', { token, title: 'Restablecer Password' });
 	} catch (error) {
 		req.logger.fatal('Failed to render page to reset password');
 		res.status(500).send(`Error interno del servidor: ${error}`);

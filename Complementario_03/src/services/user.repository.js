@@ -1,7 +1,7 @@
 import { devLogger } from '../utils/logger.js';
 import config from '../config/config.js';
 import nodemailer from 'nodemailer';
-import { createHash } from '../utils/utils.js';
+import { createHash, checkPassword } from '../utils/utils.js';
 
 export default class UserRepository {
 	constructor(dao) {
@@ -143,7 +143,7 @@ export default class UserRepository {
 			return 'Success';
 		} catch (error) {
 			devLogger.fatal(
-				`It is not possible to send the email to reset the password\n
+				`It is not possible to send the email to reset the password (repository error).\n
 				Error: ${error}`
 			);
 			throw error;
@@ -154,18 +154,21 @@ export default class UserRepository {
 		try {
 			const user = await this.dao.getByEmail(email);
 
-			if (newPassword === user.password) {
+			// Valida el password y si es true informa que no es posible poner el mismo password
+			const samePassword = checkPassword(user, newPassword);
+			if (samePassword) {
 				throw new Error('You cannot use the same password.');
 			}
 
-			newPassword = createHash(newPassword);
-			user.password = newPassword;
+			const newPasswordHash = createHash(newPassword);
+			user.password = newPasswordHash;
 
-			return await this.dao.update(user._id, user);
+			const userUpdated = await this.dao.update(user._id, user);
+			return userUpdated;
 		} catch (error) {
 			devLogger.fatal(
-				`It is not possible to reset the user's password\n
-				Error: ${error}`
+				`It is not possible to reset the user's password (repository error).\n
+				Error: ${error.message}`
 			);
 			throw error;
 		}

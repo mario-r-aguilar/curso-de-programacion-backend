@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../config/config.js';
+import { devLogger } from './logger.js';
 
 // __dirname
 export default (path) => {
@@ -16,7 +17,7 @@ export const createHash = (password) => {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 };
 
-// bcrypt - Validar hash
+// bcrypt - Validar Pass
 export const checkPassword = (user, password) => {
 	return bcrypt.compareSync(password, user.password);
 };
@@ -29,6 +30,11 @@ export const generateToken = (user) => {
 
 //jwt - Validar token
 export const verifyToken = (token) => {
-	const decodedToken = jwt.verify(token, config.privateKey);
-	return decodedToken;
+	try {
+		const decodedToken = jwt.verify(token, config.privateKey);
+		return decodedToken;
+	} catch (error) {
+		devLogger.fatal('Invalid Token');
+		return null;
+	}
 };

@@ -28,7 +28,11 @@ export default class UserMongoDAO {
 	 */
 	async getById(userID) {
 		try {
-			return await this.model.findById(userID);
+			const user = await this.model.findById(userID);
+			if (!user) {
+				return null;
+			}
+			return user;
 		} catch (error) {
 			devLogger.fatal(
 				`Unable to get the user.\n 
@@ -44,7 +48,14 @@ export default class UserMongoDAO {
 	 */
 	async getByEmail(userEmail) {
 		try {
-			return await this.model.findOne({ email: userEmail }).lean().exec();
+			const user = await this.model
+				.findOne({ email: userEmail })
+				.lean()
+				.exec();
+			if (!user) {
+				return null;
+			}
+			return user;
 		} catch (error) {
 			devLogger.fatal(
 				`Unable to get the user.\n 

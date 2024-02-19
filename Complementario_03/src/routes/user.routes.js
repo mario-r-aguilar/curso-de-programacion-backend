@@ -51,7 +51,7 @@ userRouter.put(
 	toggleUserRole
 );
 
-userRouter.get('/reset-password', sendResetPassEmail);
+userRouter.post('/reset-password', sendResetPassEmail);
 
 userRouter.put('/reset-password/:tkn', resetPassword);
 
