@@ -75,11 +75,13 @@ export default class CartRepository {
 
 			if (user.role === 'PREMIUM') {
 				const validOwner = user.email === product.owner;
-				if (!validOwner) {
+				if (validOwner) {
 					devLogger.warning(
 						'You cannot add products that were not created by you'
 					);
-					return;
+					throw new Error(
+						'You cannot add products that were not created by you'
+					);
 				}
 			}
 

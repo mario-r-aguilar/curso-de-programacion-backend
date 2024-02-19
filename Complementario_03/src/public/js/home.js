@@ -138,6 +138,21 @@ const addProductToCart = async (id) => {
 				setTimeout(() => {
 					productAddMessage.innerHTML = '';
 				}, 1000);
+			} else {
+				const productAddMessage = document.getElementById(
+					`productAddSuccess_${id}`
+				);
+				productAddMessage.innerHTML = '';
+				const div = document.createElement('div');
+				div.classList.add('alert', 'alert-danger');
+				div.innerHTML = `
+					<p>No puedes agregar este producto</p>
+				`;
+				productAddMessage.appendChild(div);
+
+				setTimeout(() => {
+					productAddMessage.innerHTML = '';
+				}, 1500);
 			}
 		})
 		.catch((error) => {

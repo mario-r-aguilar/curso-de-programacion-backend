@@ -36,7 +36,7 @@ cartRouter.post(
 cartRouter.post(
 	'/:cid/products/:pid',
 	passport.authenticate('current', { session: false }),
-	roleControl('USER'),
+	roleControl('USER', 'PREMIUM'),
 	addProductToCart
 );
 
