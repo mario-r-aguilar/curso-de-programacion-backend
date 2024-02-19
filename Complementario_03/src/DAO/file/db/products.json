@@ -7,6 +7,7 @@
 		"price": 449359,
 		"status": true,
 		"stock": 15,
+		"owner": "admin",
 		"category": "Motorola",
 		"thumbnail": ["/static/img/Id_01.png"]
 	},
@@ -18,6 +19,7 @@
 		"price": 570000,
 		"status": true,
 		"stock": 10,
+		"owner": "admin",
 		"category": "Motorola",
 		"thumbnail": ["/static/img/Id_02.png"]
 	},
@@ -29,6 +31,7 @@
 		"price": 120000,
 		"status": true,
 		"stock": 20,
+		"owner": "admin",
 		"category": "Motorola",
 		"thumbnail": ["/static/img/Id_03.png"]
 	},
@@ -40,6 +43,7 @@
 		"price": 90000,
 		"status": true,
 		"stock": 30,
+		"owner": "admin",
 		"category": "Motorola",
 		"thumbnail": ["/static/img/Id_04.png"]
 	},
@@ -51,6 +55,7 @@
 		"price": 62000,
 		"status": true,
 		"stock": 35,
+		"owner": "admin",
 		"category": "Motorola",
 		"thumbnail": ["/static/img/Id_05.png"]
 	},
@@ -62,6 +67,7 @@
 		"price": 160000,
 		"status": true,
 		"stock": 25,
+		"owner": "admin",
 		"category": "Samsung",
 		"thumbnail": ["/static/img/Id_06.png"]
 	},
@@ -73,6 +79,7 @@
 		"price": 227000,
 		"status": true,
 		"stock": 20,
+		"owner": "admin",
 		"category": "Samsung",
 		"thumbnail": ["/static/img/Id_07.png"]
 	},
@@ -84,6 +91,7 @@
 		"price": 115000,
 		"status": true,
 		"stock": 30,
+		"owner": "admin",
 		"category": "Samsung",
 		"thumbnail": ["/static/img/Id_08.png"]
 	},
@@ -95,6 +103,7 @@
 		"price": 287000,
 		"status": true,
 		"stock": 15,
+		"owner": "admin",
 		"category": "Samsung",
 		"thumbnail": ["/static/img/Id_09.png"]
 	},
@@ -106,6 +115,7 @@
 		"price": 505000,
 		"status": true,
 		"stock": 10,
+		"owner": "admin",
 		"category": "Samsung",
 		"thumbnail": ["/static/img/Id_10.png"]
 	},
@@ -117,6 +127,7 @@
 		"price": 75000,
 		"status": true,
 		"stock": 35,
+		"owner": "admin",
 		"category": "Samsung",
 		"thumbnail": ["/static/img/Id_11.png"]
 	},
@@ -128,6 +139,7 @@
 		"price": 120000,
 		"status": true,
 		"stock": 15,
+		"owner": "admin",
 		"category": "Xiaomi",
 		"thumbnail": ["/static/img/Id_12.png"]
 	},
@@ -139,6 +151,7 @@
 		"price": 1340000,
 		"status": true,
 		"stock": 5,
+		"owner": "admin",
 		"category": "iPhone",
 		"thumbnail": ["/static/img/Id_13.png"]
 	},
@@ -150,6 +163,7 @@
 		"price": 1590000,
 		"status": true,
 		"stock": 5,
+		"owner": "admin",
 		"category": "iPhone",
 		"thumbnail": ["/static/img/Id_14.png"]
 	},
@@ -161,6 +175,7 @@
 		"price": 200000,
 		"status": true,
 		"stock": 15,
+		"owner": "admin",
 		"category": "Xiaomi",
 		"thumbnail": ["/static/img/Id_15.png"]
 	}

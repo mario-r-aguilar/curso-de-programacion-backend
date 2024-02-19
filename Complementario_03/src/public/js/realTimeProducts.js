@@ -25,7 +25,7 @@ const renderProducts = async (data) => {
 			<div
 			class='card p-3 mb-3 shadow-lg'
 			id='cardProduct' 
-			style='width: 18rem; height: 52rem'
+			style='width: 18rem; height: 55rem'
 		>
 			<img
 				src='${element.thumbnail}'
@@ -51,6 +51,10 @@ const renderProducts = async (data) => {
 				<span class='card-text'>Stock: </span>
 				<p class='card-text'>
 					<b>${element.stock}</b>
+				</p>
+				<span class='card-text'>Creado por: </span>
+				<p class='card-text'>
+					<b>${element.owner}</b>
 				</p>
 				<span class='card-text'>Categoría: </span>
 				<p class='card-text'>
