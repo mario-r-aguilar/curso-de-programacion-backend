@@ -75,11 +75,10 @@ export const addProduct = async (req, res, next) => {
 			next(CustomError.createProductError(newProduct));
 		}
 
-		const productAdded = await ProductService.addProduct(newProduct);
-
 		if (user.role === 'PREMIUM') {
-			productAdded.owner = user.email;
+			newProduct.owner = user.email;
 		}
+		const productAdded = await ProductService.addProduct(newProduct);
 
 		res.status(201).send(productAdded);
 	} catch (error) {
@@ -133,6 +132,7 @@ export const deleteProduct = async (req, res) => {
 		}
 
 		const userData = req.session.user;
+
 		const user = new UserDTO(userData);
 
 		let { pid } = req.params;
@@ -141,6 +141,7 @@ export const deleteProduct = async (req, res) => {
 			user,
 			pid
 		);
+
 		if (!validProductOwner)
 			throw new Error(
 				'You cannot delete products that were not created by you'

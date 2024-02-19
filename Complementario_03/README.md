@@ -15,10 +15,10 @@
    -  Si un producto se crea sin owner, se debe colocar por defecto “admin”.
    -  El campo owner deberá guardar sólo el correo electrónico del usuario que lo haya creado (sólo podrá recibir usuarios premium)
 
-4. **Modificar los permisos de modificación y eliminación de productos para que:**
+4. Modificar los permisos de modificación y eliminación de productos para que:
 
-   -  **Un usuario premium sólo pueda borrar los productos que le pertenecen.**
-   -  **El admin pueda borrar cualquier producto, aún si es de un owner.**
+   -  Un usuario premium sólo pueda borrar los productos que le pertenecen.
+   -  El admin pueda borrar cualquier producto, aún si es de un owner.
 
 5. **Cambiar la lógica de carrito para que un usuario premium NO pueda agregar a su carrito un producto que le pertenece.**
 

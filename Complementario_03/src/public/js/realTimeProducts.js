@@ -145,14 +145,22 @@ const renderAddForm = () => {
 				const responseMessage = document.createElement('div');
 				responseMessage.innerHTML = `
                 <div class="alert alert-success w-50" role="alert">Producto agregado</div>
-                <button class='btn btn-primary border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+                <button class='btn btn-primary border border-dark shadow me-1 mt-2 mb-2' onclick='closeForm()'>Cerrar</button>
                 `;
 				form.appendChild(responseMessage);
 				addForm.reset();
 				// Envía por socket.io el aviso de actualización de la lista de productos
 				socket.emit('updatedList', 'Se actualizo la lista de productos');
 			} else {
-				console.error('Could not add product');
+				console.error('Could not add the product');
+				form.innerHTML = '';
+				const responseMessage = document.createElement('div');
+				responseMessage.innerHTML = `
+                <div class="alert alert-danger w-50" role="alert">No fue posible agregar el producto</div>
+                <button class='btn btn-primary border border-dark shadow me-1 mt-2 mb-2' onclick='closeForm()'>Cerrar</button>
+                `;
+				form.appendChild(responseMessage);
+				addForm.reset();
 			}
 		} catch (error) {
 			console.error({ error: error });
@@ -222,12 +230,22 @@ const renderUpdateForm = () => {
 					const responseMessage = document.createElement('div');
 					responseMessage.innerHTML = `
                 <div class="alert alert-success w-50" role="alert">Producto actualizado</div>
-                <button class='btn btn-primary border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+                <button class='btn btn-primary border border-dark shadow me-1 mt-2 mb-2' onclick='closeForm()'>Cerrar</button>
                 `;
 					form.appendChild(responseMessage);
 					updateForm.reset();
 
 					socket.emit('updatedList', 'Se actualizo la lista de productos');
+				} else {
+					console.error('Could not update the product');
+					form.innerHTML = '';
+					const responseMessage = document.createElement('div');
+					responseMessage.innerHTML = `
+					<div class="alert alert-danger w-50" role="alert">No fue posible actualizar el producto</div>
+					<button class='btn btn-primary border border-dark shadow me-1 mt-2 mb-2' onclick='closeForm()'>Cerrar</button>
+					`;
+					form.appendChild(responseMessage);
+					updateForm.reset();
 				}
 			})
 			.catch((err) => {
@@ -271,7 +289,7 @@ const renderDelForm = () => {
 						const response = document.createElement('div');
 						response.innerHTML = `
                         <div class="alert alert-danger w-50" role="alert">Producto eliminado</div>
-                        <button class='btn btn-primary border border-dark shadow me-1 mt-2' onclick='closeForm()'>Cerrar</button>
+                        <button class='btn btn-primary border border-dark shadow me-1 mt-2 mb-2' onclick='closeForm()'>Cerrar</button>
                         `;
 						form.appendChild(response);
 						const delForm = document.getElementById('delForm');
@@ -283,6 +301,14 @@ const renderDelForm = () => {
 						);
 					} else {
 						console.error('Product could not be removed');
+						form.innerHTML = '';
+						const responseMessage = document.createElement('div');
+						responseMessage.innerHTML = `
+					<div class="alert alert-danger w-50" role="alert">No fue posible eliminar el producto</div>
+					<button class='btn btn-primary border border-dark shadow me-1 mt-2 mb-2' onclick='closeForm()'>Cerrar</button>
+					`;
+						form.appendChild(responseMessage);
+						delForm.reset();
 					}
 				})
 				.catch((err) => {

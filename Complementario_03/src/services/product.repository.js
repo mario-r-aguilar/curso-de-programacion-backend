@@ -132,6 +132,7 @@ export default class ProductRepository {
 		try {
 			if (user.role === 'PREMIUM') {
 				const product = await this.dao.getById(productID);
+
 				if (!product) {
 					throw new Error('Product not found');
 				}
