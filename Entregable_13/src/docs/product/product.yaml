@@ -33,7 +33,7 @@ paths:
                      schema:
                         $ref: '#components/schemas/Product'
             '401':
-               description: El usuario no está logueado
+               description: El usuario no está logueado, usualmente generado por tener un token inválido
             '400':
                description: Error generado por la falta de una o más propiedades requeridas para el ingreso de un producto
             '500':
@@ -84,7 +84,7 @@ paths:
                      schema:
                         $ref: '#components/schemas/Product'
             '401':
-               description: El usuario no está logueado
+               description: El usuario no está logueado, usualmente generado por tener un token inválido
             '500':
                description: Error interno del servidor, usualmente generado por intentar actualizar productos propios o el ingreso de una ID de producto errónea
       delete:
@@ -102,7 +102,7 @@ paths:
             '204':
                description: El producto fue eliminado satisfactoriamente desde la base de datos
             '401':
-               description: El usuario no está logueado
+               description: El usuario no está logueado, usualmente generado por tener un token inválido
             '500':
                description: Error interno del servidor, usualmente generado por intentar eliminar productos propios o el ingreso de una ID de producto errónea
 components:

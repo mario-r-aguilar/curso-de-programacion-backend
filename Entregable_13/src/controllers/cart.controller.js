@@ -5,7 +5,7 @@ import UserDTO from '../DTO/user.dto.js';
 export const getCarts = async (req, res) => {
 	try {
 		const carts = await CartService.getCarts();
-		res.send(carts);
+		res.status(200).send(carts);
 	} catch (error) {
 		req.logger.fatal('Could not get cart list');
 		res.status(500).send(`Internal Server Error: ${error}`);
@@ -17,7 +17,7 @@ export const getCartById = async (req, res) => {
 	try {
 		let { cid } = req.params;
 		const cart = await CartService.getCartById(cid);
-		res.send(cart);
+		res.status(200).send(cart);
 	} catch (error) {
 		req.logger.fatal('Could not get cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
@@ -70,7 +70,9 @@ export const updateAllProductsOfCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
 		let newProductList = req.body;
-		res.send(await CartService.updateAllProductsOfCart(cid, newProductList));
+		res.status(200).send(
+			await CartService.updateAllProductsOfCart(cid, newProductList)
+		);
 	} catch (error) {
 		req.logger.fatal('Could not update all products in cart');
 		res.status(500).send(`Internal Server Error: ${error}`);
@@ -83,7 +85,7 @@ export const updateQuantityOfProduct = async (req, res) => {
 		let { cid } = req.params;
 		let { pid } = req.params;
 		let newQuantity = req.body;
-		res.send(
+		res.status(200).send(
 			await CartService.updateQuantityOfProduct(cid, pid, newQuantity)
 		);
 	} catch (error) {
@@ -126,7 +128,7 @@ export const purchaseProductsInCart = async (req, res) => {
 		const user = new UserDTO(userData);
 		const payload = await CartService.purchaseProductsInCart(cid, user);
 
-		res.send({
+		res.status(200).send({
 			status: 'success',
 			payload: payload,
 		});
