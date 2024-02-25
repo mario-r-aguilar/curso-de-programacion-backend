@@ -16,6 +16,8 @@ import initializePassport from './config/passport.config.js';
 import config from './config/config.js';
 import cors from 'cors';
 import errorsHandler from './middlewares/errorsHandler.js';
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
 
 const app = express();
 
@@ -52,12 +54,27 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Swagger
+const swaggerOptions = {
+	definition: {
+		openapi: '3.0.1',
+		info: {
+			title: 'E-commerce API documentation',
+			description: 'API developed to be used in an e-commerce',
+		},
+	},
+	apis: [`${__dirname}/docs/**/*.yaml`],
+};
+
+const specs = swaggerJsDoc(swaggerOptions);
+
 // Routes
 app.use('/api/sessions', userRouter);
 app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);
 app.use('/api/loggertest', loggerTestRouter);
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 // Manejador de errores
 app.use(errorsHandler);
