@@ -41,6 +41,9 @@ export const getProductById = async (req, res) => {
 	try {
 		let { pid } = req.params;
 		const product = await ProductService.getProductById(pid);
+		if (!product) {
+			return res.status(404).send('Product not found');
+		}
 		res.status(200).send(product);
 	} catch (error) {
 		req.logger.fatal('Could not get product');

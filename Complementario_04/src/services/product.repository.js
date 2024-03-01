@@ -41,7 +41,7 @@ export default class ProductRepository {
 				`It is not possible to obtain the product.\n 
 				Error: ${error}`
 			);
-			return;
+			return null;
 		}
 	}
 

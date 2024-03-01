@@ -6,7 +6,8 @@
 	"main": "src/app.js",
 	"scripts": {
 		"start": "node src/app.js",
-		"test": "nodemon src/app.js"
+		"dev": "nodemon src/app.js",
+		"test": "mocha test/testingProyect.test.js"
 	},
 	"keywords": [
 		"node.js",
@@ -33,7 +34,8 @@
 		"nodemailer",
 		"@faker-js/faker",
 		"winston logger",
-		"swagger"
+		"swagger",
+		"supertest"
 	],
 	"author": "Mario Aguilar",
 	"license": "ISC",
@@ -61,6 +63,9 @@
 		"winston": "^3.11.0"
 	},
 	"devDependencies": {
-		"nodemon": "^3.0.1"
+		"chai": "^5.1.0",
+		"mocha": "^10.3.0",
+		"nodemon": "^3.0.1",
+		"supertest": "^6.3.4"
 	}
 }

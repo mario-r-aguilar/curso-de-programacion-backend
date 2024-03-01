@@ -16,10 +16,23 @@ switch (selectedPersistence.persistence) {
 		try {
 			let dbSelected =
 				config.modeTest === 'No' ? config.mongoDbName : config.mongoDbTest;
+
+			if (config.modeTest === 'Yes') {
+				devLogger.info('Test Mode Activated');
+			} else {
+				devLogger.info('Test Mode Disabled');
+			}
+
 			mongoose
 				.connect(config.mongoUrl, { dbName: dbSelected })
 				.then(() => {
-					devLogger.info('Mongo DB connected');
+					if (config.modeTest === 'Yes') {
+						mongoose.connection.collections.users.drop();
+						mongoose.connection.collections.carts.drop();
+						devLogger.info('Mongo Test DB reset and connected');
+					} else {
+						devLogger.info('Mongo DB connected');
+					}
 				})
 				.catch((error) => {
 					devLogger.error(

@@ -67,7 +67,7 @@ export default class ProductMongoDAO extends ProductDAOInterface {
 				`It is not possible to obtain the product.\n 
 				Error: ${error}`
 			);
-			return;
+			return null;
 		}
 	}
 
