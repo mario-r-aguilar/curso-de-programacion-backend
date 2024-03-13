@@ -1,4 +1,4 @@
-# # Entregable-Complementario 04 - Programación Backend
+# Entregable-Complementario 04 - Programación Backend
 
 ## Consigna
 
