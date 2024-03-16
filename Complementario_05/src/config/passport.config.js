@@ -99,6 +99,8 @@ const initializePassport = () => {
 							cart: config.adminCart,
 							password: createHash(config.adminPass),
 							role: config.adminRole,
+							documents: [],
+							last_connection: new Date(),
 						};
 
 						const token = generateToken(user);
@@ -168,10 +170,12 @@ const initializePassport = () => {
 							products: [],
 						}),
 						role: 'USER',
+						documents: [],
+						last_connection: new Date(),
 					});
 
 					const token = generateToken(newUser);
-					user.token = token;
+					newUser.token = token;
 
 					// Autentica el usuario
 					return done(null, newUser);

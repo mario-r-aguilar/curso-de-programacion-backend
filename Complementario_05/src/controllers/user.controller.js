@@ -7,6 +7,10 @@ export const loginUser = async (req, res) => {
 	try {
 		if (!req.user) return res.status(401).send('Invalid Credentials');
 
+		await UserService.updateLastConnection(req.user._id, {
+			last_connection: new Date(),
+		});
+
 		req.session.user = req.user;
 		return res
 			.cookie('token', req.user.token, {
@@ -29,8 +33,12 @@ export const loginGithub = (req, res) => {
 	}
 };
 
-export const loginGithubCallBack = (req, res) => {
+export const loginGithubCallBack = async (req, res) => {
 	try {
+		await UserService.updateLastConnection(req.user._id, {
+			last_connection: new Date(),
+		});
+
 		req.session.user = req.user;
 		return res
 			.cookie('token', req.user.token, {
@@ -79,8 +87,12 @@ export const currentUser = async (req, res) => {
 };
 
 // Desloguea a un usuario
-export const logoutUser = (req, res) => {
+export const logoutUser = async (req, res) => {
 	try {
+		await UserService.updateLastConnection(req.user._id, {
+			last_connection: new Date(),
+		});
+
 		req.session.destroy((err) => {
 			if (err) return res.send('Logout Error');
 

@@ -187,4 +187,26 @@ export default class UserRepository {
 			throw error;
 		}
 	}
+
+	async updateLastConnection(userID, userUpdated) {
+		try {
+			if (!userID) {
+				throw new Error(
+					'A user ID was not provided or the ID provided does not exist.'
+				);
+			}
+
+			if (!userUpdated) {
+				throw new Error('A valid user was not provided.');
+			}
+
+			return await this.dao.update(userID, userUpdated);
+		} catch (error) {
+			devLogger.fatal(
+				`It is not possible to update the user's last connection. (repository error).\n
+				Error: ${error.message}`
+			);
+			throw error;
+		}
+	}
 }

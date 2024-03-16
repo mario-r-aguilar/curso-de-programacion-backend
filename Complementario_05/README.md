@@ -2,7 +2,7 @@
 
 ## Consigna
 
-1. **Mover la ruta /api/users/premium/:uid** a un router específico para usuarios en /api/sessions/
+1. **Mover la ruta /api/sessions/premium/:uid** a un router específico para usuarios en /api/sessions/
 
 2. **Modificar el modelo de User para que cuente con una nueva propiedad “documents”**, la cual será un array que contenga los objetos con las siguientes propiedades:
 
