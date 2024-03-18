@@ -23,8 +23,8 @@
 
 6. **Modificar el endpoint /api/sessions/premium/:uid** para que sólo actualice al usuario a premium si ya ha cargado los siguientes documentos:
 
-   -  Identificación.
-   -  Comprobante de domicilio.
-   -  Comprobante de estado de cuenta.
+   -  Identificación
+   -  Comprobante de domicilio
+   -  Comprobante de estado de cuenta
 
 7. **En caso de llamar al endpoint /api/sessions/premium/:uid, si no se ha terminado de cargar la documentación, devolver un error** indicando que el usuario no ha terminado de procesar su documentación (sólo si quiere pasar de user a premium, no al revés).
