@@ -2,6 +2,11 @@ import { devLogger } from '../utils/logger.js';
 import config from '../config/config.js';
 import nodemailer from 'nodemailer';
 import { createHash, checkPassword } from '../utils/utils.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import getDirname from '../utils/utils.js';
+
+const __dirname = getDirname(import.meta.url);
 
 export default class UserRepository {
 	constructor(dao) {
@@ -117,6 +122,25 @@ export default class UserRepository {
 	}
 
 	/**
+	 * Verifica si el usuario cuenta con los 3 documentos obligatorios
+	 * @param {Object} Usuario
+	 * @returns {Boolean} Resultado de la verificación
+	 */
+	async areDocumentsUploaded(user) {
+		const requiredDocuments = [
+			'personal-identification',
+			'proof-of-address',
+			'proof-of-account-status',
+		];
+		const uploadedDocuments = user.documents.map((doc) => doc.name);
+
+		// Verifica si todos los documentos requeridos están presentes en los documentos subidos
+		return requiredDocuments.every((document) =>
+			uploadedDocuments.includes(document)
+		);
+	}
+
+	/**
 	 * Envía un link para reestablecer la contraseña
 	 * @param {String} Email del usuario
 	 * @param {String} Token
@@ -188,6 +212,12 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Actualiza la última conexión del usuario
+	 * @param {String} ID del usuario
+	 * @param {Object} Usuario editado
+	 * @returns {Object} Usuario actualizado
+	 */
 	async updateLastConnection(userID, userUpdated) {
 		try {
 			if (!userID) {
@@ -204,6 +234,59 @@ export default class UserRepository {
 		} catch (error) {
 			devLogger.fatal(
 				`It is not possible to update the user's last connection. (repository error).\n
+				Error: ${error.message}`
+			);
+			throw error;
+		}
+	}
+
+	/**
+	 * Chequea si un documento existe y de ser así lo reemplaza por el nuevo o bien lo agrega en caso contrario
+	 * @param {Array} Documentos del usuario
+	 * @returns {Array} Documentos actualizados
+	 */
+	async checkDocuments(documents, fileField, uploadPath) {
+		const existingDocumentIndex = documents.findIndex(
+			(doc) => doc.name === fileField
+		);
+
+		if (existingDocumentIndex !== -1) {
+			const fileToDelete = documents[existingDocumentIndex].reference;
+
+			documents[existingDocumentIndex] = {
+				name: fileField,
+				reference: uploadPath,
+			};
+
+			// Elimina archivo anterior
+			fs.unlink(`${path.join(__dirname, '..', fileToDelete)}`, (err) => {
+				if (err) {
+					devLogger.warning(
+						`Error deleting file: ${documents[existingDocumentIndex].reference}`
+					);
+				}
+			});
+		} else {
+			documents.push({
+				name: fileField,
+				reference: uploadPath,
+			});
+		}
+		return documents;
+	}
+
+	/**
+	 * Actualiza el listado de documentos del usuario
+	 * @param {String} ID del usuario
+	 * @param {Object} Usuario o campo de usuario documents editado
+	 * @returns {Object} Usuario actualizado
+	 */
+	async uploadUserDocuments(userID, documents) {
+		try {
+			return await this.dao.update(userID, { documents: documents });
+		} catch (error) {
+			devLogger.fatal(
+				`User documents cannot be updated.\n
 				Error: ${error.message}`
 			);
 			throw error;

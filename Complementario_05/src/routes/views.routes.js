@@ -13,6 +13,7 @@ import {
 	renderResetPassMail,
 	renderResetPassPage,
 	renderToggleUserRole,
+	uploadUserFiles,
 } from '../controllers/views.controller.js';
 
 const viewsRouter = Router();
@@ -62,6 +63,13 @@ viewsRouter.get(
 	passport.authenticate('current', { session: false }),
 	roleControl('ADMIN'),
 	renderToggleUserRole
+);
+
+viewsRouter.get(
+	'/uploaddocuments/:uid',
+	passport.authenticate('current', { session: false }),
+	roleControl('USER', 'PREMIUM'),
+	uploadUserFiles
 );
 
 export { viewsRouter };

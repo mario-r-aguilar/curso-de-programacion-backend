@@ -8,9 +8,10 @@
 	<input type='hidden' id='getUserRole' value='{{user.role}}' />
 	<input type='hidden' id='isMongoPersistence' value='{{isMongoPersistence}}' />
 	
-	<div class='d-flex me-4  mb-3 flex-row justify-content-between flex-wrap'>
-		<h1 class="ps-4 ms-5 mt-3">Lista de productos</h1> 
+	<div class='d-flex me-4 ms-5 mb-3 flex-row justify-content-between flex-wrap'>			
 		
+		<a class="navbar-brand me-3 ms-3" href="/uploaddocuments/{{userId}}"> <img class="img-fluid rounded mt-3" src="/static/img/upload.png" width="38" height="38" alt="upload.png"> <span class="fw-bold align-bottom">Subir archivos</span> </a>
+
 		{{!-- Link al carrito del usuario (varía según la persistencia seleccionada) --}} 
 		{{#if isMongoPersistence}}
 			<a class='nav-link' style="width: 3%; height: 3%" href="/carts/{{user.cart}}"> <img class="img-fluid mt-3" style="width: 100%; height: 100%" id="cartImg" src="/static/img/cart_img.svg" alt="cart_img"> </a> 
@@ -18,6 +19,8 @@
 			<a class='nav-link' style="width: 3%; height: 3%" href="/carts/{{user.cart._id}}"> <img class="img-fluid mt-3" style="width: 100%; height: 100%" id="cartImg" src="/static/img/cart_img.svg" alt="cart_img"> </a> 
 		{{/if}} 
 	</div> 
+
+	<h1 class="ps-4 ms-5 mt-5">Lista de productos</h1> 
 	
 	{{!-- Código para persistencia MONGO --}}
 	{{#if isMongoPersistence}}

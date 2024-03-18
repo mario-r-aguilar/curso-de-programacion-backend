@@ -32,6 +32,7 @@ export const renderProductsPage = async (req, res) => {
 		let productsList;
 		const userData = req.session.user;
 		const user = new UserDTO(userData);
+		const userId = userData._id;
 		const { limit, page, sort, category, status, title } = req.query;
 
 		// código para persistencia MONGO
@@ -52,6 +53,7 @@ export const renderProductsPage = async (req, res) => {
 		res.render('home', {
 			isMongoPersistence,
 			user,
+			userId,
 			productsList,
 			title: 'Lista de productos disponibles',
 		});
@@ -163,6 +165,25 @@ export const renderToggleUserRole = async (req, res) => {
 		});
 	} catch (error) {
 		req.logger.fatal('Failed to render page to toggle user role');
+		res.status(500).send(`Error interno del servidor: ${error}`);
+	}
+};
+
+// Vista para que el usuario suba archivos
+export const uploadUserFiles = async (req, res) => {
+	try {
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+
+		const userId = req.params.uid;
+
+		res.render('uploadDocuments', {
+			user,
+			userId,
+			title: 'Subir Archivos',
+		});
+	} catch (error) {
+		req.logger.fatal('Failed to render page to upload files');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };

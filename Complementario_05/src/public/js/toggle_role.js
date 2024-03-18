@@ -13,11 +13,9 @@ const toggleUserRoleFn = () => {
 			if (!response.ok) {
 				toggleRoleError.innerHTML = '';
 				toggleRoleError.classList.remove('d-none');
-				toggleRoleError.textContent =
-					'No se pudo cambiar el rol. Verifique el ID del usuario.';
-			}
-
-			if (response.ok) {
+				toggleRoleError.classList.add('alert-danger');
+				toggleRoleError.textContent = 'Error al intentar cambiar el rol.';
+			} else {
 				toggleRoleError.innerHTML = '';
 				toggleRoleError.classList.remove('d-none', 'alert-danger');
 				toggleRoleError.classList.add('alert-success');

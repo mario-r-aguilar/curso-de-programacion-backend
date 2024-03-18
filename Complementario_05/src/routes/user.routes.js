@@ -8,11 +8,13 @@ import {
 	failRegister,
 	currentUser,
 	logoutUser,
+	uploadUserFiles,
 	toggleUserRole,
 	sendResetPassEmail,
 	resetPassword,
 } from '../controllers/user.controller.js';
 import handleLoginSession from '../middlewares/login.middleware.js';
+import upload from '../middlewares/multer.middleware.js';
 
 const userRouter = Router();
 
@@ -49,6 +51,20 @@ userRouter.put(
 	'/premium/:uid',
 	passport.authenticate('current', { session: false }),
 	toggleUserRole
+);
+
+userRouter.post(
+	'/:uid/documents',
+	passport.authenticate('current', { session: false }),
+	upload.fields([
+		{ name: 'profileImage', maxCount: 1 },
+		{ name: 'productImage', maxCount: 1 },
+		{ name: 'userDocument', maxCount: 1 },
+		{ name: 'personal-identification', maxCount: 1 },
+		{ name: 'proof-of-address', maxCount: 1 },
+		{ name: 'proof-of-account-status', maxCount: 1 },
+	]),
+	uploadUserFiles
 );
 
 userRouter.post('/reset-password', sendResetPassEmail);

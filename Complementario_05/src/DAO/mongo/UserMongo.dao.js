@@ -101,7 +101,7 @@ export default class UserMongoDAO {
 	 * Actualiza un usuario
 	 * @param {String} ID del usuario
 	 * @param {Object} Usuario editado
-	 * @returns {Object} Usuario actualizado
+	 * @returns {Object} Información sobre la actualización
 	 */
 	async update(userID, userUpdated) {
 		try {

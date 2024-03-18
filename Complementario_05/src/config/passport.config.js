@@ -7,6 +7,7 @@ import { createHash, checkPassword, generateToken } from '../utils/utils.js';
 import config from './config.js';
 import selectedPersistence from './persistence.js';
 import { devLogger } from '../utils/logger.js';
+import mongoose from 'mongoose';
 
 // Core de las estrategias
 const LocalStrategy = local.Strategy;
@@ -90,8 +91,11 @@ const initializePassport = () => {
 						username == config.adminMail &&
 						password == config.adminPass
 					) {
+						const adminID = config.adminId;
+						const validId = new mongoose.Types.ObjectId(adminID);
+
 						const user = {
-							_id: config.adminId,
+							_id: validId,
 							name: config.adminName,
 							lastname: config.adminLastname,
 							email: config.adminMail,

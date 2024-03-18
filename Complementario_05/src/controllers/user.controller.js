@@ -89,9 +89,12 @@ export const currentUser = async (req, res) => {
 // Desloguea a un usuario
 export const logoutUser = async (req, res) => {
 	try {
-		await UserService.updateLastConnection(req.user._id, {
-			last_connection: new Date(),
-		});
+		const isAdmin = req.session.user.role === 'ADMIN' ? true : false;
+		if (!isAdmin) {
+			await UserService.updateLastConnection(req.session.user._id, {
+				last_connection: new Date(),
+			});
+		}
 
 		req.session.destroy((err) => {
 			if (err) return res.send('Logout Error');
@@ -104,12 +107,83 @@ export const logoutUser = async (req, res) => {
 	}
 };
 
+// Subir archivos del usuario
+export const uploadUserFiles = async (req, res) => {
+	try {
+		const { uid } = req.params;
+		const user = await UserService.getUserById(uid);
+		if (!user) return res.status(404).send('User is not found');
+
+		if (!req.files) {
+			return res.status(400).send('No files were uploaded.');
+		}
+
+		let documents = user.documents || [];
+
+		for (const fileField of Object.keys(req.files)) {
+			const file = req.files[fileField][0];
+			let uploadPath = '';
+			switch (file.fieldname) {
+				case 'profileImage':
+					uploadPath = `/public/img/profiles/${file.filename}`;
+					break;
+				case 'productImage':
+					uploadPath = `/public/img/usersProducts/${file.filename}`;
+					break;
+				case 'personal-identification':
+					uploadPath = `/public/userDocuments/${file.filename}`;
+					break;
+				case 'proof-of-address':
+					uploadPath = `/public/userDocuments/${file.filename}`;
+					break;
+				case 'proof-of-account-status':
+					uploadPath = `/public/userDocuments/${file.filename}`;
+					break;
+				case 'userDocument':
+					uploadPath = `/public/userDocuments/${file.filename}`;
+					break;
+				default:
+					break;
+			}
+
+			documents = await UserService.checkDocuments(
+				documents,
+				fileField,
+				uploadPath
+			);
+		}
+
+		await UserService.uploadUserDocuments(uid, documents);
+
+		return res.status(200).send(`The file was uploaded successfully.`);
+	} catch (error) {
+		req.logger.fatal(`It is not possible to upload the file.`);
+		res.status(500).send(`Internal Server Error: ${error.message}`);
+	}
+};
+
 // Cambia el rol de un usuario
 export const toggleUserRole = async (req, res) => {
 	try {
 		const { uid } = req.params;
 		const user = await UserService.getUserById(uid);
 		if (!user) return res.status(404).send('User is not found');
+
+		if (user.role === 'USER') {
+			const documentsUploaded = await UserService.areDocumentsUploaded(user);
+
+			if (!documentsUploaded) {
+				req.logger.warning(`User has not uploaded all required documents`);
+				return res
+					.status(400)
+					.send('User has not uploaded all required documents');
+			} else {
+				await UserService.toggleUserRole(user);
+				return res
+					.status(200)
+					.send(`The user's role was successfully modified`);
+			}
+		}
 
 		await UserService.toggleUserRole(user);
 
