@@ -64,6 +64,14 @@ export default class UserMongoDAO {
 		}
 	}
 
+	async getByLastConnection(threshold) {
+		const usersInactives = await this.model.find({
+			last_connection: { $lt: threshold },
+		});
+
+		return usersInactives;
+	}
+
 	/**
 	 * Agrega un usuario
 	 * @param {Object} Usuario
@@ -81,13 +89,13 @@ export default class UserMongoDAO {
 	}
 
 	/**
-	 * Elimina un usuario
+	 * Elimina un listado de usuarios
 	 * @param {String} ID del usuario
 	 * @returns {@type void}
 	 */
-	async delete(userID) {
+	async delete(filter) {
 		try {
-			return await this.model.deleteOne({ _id: userID });
+			return await this.model.deleteMany(filter);
 		} catch (error) {
 			devLogger.fatal(
 				`It is not possible to delete the user.\n 

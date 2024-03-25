@@ -15,7 +15,7 @@ export default class UserRepository {
 	}
 
 	/**
-	 * Busca el listado de usuarios
+	 * Devuelve el listado de usuarios con sus datos principales
 	 * @returns {Array} Listado de usuarios
 	 */
 	async getAll() {
@@ -83,6 +83,55 @@ export default class UserRepository {
 				Error: ${error}`
 			);
 			throw error;
+		}
+	}
+
+	async deleteInactiveUsers() {
+		try {
+			// Para hacer pruebas con inactividad de 10 minutos (comentar la siguiente línea si no se usa)
+			// const threshold = new Date(Date.now() - 10 * 60 * 1000);
+
+			// Resta 2 días a la fecha actual para obtener la fecha de 2 días atrás (en milisegundos)
+			const threshold = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+
+			const usersInactives = await this.dao.getByLastConnection(threshold);
+
+			const deletionResult = await this.dao.delete({
+				last_connection: { $lt: threshold },
+			});
+
+			const transport = nodemailer.createTransport({
+				service: 'gmail',
+				port: 587,
+				auth: {
+					user: config.nodemailerUser,
+					pass: config.nodemailerPass,
+				},
+			});
+
+			for (const user of usersInactives) {
+				await transport.sendMail({
+					from: 'Cba E-commerce <config.nodemailerUser>',
+					to: user.email,
+					subject: 'Información importante sobre tu cuenta',
+					html: `
+					<h3>Tu cuenta ha sido eliminada por inactividad</h3>
+					<p><b>Hola ${user.name},</b> te informamos que tu cuenta ha sido eliminada por inactividad. 
+					Si deseas seguir utilizando nuestros servicios, por favor vuelve a registrarte.
+					Muchas gracias.</p>`,
+				});
+			}
+
+			transport.close();
+
+			// Elimina todo usuario cuya última conexión sea menor a la del límite establecido en threshold
+			return deletionResult;
+		} catch (error) {
+			devLogger.fatal(
+				`It is not possible to delete the inactive users.\n 
+            Error: ${error}`
+			);
+			return;
 		}
 	}
 

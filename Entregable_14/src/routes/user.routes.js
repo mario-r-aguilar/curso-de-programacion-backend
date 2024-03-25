@@ -2,6 +2,7 @@ import { Router } from 'express';
 import passport from 'passport';
 import {
 	getAllUsers,
+	deleteInactiveUsers,
 	loginUser,
 	loginGithub,
 	loginGithubCallBack,
@@ -23,6 +24,12 @@ userRouter.get(
 	'/',
 	passport.authenticate('current', { session: false }),
 	getAllUsers
+);
+
+userRouter.delete(
+	'/',
+	passport.authenticate('current', { session: false }),
+	deleteInactiveUsers
 );
 
 userRouter.post('/login', handleLoginSession, loginUser);

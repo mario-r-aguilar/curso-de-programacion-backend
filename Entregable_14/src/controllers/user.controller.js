@@ -15,6 +15,19 @@ export const getAllUsers = async (req, res) => {
 	}
 };
 
+// Eliminar usuarios inactivos
+export const deleteInactiveUsers = async (req, res) => {
+	try {
+		const deletionResult = await UserService.deleteInactiveUsers();
+
+		req.logger.info('Inactive users removed.');
+		return res.status(204).send(deletionResult);
+	} catch (error) {
+		req.logger.fatal('It is not possible to delete the inactive users.');
+		res.status(500).send(`Internal Server Error: ${error}`);
+	}
+};
+
 // Estrategia local (logueo de usuario)
 export const loginUser = async (req, res) => {
 	try {
