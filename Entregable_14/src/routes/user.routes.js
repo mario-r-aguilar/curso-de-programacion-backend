@@ -3,6 +3,7 @@ import passport from 'passport';
 import {
 	getAllUsers,
 	deleteInactiveUsers,
+	getUserByEmail,
 	loginUser,
 	loginGithub,
 	loginGithubCallBack,
@@ -24,6 +25,12 @@ userRouter.get(
 	'/',
 	passport.authenticate('current', { session: false }),
 	getAllUsers
+);
+
+userRouter.get(
+	'/:email',
+	passport.authenticate('current', { session: false }),
+	getUserByEmail
 );
 
 userRouter.delete(

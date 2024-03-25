@@ -1,0 +1,48 @@
+<section class='container'>
+
+	<div class='border border-secondary rounded shadow'>
+
+		<h3 class='ms-3 mb-3 mt-4'>Cambiar Rol de un Usuario </h3>
+
+		<form action=''>
+			<input
+				type='text'
+				id='userEmail'
+				class='form-control ms-4 w-25 mb-2'
+				name='userEmail'
+				placeholder='Correo del usuario'
+			/>
+			<button
+				id='getIdBtn'
+				class='d-inline ms-4 btn btn-primary border border-dark shadow mt-1'
+				type='button'
+			>Obtener Id</button>
+		</form>
+		<div id='getIdMessage' class='d-none ms-4 alert w-50'></div>
+
+		<form action=''>
+			<input
+				type='text'
+				id='userId'
+				class='form-control ms-4 w-25 mb-2'
+				name='userId'
+				placeholder='Id del Usuario'
+			/>
+
+			<button
+				id='toggleRoleBtn'
+				class='ms-4 btn btn-primary border border-dark shadow mt-1'
+				type='button'
+			>Cambiar Rol</button>
+		</form>
+		<div id='toggleRoleMessage' class='d-none ms-4 alert w-50'></div>
+
+	</div>
+
+	<div>
+
+	</div>
+
+</section>
+
+<script src='/static/js/adminPage.js'></script>

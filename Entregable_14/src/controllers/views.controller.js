@@ -1,4 +1,4 @@
-import { ProductService, CartService } from '../services/index.js';
+import { ProductService, CartService, UserService } from '../services/index.js';
 import selectedPersistence from '../config/persistence.js';
 import UserDTO from '../DTO/user.dto.js';
 
@@ -152,19 +152,13 @@ export const renderResetPassPage = async (req, res) => {
 };
 
 // Vista de la página para cambiar el rol del usuario
-export const renderToggleUserRole = async (req, res) => {
+export const renderAdminPage = async (req, res) => {
 	try {
-		const userData = req.session.user;
-		const user = new UserDTO(userData);
-
-		const userId = req.params.uid;
-		res.render('toggle_role', {
-			user,
-			userId,
-			title: 'Cambiar Rol del Usuario',
+		res.render('adminPage', {
+			title: 'Administración de Usuarios',
 		});
 	} catch (error) {
-		req.logger.fatal('Failed to render page to toggle user role');
+		req.logger.fatal('Cannot render administrator page.');
 		res.status(500).send(`Error interno del servidor: ${error}`);
 	}
 };

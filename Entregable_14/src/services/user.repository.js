@@ -86,6 +86,10 @@ export default class UserRepository {
 		}
 	}
 
+	/**
+	 * Elimina usuarios que hayan permanecido inactivos por más de dos días
+	 * @returns Resultado de la eliminación de usuarios
+	 */
 	async deleteInactiveUsers() {
 		try {
 			// Para hacer pruebas con inactividad de 10 minutos (comentar la siguiente línea si no se usa)

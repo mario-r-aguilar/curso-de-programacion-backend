@@ -15,6 +15,19 @@ export const getAllUsers = async (req, res) => {
 	}
 };
 
+// Obtiene un usuario a través de su email
+export const getUserByEmail = async (req, res) => {
+	try {
+		const userEmail = req.params.email;
+		const user = await UserService.getUserByEmail(userEmail);
+
+		return res.status(200).send(user);
+	} catch (error) {
+		req.logger.fatal('Could not get user.');
+		res.status(500).send(`Internal Server Error: ${error}`);
+	}
+};
+
 // Eliminar usuarios inactivos
 export const deleteInactiveUsers = async (req, res) => {
 	try {
