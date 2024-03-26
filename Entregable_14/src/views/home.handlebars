@@ -10,7 +10,13 @@
 	
 	<div class='d-flex me-4 ms-5 mb-3 flex-row justify-content-between flex-wrap'>			
 		
-		<a class="navbar-brand me-3 ms-3" href="/uploaddocuments/{{userId}}"> <img class="img-fluid rounded mt-3" src="/static/img/upload.png" width="38" height="38" alt="upload.png"> <span class="fw-bold align-bottom">Subir archivos</span> </a>
+	
+		<a class="navbar-brand me-3 ms-3" href="/uploaddocuments/{{userId}}"> <img class="img-fluid rounded mt-3" src="/static/img/upload.png" width="38" height="38" alt="upload.png"> <span class="fw-bold align-bottom">Subir archivos</span> </a>	
+
+		{{!-- Botón de la página de administración de usuarios (solo administradores) --}}
+		{{#if isAdmin}}
+		<a class="navbar-brand me-3 ms-3" href="/adminpage"> <img class="img-fluid rounded mt-3" src="/static/img/admin_users.png" width="38" height="38" alt="admin_users.png"> <span class="fw-bold align-bottom">Administrar Usuarios</span> </a>
+		{{/if}}
 
 		{{!-- Link al carrito del usuario (varía según la persistencia seleccionada) --}} 
 		{{#if isMongoPersistence}}

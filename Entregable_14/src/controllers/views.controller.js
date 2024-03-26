@@ -1,4 +1,4 @@
-import { ProductService, CartService, UserService } from '../services/index.js';
+import { ProductService, CartService } from '../services/index.js';
 import selectedPersistence from '../config/persistence.js';
 import UserDTO from '../DTO/user.dto.js';
 
@@ -33,6 +33,7 @@ export const renderProductsPage = async (req, res) => {
 		const userData = req.session.user;
 		const user = new UserDTO(userData);
 		const userId = userData._id;
+		const isAdmin = user.role === 'ADMIN' ? true : false;
 		const { limit, page, sort, category, status, title } = req.query;
 
 		// código para persistencia MONGO
@@ -54,6 +55,7 @@ export const renderProductsPage = async (req, res) => {
 			isMongoPersistence,
 			user,
 			userId,
+			isAdmin,
 			productsList,
 			title: 'Lista de productos disponibles',
 		});
@@ -154,9 +156,9 @@ export const renderResetPassPage = async (req, res) => {
 // Vista de la página para cambiar el rol del usuario
 export const renderAdminPage = async (req, res) => {
 	try {
-		res.render('adminPage', {
-			title: 'Administración de Usuarios',
-		});
+		const userData = req.session.user;
+		const user = new UserDTO(userData);
+		res.render('adminPage', { user, title: 'Administración de Usuarios' });
 	} catch (error) {
 		req.logger.fatal('Cannot render administrator page.');
 		res.status(500).send(`Error interno del servidor: ${error}`);

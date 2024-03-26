@@ -15,15 +15,18 @@ export const getAllUsers = async (req, res) => {
 	}
 };
 
-// Obtiene un usuario a través de su email
-export const getUserByEmail = async (req, res) => {
+export const getUserId = async (req, res) => {
 	try {
-		const userEmail = req.params.email;
-		const user = await UserService.getUserByEmail(userEmail);
+		const { eml } = req.params;
+		console.log('eml BK ' + eml);
+		const user = await UserService.getUserByEmail(eml);
+		const userId = user._id;
+		console.log('userID BK ' + userId);
 
-		return res.status(200).send(user);
+		req.logger.info('User Id successfully obtained.');
+		return res.status(200).json(userId);
 	} catch (error) {
-		req.logger.fatal('Could not get user.');
+		req.logger.fatal('Could not get user id.');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };
@@ -128,6 +131,10 @@ export const currentUser = async (req, res) => {
 // Desloguea a un usuario
 export const logoutUser = async (req, res) => {
 	try {
+		if (!req.session.user) {
+			return res.redirect('/');
+		}
+
 		const isAdmin = req.session.user.role === 'ADMIN' ? true : false;
 		if (!isAdmin) {
 			await UserService.updateLastConnection(req.session.user._id, {
