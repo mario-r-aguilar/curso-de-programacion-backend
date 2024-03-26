@@ -255,17 +255,15 @@ export default class CartRepository {
 	}
 
 	/**
-	 * Efectua la compra de los productos que posean stock y muestra el detalle de la misma
+	 * Separa los productos con stock de los sin stock y calcula el precio total de la compra
 	 * @param {String} ID del carrito
-	 * @param {Object} Usuario
-	 * @returns {Object} Detalle de la compra
+	 * @returns {Object} Detalle de productos con y sin stock junto al precio total de la compra de productos con stock
 	 */
-	async purchaseProductsInCart(cartID, user) {
+	async calculatePurchase(cartID) {
 		try {
 			const cart = await this.getCartById(cartID);
 			let productStockOk = [];
 			let productStockNone = [];
-			let ticket = null;
 
 			// Manejo de stock y carrito resultante
 			for (const productInCart of cart.products) {
@@ -290,14 +288,42 @@ export default class CartRepository {
 				}
 			}
 
-			// Generación de ticket para response
 			let totalPricePurchase = productStockOk.reduce(
 				(total, product) => total + product.price,
 				0
 			);
 
+			const result = {
+				productStockOk,
+				totalPricePurchase,
+				productStockNone,
+			};
+
+			return result;
+		} catch (error) {
+			devLogger.fatal(
+				`it is not possible to calculate the purchase.\n 
+			Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	/**
+	 * Completa el proceso de la compra y muestra el detalle de la misma
+	 * @param {String} ID del carrito
+	 * @param {Object} Usuario
+	 * @returns {Object} Detalle de la compra
+	 */
+	async purchaseProductsInCart(cartID, user) {
+		try {
+			let ticket = null;
+
+			const result = await this.calculatePurchase(cartID);
+
+			// Generación de ticket para response
 			const ticketData = {
-				amount: totalPricePurchase,
+				amount: result.totalPricePurchase,
 				purchaser: user.email,
 			};
 
@@ -307,7 +333,7 @@ export default class CartRepository {
 			}
 
 			// Ids de productos sin stock para response
-			let productStockNoneIDs = productStockNone.map((product) => {
+			let productStockNoneIDs = result.productStockNone.map((product) => {
 				return product._id;
 			});
 

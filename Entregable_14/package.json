@@ -35,8 +35,7 @@
 		"@faker-js/faker",
 		"winston logger",
 		"swagger",
-		"supertest",
-		"stripe"
+		"supertest"
 	],
 	"author": "Mario Aguilar",
 	"license": "ISC",
