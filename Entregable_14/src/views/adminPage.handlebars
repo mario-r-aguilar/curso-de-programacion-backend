@@ -21,9 +21,14 @@
 			>Obtener Id del Usuario</button>
 			{{! loader }}
 			<span
-				class='ms-3 spinner-border text-dark d-none'
+				class='ms-3 me-3 spinner-border text-dark d-none'
 				id='waitingGetIdProcess'
 			></span>
+			<input
+				type='reset'
+				class='btn btn-secondary border border-dark shadow mt-1 mb-3'
+				value='Borrar'
+			/>
 		</form>
 		<div id='getIdMessage' class='d-none mt-3 alert w-75'></div>
 
@@ -44,9 +49,14 @@
 			>Cambiar Rol del Usuario</button>
 			{{! loader }}
 			<span
-				class='ms-3 spinner-border text-dark d-none'
+				class='ms-3 me-3 spinner-border text-dark d-none'
 				id='waitingToggleRoleProcess'
 			></span>
+			<input
+				type='reset'
+				class='btn btn-secondary border border-dark shadow mt-1'
+				value='Borrar'
+			/>
 		</form>
 		<div id='toggleRoleMessage' class='mt-3 d-none alert w-75'></div>
 

@@ -10,8 +10,15 @@
 	
 	<div class='d-flex me-4 ms-5 mb-3 flex-row justify-content-between flex-wrap'>			
 		
-	
+		{{!-- Botón de la página de administración de documentos (solo usuarios y usuarios premium) --}}
+		{{#if isUserOrPremium}}
 		<a class="navbar-brand me-3 ms-3" href="/uploaddocuments/{{userId}}"> <img class="img-fluid rounded mt-3" src="/static/img/upload.png" width="38" height="38" alt="upload.png"> <span class="fw-bold align-bottom">Subir archivos</span> </a>	
+		{{/if}}
+
+		{{!-- Botón de la página de administración de productos (solo administradores y usuarios premium) --}}
+		{{#if isAdminOrPremium}}
+		<a class="navbar-brand me-3 ms-3" href="/realtimeproducts"> <img class="img-fluid rounded mt-3" src="/static/img/admin_product.png" width="38" height="38" alt="admin_product.png"> <span class="fw-bold align-bottom">Administrar Productos</span> </a>
+		{{/if}}	
 
 		{{!-- Botón de la página de administración de usuarios (solo administradores) --}}
 		{{#if isAdmin}}

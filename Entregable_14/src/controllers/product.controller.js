@@ -135,7 +135,6 @@ export const deleteProduct = async (req, res) => {
 		}
 
 		const userData = req.session.user;
-
 		const user = new UserDTO(userData);
 
 		let { pid } = req.params;

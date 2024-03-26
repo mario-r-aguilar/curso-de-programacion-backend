@@ -1,5 +1,7 @@
 import { fakerES_MX as faker } from '@faker-js/faker';
 import { devLogger } from '../utils/logger.js';
+import config from '../config/config.js';
+import nodemailer from 'nodemailer';
 
 export default class ProductRepository {
 	constructor(dao) {
@@ -69,6 +71,32 @@ export default class ProductRepository {
 	 */
 	async deleteProduct(productID) {
 		try {
+			const product = await this.getProductById(productID);
+			const productOwner = product.owner;
+
+			const transport = nodemailer.createTransport({
+				service: 'gmail',
+				port: 587,
+				auth: {
+					user: config.nodemailerUser,
+					pass: config.nodemailerPass,
+				},
+			});
+
+			if (productOwner !== 'admin') {
+				await transport.sendMail({
+					from: 'Cba E-commerce <config.nodemailerUser>',
+					to: product.owner,
+					subject: 'Información importante sobre tus productos',
+					html: `
+						<h3>Uno de tus productos ha sido eliminado</h3>
+						<p>Te informamos que <b>el producto ${product.title} ha sido eliminado</b>. 
+						Por cualquier consulta puedes comunicarte con el administrador del sitio.
+						Muchas gracias.</p>
+					`,
+				});
+			}
+
 			return await this.dao.delete(productID);
 		} catch (error) {
 			devLogger.fatal(

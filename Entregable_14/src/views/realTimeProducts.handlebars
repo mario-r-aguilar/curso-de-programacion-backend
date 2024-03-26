@@ -56,6 +56,11 @@
 	id='btnDel'
 	onclick='renderDelForm()'
 >Eliminar Productos</button>
+{{! loader }}
+<span
+	class='ms-3 me-3 spinner-border text-dark d-none'
+	id='waitingDeleteProcess'
+></span>
 
 {{! Aquí se renderizarán los productos }}
 <div

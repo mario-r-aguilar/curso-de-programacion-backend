@@ -277,6 +277,12 @@ const renderDelForm = () => {
 		if (idInput !== null) {
 			const productId = idInput.value;
 
+			// loader
+			const waitingDeleteProcess = document.querySelector(
+				'#waitingDeleteProcess'
+			);
+			waitingDeleteProcess.classList.remove('d-none');
+
 			// Elimina el producto indicado según su id
 			fetch(`/api/products/${productId}`, {
 				method: 'DELETE',
@@ -284,6 +290,7 @@ const renderDelForm = () => {
 				.then((res) => {
 					// Si la promesa se resolvio correctamente renderiza un mensaje informándolo
 					if (res.ok) {
+						waitingDeleteProcess.classList.add('d-none');
 						const form = document.getElementById('form');
 						form.innerHTML = '';
 						const response = document.createElement('div');
@@ -300,6 +307,7 @@ const renderDelForm = () => {
 							'Se actualizo la lista de productos'
 						);
 					} else {
+						waitingDeleteProcess.classList.add('d-none');
 						console.error('Product could not be removed');
 						form.innerHTML = '';
 						const responseMessage = document.createElement('div');

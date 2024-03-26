@@ -34,6 +34,10 @@ export const renderProductsPage = async (req, res) => {
 		const user = new UserDTO(userData);
 		const userId = userData._id;
 		const isAdmin = user.role === 'ADMIN' ? true : false;
+		const isAdminOrPremium =
+			user.role === 'PREMIUM' || user.role === 'ADMIN' ? true : false;
+		const isUserOrPremium =
+			user.role === 'USER' || user.role === 'PREMIUM' ? true : false;
 		const { limit, page, sort, category, status, title } = req.query;
 
 		// código para persistencia MONGO
@@ -56,6 +60,8 @@ export const renderProductsPage = async (req, res) => {
 			user,
 			userId,
 			isAdmin,
+			isAdminOrPremium,
+			isUserOrPremium,
 			productsList,
 			title: 'Lista de productos disponibles',
 		});
