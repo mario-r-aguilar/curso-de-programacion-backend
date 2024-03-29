@@ -255,7 +255,7 @@ export default class CartRepository {
 	}
 
 	/**
-	 * Separa los productos con stock de los sin stock y calcula el precio total de la compra
+	 * Calcula el precio total de la compra para generar la orden de pago en Mercado Mercado Pago
 	 * @param {String} ID del carrito
 	 * @returns {Object} Detalle de productos con y sin stock junto al precio total de la compra de productos con stock
 	 */
@@ -264,6 +264,45 @@ export default class CartRepository {
 			const cart = await this.getCartById(cartID);
 			let productStockOk = [];
 			let productStockNone = [];
+			let totalPricePurchase = 0;
+
+			// Cálculo de productos con y sin stock
+			for (const productInCart of cart.products) {
+				let product = await ProductService.getProductById(
+					productInCart.product._id
+				);
+
+				if (product.stock < productInCart.quantity) {
+					productStockNone.push(product);
+				} else {
+					product.price *= productInCart.quantity;
+					totalPricePurchase += product.price;
+					productStockOk.push(product);
+				}
+			}
+
+			return { totalPricePurchase };
+		} catch (error) {
+			devLogger.fatal(
+				`it is not possible to calculate the purchase.\n 
+				Error: ${error}`
+			);
+			return;
+		}
+	}
+
+	/**
+	 * Completa el proceso de la compra y muestra el detalle de la misma
+	 * @param {String} ID del carrito
+	 * @param {Object} Usuario
+	 * @returns {Object} Detalle de la compra
+	 */
+	async purchaseProductsInCart(cartID, user) {
+		try {
+			const cart = await this.getCartById(cartID);
+			let productStockOk = [];
+			let productStockNone = [];
+			let ticket = null;
 
 			// Manejo de stock y carrito resultante
 			for (const productInCart of cart.products) {
@@ -288,42 +327,14 @@ export default class CartRepository {
 				}
 			}
 
+			// Generación de ticket para response
 			let totalPricePurchase = productStockOk.reduce(
 				(total, product) => total + product.price,
 				0
 			);
 
-			const result = {
-				productStockOk,
-				totalPricePurchase,
-				productStockNone,
-			};
-
-			return result;
-		} catch (error) {
-			devLogger.fatal(
-				`it is not possible to calculate the purchase.\n 
-			Error: ${error}`
-			);
-			return;
-		}
-	}
-
-	/**
-	 * Completa el proceso de la compra y muestra el detalle de la misma
-	 * @param {String} ID del carrito
-	 * @param {Object} Usuario
-	 * @returns {Object} Detalle de la compra
-	 */
-	async purchaseProductsInCart(cartID, user) {
-		try {
-			let ticket = null;
-
-			const result = await this.calculatePurchase(cartID);
-
-			// Generación de ticket para response
 			const ticketData = {
-				amount: result.totalPricePurchase,
+				amount: totalPricePurchase,
 				purchaser: user.email,
 			};
 
@@ -333,7 +344,7 @@ export default class CartRepository {
 			}
 
 			// Ids de productos sin stock para response
-			let productStockNoneIDs = result.productStockNone.map((product) => {
+			let productStockNoneIDs = productStockNone.map((product) => {
 				return product._id;
 			});
 

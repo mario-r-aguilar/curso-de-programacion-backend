@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { roleControl } from '../middlewares/roleControl.middleware.js'; // Se desactiva para poder trabajar desde postman
+import { roleControl } from '../middlewares/roleControl.middleware.js';
 import {
 	getCarts,
 	getCartById,

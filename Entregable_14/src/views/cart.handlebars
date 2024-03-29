@@ -20,14 +20,18 @@
 		id='btnBackToBuy'
 	>Seguir comprando</button>
 	<button
-		class='btn btn-primary border border-dark shadow ms-5 mb-3'
+		class='btn btn-primary border border-dark shadow ms-5 me-3 mb-3'
 		id='btnFinishBuy'
 	>Finalizar la compra</button>
 	{{! Aquí se mostrará el loader mientras la operación se finaliza}}
 	<span
-		class='ms-3 spinner-border text-dark d-none'
+		class='ms-3 me-3 spinner-border text-dark d-none'
 		id='waitingPurchasingProcess'
 	></span>
+
+	{{! Sección para Mercado Pago }}
+	<div id='wallet_container'></div>
+
 	<button
 		class='btn btn-success border border-dark shadow ms-5 mb-3'
 		id='btnEmptyCart'
@@ -91,4 +95,6 @@
 
 </div>
 
+{{! SDK de Mercado Pago }}
+<script src='https://sdk.mercadopago.com/js/v2'></script>
 <script src='/static/js/cart.js'></script>

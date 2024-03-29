@@ -9,6 +9,7 @@ import { cartRouter } from './routes/cart.routes.js';
 import { userRouter } from './routes/user.routes.js';
 import { viewsRouter } from './routes/views.routes.js';
 import { loggerTestRouter } from './routes/loggerTest.routes.js';
+import { mercadoPagoRouter } from './routes/mercadoPago.routes.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
@@ -75,6 +76,7 @@ app.use('/api/products/', productRouter);
 app.use('/api/carts/', cartRouter);
 app.use('/', viewsRouter);
 app.use('/api/loggertest', loggerTestRouter);
+app.use('/api/mp', mercadoPagoRouter);
 app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 // Manejador de errores

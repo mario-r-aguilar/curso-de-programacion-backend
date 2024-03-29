@@ -4,7 +4,7 @@ import { fakerES_MX as faker } from '@faker-js/faker';
 import config from '../src/config/config.js';
 
 const expect = chai.expect;
-const requester = supertest('http://localhost:8080');
+const requester = supertest(`${config.serverUrl}`);
 
 // Antes de hacer el test, se debe cambiar el valor de la variable de entorno MODE_TEST a 'Yes'
 // Luego ejecutar el servidor en una terminal y en otra terminal ejecutar el comando npm test

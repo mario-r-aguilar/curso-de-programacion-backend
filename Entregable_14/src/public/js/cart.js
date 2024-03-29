@@ -35,29 +35,6 @@ const refreshCartPage = (cartID) => {
 	document.location.href = url;
 };
 
-// Muestra el detalle de la compra
-const showPurchaseDetail = (data) => {
-	const purchaseDetail = document.getElementById('purchaseDetail');
-	purchaseDetail.innerHTML = '';
-	const div = document.createElement('div');
-	div.classList.add('alert', 'alert-success');
-	if (data.payload.ticket === 'ticket not generated') {
-		div.innerHTML = `
-		<h3>Le pedimos disculpas, actualmente no disponemos stock en los productos seleccionados.</h3>		 		
-		`;
-	} else {
-		div.innerHTML = `
-		<h3>Muchas Gracias por su Compra!</h3>		
-		<p><b>Total: $${data.payload.ticket.amount}</b></p>
-	 	<p><b>Comprador: ${data.payload.ticket.purchaser}</b></p>
-		<p><b>Fecha de compra: ${data.payload.ticket.purchase_datetime}</b></p>
-		<p><b>Nº de Ticket: ${data.payload.ticket.code}</b></p>
-		<h5>Se proceso la compra solo con los productos que tenían stock disponible</h5>		
-		`;
-	}
-	purchaseDetail.appendChild(div);
-};
-
 // Calcula el precio total de los productos que se encuentran en el carrito
 const calculateTotalPurchase = async () => {
 	// obtiene el contenido del carrito
@@ -140,34 +117,79 @@ if (btnProductInCart) {
 	});
 }
 
-// Funcionalidad para el botón de finalizar compra
+// Efectuar la compra con Mercado Pago
+// Botón de compra
 const btnFinishBuy = document.querySelector('#btnFinishBuy');
+// Loader
+const waitingPurchasingProcess = document.querySelector(
+	'#waitingPurchasingProcess'
+);
+// Id de compra
+let orderId;
+// Integración de Mercado Pago
+let mp;
+
 if (btnFinishBuy) {
 	btnFinishBuy.onclick = () => {
-		// Muestra un loader hasta que se muestra la información de la operación
-		const waitingPurchasingProcess = document.querySelector(
-			'#waitingPurchasingProcess'
-		);
+		// Obtener clave pública
+		const getMpPublicKey = () => {
+			fetch(`/api/mp/publicKey`)
+				.then((response) => response.json())
+				.then((publicKey) => {
+					mp = new MercadoPago(publicKey, {
+						locale: 'es-AR',
+					});
+				})
+				.catch((error) =>
+					console.error(
+						`No es posible obtener la clave pública de Mercado Pago. Error ${error}`
+					)
+				);
+		};
+		getMpPublicKey();
+
+		// Mostrar loader mientras se carga el botón
 		waitingPurchasingProcess.classList.remove('d-none');
-		fetch(`/api/carts/${cartID}/purchase`)
+
+		// Crear orden de pago y renderizar botón de Mercado Pago
+		fetch(`/api/mp/createorder/${cartID}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
 			.then((response) => response.json())
 			.then((data) => {
-				// Muestra los detalles de la compra durante 8 segundos y actualiza la página
-				showPurchaseDetail(data);
-				// Desactiva el loader de espera
-				waitingPurchasingProcess.classList.add('d-none');
-				setTimeout(() => {
-					refreshCartPage(cartID);
-				}, 8000);
+				orderId = data.id;
+				createCheckoutButton(orderId);
 			})
 			.catch((error) =>
 				console.error(
-					`It was not possible to complete the purchase. Error ${error}`
+					`No es posible obtener la Id de la orden de compra. Error ${error}`
 				)
 			);
 	};
 }
 
+// Función para renderizar el botón de Mercado Pago
+const createCheckoutButton = (preferenceId) => {
+	const bricksBuilder = mp.bricks();
+
+	const renderComponent = async () => {
+		if (window.checkoutButton) window.checkoutButton.unmount();
+
+		await bricksBuilder.create('wallet', 'wallet_container', {
+			initialization: {
+				preferenceId: preferenceId,
+			},
+		});
+	};
+	renderComponent();
+	// Ocultar loader
+	waitingPurchasingProcess.classList.add('d-none');
+};
+
+// Función del botón para vaciar el carrito
 const btnEmptyCart = document.querySelector('#btnEmptyCart');
 if (btnEmptyCart) {
 	btnEmptyCart.onclick = () => {

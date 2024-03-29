@@ -109,8 +109,8 @@ export const deleteAllProductsfromCart = async (req, res) => {
 export const purchaseProductsInCart = async (req, res) => {
 	try {
 		let { cid } = req.params;
-		const cart = CartService.getCartById(cid);
 		const userData = req.session.user;
+		const user = new UserDTO(userData);
 
 		if (!userData) {
 			return res.status(401).send({
@@ -118,24 +118,12 @@ export const purchaseProductsInCart = async (req, res) => {
 				message: 'unauthorized: you are not logged in',
 			});
 		}
-		if (!cart) {
-			return res.status(404).send({
-				status: 'error',
-				message: 'not found: the cart does not exist',
-			});
-		}
 
-		const user = new UserDTO(userData);
-		const payload = await CartService.purchaseProductsInCart(cid, user);
+		await CartService.purchaseProductsInCart(cid, user);
 
-		res.status(200).send({
-			status: 'success',
-			payload: payload,
-		});
+		res.status(200).redirect(`/carts/${cid}`);
 	} catch (error) {
-		req.logger.fatal(
-			'The purchase of the products in the cart could not be made'
-		);
+		req.logger.fatal('The purchase of the products could not be made');
 		res.status(500).send(`Internal Server Error: ${error}`);
 	}
 };

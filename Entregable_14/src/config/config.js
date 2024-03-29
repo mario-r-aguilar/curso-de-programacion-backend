@@ -23,4 +23,6 @@ export default {
 	nodemailerPass: process.env.PASS_NODEMAILER,
 	environment: process.env.ENVIRONMENT || 'DEV',
 	serverUrl: process.env.SERVER_URL,
+	mpAccessToken: process.env.MP_ACCESS_TOKEN,
+	mpPublicKey: process.env.MP_PUBLIC_KEY,
 };
