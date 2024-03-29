@@ -131,6 +131,18 @@ let mp;
 
 if (btnFinishBuy) {
 	btnFinishBuy.onclick = () => {
+		const purchaseDetail = document.querySelector('#purchaseDetail');
+		if (purchaseDetail) {
+			purchaseDetail.innerHTML = '';
+			const detail = document.createElement('div');
+			detail.classList.add('alert', 'alert-dark', 'w-50');
+			detail.innerHTML = `
+				<h4>Solo se procesaran productos con stock</h4>
+				<p>Los productos que no posean stock permaneceran en su carrito, 
+				para que pueda comprarlos cuando esten nuevamente disponibles.</p>
+			`;
+			purchaseDetail.appendChild(detail);
+		}
 		// Obtener clave pública
 		const getMpPublicKey = () => {
 			fetch(`/api/mp/publicKey`)
