@@ -95,7 +95,7 @@ export default class TicketRepository {
 	 * @param {String} Email del usuario
 	 * @returns {Object} Detalles del mail enviado
 	 */
-	async sendTicketByMail(ticket, email) {
+	async sendTicketByMail(ticket, email, soldProducts, unsoldProducts) {
 		const transport = nodemailer.createTransport({
 			service: 'gmail',
 			port: 587,
@@ -106,6 +106,25 @@ export default class TicketRepository {
 		});
 
 		try {
+			let soldProductsHTML = '';
+			let unsoldProductsHTML = '';
+
+			// HTML para productos con stock
+			if (soldProducts.length > 0) {
+				soldProductsHTML += '<h4>Productos vendidos:</h4>';
+				soldProducts.forEach((product) => {
+					soldProductsHTML += `<p>${product}</p>`;
+				});
+			}
+
+			// HTML para productos sin stock
+			if (unsoldProducts.length > 0) {
+				unsoldProductsHTML += '<h4>Productos sin stock:</h4>';
+				unsoldProducts.forEach((product) => {
+					unsoldProductsHTML += `<p>${product}</p>`;
+				});
+			}
+
 			const detailPurchase = await transport.sendMail({
 				from: 'Cba E-commerce <config.nodemailerUser>',
 				to: email,
@@ -116,7 +135,8 @@ export default class TicketRepository {
 	 				<p><b>Comprador: ${ticket.purchaser}</b></p>
 					<p><b>Fecha de compra: ${ticket.purchase_datetime}</b></p>
 					<p><b>Nº de Ticket: ${ticket.code}</b></p>
-					<h4>Se proceso la compra solo con los productos que tenían stock disponible</h4>
+					${soldProductsHTML}
+					${unsoldProductsHTML}
 				`,
 			});
 			return detailPurchase;

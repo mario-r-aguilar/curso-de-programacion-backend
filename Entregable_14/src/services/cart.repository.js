@@ -303,6 +303,8 @@ export default class CartRepository {
 			let productStockOk = [];
 			let productStockNone = [];
 			let ticket = null;
+			let soldProducts = [];
+			let unsoldProducts = [];
 
 			// Manejo de stock y carrito resultante
 			for (const productInCart of cart.products) {
@@ -312,6 +314,7 @@ export default class CartRepository {
 
 				if (product.stock < productInCart.quantity) {
 					productStockNone.push(product);
+					unsoldProducts.push(product.title);
 				} else {
 					product.stock -= productInCart.quantity;
 					await ProductService.updateProduct(
@@ -324,6 +327,7 @@ export default class CartRepository {
 						cartID,
 						productInCart.product._id
 					);
+					soldProducts.push(product.title);
 				}
 			}
 
@@ -340,7 +344,12 @@ export default class CartRepository {
 
 			if (ticketData.amount !== 0) {
 				ticket = await TicketService.addTicket(ticketData);
-				await TicketService.sendTicketByMail(ticket, user.email);
+				await TicketService.sendTicketByMail(
+					ticket,
+					user.email,
+					soldProducts,
+					unsoldProducts
+				);
 			}
 
 			// Ids de productos sin stock para response
