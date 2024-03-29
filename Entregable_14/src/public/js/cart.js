@@ -131,18 +131,6 @@ let mp;
 
 if (btnFinishBuy) {
 	btnFinishBuy.onclick = () => {
-		const purchaseDetail = document.querySelector('#purchaseDetail');
-		if (purchaseDetail) {
-			purchaseDetail.innerHTML = '';
-			const detail = document.createElement('div');
-			detail.classList.add('alert', 'alert-dark', 'w-50');
-			detail.innerHTML = `
-				<h4>Solo se procesaran productos con stock</h4>
-				<p>Los productos que no posean stock permaneceran en su carrito, 
-				para que pueda comprarlos cuando esten nuevamente disponibles.</p>
-			`;
-			purchaseDetail.appendChild(detail);
-		}
 		// Obtener clave pública
 		const getMpPublicKey = () => {
 			fetch(`/api/mp/publicKey`)
@@ -163,6 +151,10 @@ if (btnFinishBuy) {
 		// Mostrar loader mientras se carga el botón
 		waitingPurchasingProcess.classList.remove('d-none');
 
+		// Mensajes informativos
+		const purchaseDetailOk = document.querySelector('#purchaseDetailOk');
+		const purchaseDetailFail = document.querySelector('#purchaseDetailFail');
+
 		// Crear orden de pago y renderizar botón de Mercado Pago
 		fetch(`/api/mp/createorder/${cartID}`, {
 			method: 'POST',
@@ -170,10 +162,21 @@ if (btnFinishBuy) {
 				'Content-Type': 'application/json',
 			},
 		})
-			.then((response) => response.json())
+			.then((response) => {
+				if (response.status === 400) {
+					waitingPurchasingProcess.classList.add('d-none');
+					purchaseDetailFail.classList.remove('d-none');
+				} else if (response.ok) {
+					return response.json();
+				}
+			})
 			.then((data) => {
-				orderId = data.id;
-				createCheckoutButton(orderId);
+				if (data) {
+					waitingPurchasingProcess.classList.add('d-none');
+					purchaseDetailOk.classList.remove('d-none');
+					orderId = data.id;
+					createCheckoutButton(orderId);
+				}
 			})
 			.catch((error) =>
 				console.error(

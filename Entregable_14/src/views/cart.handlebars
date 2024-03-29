@@ -39,7 +39,21 @@
 </div>
 
 {{! Aquí se mostrará el detalle de la compra una vez finalizada}}
-<div id='purchaseDetail'></div>
+<div class='d-none alert alert-dark' id='purchaseDetailOk'>
+	<h4>Solo se procesaran productos con stock</h4>
+	<p>
+		Los productos que no posean stock permaneceran en tu carrito luego de la
+		compra, para que pueda adquirirlos cuando nuevamente esten disponibles.
+	</p>
+</div>
+<div class='d-none alert alert-danger' id='purchaseDetailFail'>
+	<h4>No se puede procesar la compra</h4>
+	<p>
+		El carrito está vacío o bien todos los productos que agregaste no poseen
+		stock por el momento. Intenta más tarde. Te pedimos disculpas por las
+		molestias ocasionadas.
+	</p>
+</div>
 
 {{! Aquí se renderizan los productos del carrito }}
 <div
