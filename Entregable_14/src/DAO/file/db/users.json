@@ -1,12 +1,14 @@
 [
 	{
-		"_id": "6656ca50-7fcc-450a-84b2-5ea451e26cbe",
+		"_id": "e53aa0da-4344-41c5-bf64-d34ab6dc8868",
 		"name": "test2",
 		"lastname": "test2",
 		"email": "test2@test.com",
-		"age": 20,
-		"cart": { "_id": "fa4ca197-843a-41dd-86d0-45a944c7b787", "products": [] },
-		"password": "$2b$10$yQ0MhMaM9kycLcUMcS21/ODG2xefFjXfWEx2pft5gOQVlYbtxJfgu",
-		"role": "USER"
+		"age": 25,
+		"cart": { "_id": "eaf36802-3664-4334-a7d6-43aeddcde672", "products": [] },
+		"password": "$2b$10$IfI.NwOUjWdbez7iVhooxeOu7ULc3beSFNVEWXWjbJEnWBLxssYam",
+		"role": "USER",
+		"documents": [],
+		"last_connection": "2024-03-30T20:35:22.859Z"
 	}
 ]
