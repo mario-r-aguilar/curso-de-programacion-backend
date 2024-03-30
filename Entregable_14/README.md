@@ -16,4 +16,4 @@
 
 5. **No es necesario desarrollar vistas para módulos que no influyan en el proceso de compra** (Como vistas de usuarios premium para crear productos, o vistas de panel de admin para updates de productos, etc)
 
-6. **Realizar el despliegue de tu aplicativo en la plataforma de tu elección** (preferentemente Railway.app, pues es la abarcada en el curso) y corroborar que se puede llevar a cabo un proceso de compra completo.
+6. **Realizar el despliegue de tu aplicativo en la plataforma de tu elección** (preferentemente Railway.app, pues es la abarcada en el curso) y corroborar que se puede llevar a cabo un proceso de compra completo. De ser necesario crear un nuevo repositorio para que este solo el proyecto final, sin los desafíos anteriores.
