@@ -59,11 +59,6 @@ export default class CartFileDAO {
 		}
 	}
 
-	/**
-	 * Agrega un nuevo carrito
-	 * @param {Object} Carrito
-	 * @returns {Object} Carrito creado
-	 */
 	async add(newCart) {
 		try {
 			const { products } = newCart;
@@ -74,8 +69,12 @@ export default class CartFileDAO {
 			const _id = uuidv4();
 			const newCartWithID = {
 				_id,
-				products: [],
+				products: products.map((product) => ({
+					product: product._id,
+					quantity: product.quantity || 1,
+				})),
 			};
+
 			cartsList.push(newCartWithID);
 
 			await fs.promises.writeFile(this.path, JSON.stringify(cartsList));
@@ -85,7 +84,7 @@ export default class CartFileDAO {
 		} catch (error) {
 			devLogger.fatal(
 				`It is not possible to add the cart. \n 
-            Error: ${error}`
+				Error: ${error}`
 			);
 			return;
 		}
