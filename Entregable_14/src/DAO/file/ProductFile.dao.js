@@ -94,6 +94,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				status,
 				stock,
 				category,
+				owner,
 				thumbnail,
 			} = newProduct;
 
@@ -105,6 +106,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				!status ||
 				!stock ||
 				!category ||
+				!owner ||
 				!thumbnail
 			)
 				return devLogger.error(
@@ -119,6 +121,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				typeof status !== 'boolean' ||
 				typeof stock !== 'number' ||
 				typeof category !== 'string' ||
+				typeof owner !== 'string' ||
 				!Array.isArray(thumbnail)
 			) {
 				return devLogger.error(
@@ -143,6 +146,7 @@ export default class ProductFileDAO extends ProductDAOInterface {
 				status: true,
 				stock,
 				category,
+				owner,
 				thumbnail,
 			};
 
@@ -195,55 +199,33 @@ export default class ProductFileDAO extends ProductDAOInterface {
 	 */
 	async update(productID, productUpdated) {
 		try {
-			const {
-				title,
-				description,
-				code,
-				price,
-				status,
-				stock,
-				category,
-				thumbnail,
-			} = productUpdated;
-
 			const productList = await this.get();
-
-			// Genera un nuevo listado con el producto actualizado
-			const updatedProductList = productList.map((product) => {
-				if (product._id === productID) {
-					return {
-						...product,
-						title,
-						description,
-						code,
-						price,
-						status,
-						stock,
-						category,
-						thumbnail,
-					};
-				} else {
-					return product;
-				}
-			});
-
-			const updatedProduct = updatedProductList.find(
+			const productIndex = productList.findIndex(
 				(product) => product._id === productID
 			);
 
-			await fs.promises.writeFile(
-				this.path,
-				JSON.stringify(updatedProductList)
-			);
+			if (productIndex === -1) {
+				devLogger.error(`Product ID ${productID} not found`);
+				return null;
+			}
+
+			const updatedProduct = {
+				...productList[productIndex],
+				...productUpdated,
+			};
+
+			productList[productIndex] = updatedProduct;
+
+			await fs.promises.writeFile(this.path, JSON.stringify(productList));
 
 			devLogger.info(`The product ID ${productID} was updated`);
 			return updatedProduct;
 		} catch (error) {
 			devLogger.fatal(
-				`It is not possible to update the product. \n 
-	Error: ${error}`
+				`It is not possible to update the product.\n 
+				Error: ${error}`
 			);
-			return;
+			return null;
 		}
 	}
 }

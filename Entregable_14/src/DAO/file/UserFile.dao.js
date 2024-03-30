@@ -117,6 +117,8 @@ export default class UserFileDAO {
 			let cart = await cartFileDAO.add({
 				products: [],
 			});
+			let documents = [];
+			let last_connection = Date.now();
 
 			let newUserWithID = {
 				_id,
@@ -127,6 +129,8 @@ export default class UserFileDAO {
 				cart,
 				password,
 				role,
+				documents,
+				last_connection,
 			};
 
 			usersList.push(newUserWithID);
@@ -181,42 +185,22 @@ export default class UserFileDAO {
 	 */
 	async update(userID, userUpdated) {
 		try {
-			const { name, lastname, email, age, password, cart, role } =
-				userUpdated;
-
 			const usersList = await this.get();
+			const userIndex = usersList.findIndex((user) => user._id === userID);
 
-			const userToUpdate = usersList.find((user) => user._id === userID);
-			if (!userToUpdate) {
+			if (userIndex === -1) {
 				devLogger.error(`User ID ${userID} not found`);
 				return null;
 			}
 
-			const updatedUsersList = usersList.map((user) => {
-				if (user._id === userID) {
-					return {
-						...user,
-						name,
-						lastname,
-						email,
-						age,
-						password,
-						cart,
-						role,
-					};
-				} else {
-					return user;
-				}
-			});
+			const updatedUser = {
+				...usersList[userIndex],
+				...userUpdated,
+			};
 
-			const updatedUser = updatedUsersList.find(
-				(user) => user._id === userID
-			);
+			usersList[userIndex] = updatedUser;
 
-			await fs.promises.writeFile(
-				this.path,
-				JSON.stringify(updatedUsersList)
-			);
+			await fs.promises.writeFile(this.path, JSON.stringify(usersList));
 
 			devLogger.info(`The user ID ${userID} was updated`);
 			return updatedUser;
@@ -225,7 +209,7 @@ export default class UserFileDAO {
 				`It is not possible to update the user.\n 
 				Error: ${error}`
 			);
-			return;
+			return null;
 		}
 	}
 }
