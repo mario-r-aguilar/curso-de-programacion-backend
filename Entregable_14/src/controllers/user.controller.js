@@ -18,10 +18,9 @@ export const getAllUsers = async (req, res) => {
 export const getUserId = async (req, res) => {
 	try {
 		const { eml } = req.params;
-		console.log('eml BK ' + eml);
+
 		const user = await UserService.getUserByEmail(eml);
 		const userId = user._id;
-		console.log('userID BK ' + userId);
 
 		req.logger.info('User Id successfully obtained.');
 		return res.status(200).json(userId);
