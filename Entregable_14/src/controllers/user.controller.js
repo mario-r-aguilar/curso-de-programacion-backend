@@ -1,6 +1,7 @@
 import UserDTO from '../DTO/user.dto.js';
 import { UserService } from '../services/index.js';
 import { generateToken, verifyToken } from '../utils/utils.js';
+import selectedPersistence from '../config/persistence.js';
 
 // Mostrar los datos principales de todos los usuarios
 export const getAllUsers = async (req, res) => {
@@ -48,9 +49,15 @@ export const loginUser = async (req, res) => {
 	try {
 		if (!req.user) return res.status(401).send('Invalid Credentials');
 
-		await UserService.updateLastConnection(req.user._id, {
-			last_connection: new Date(),
-		});
+		const isMongoPersistence =
+			selectedPersistence.persistence === 'MONGO' ? true : false;
+
+		// Para garantizar compatibilidad con la persistencia FILE en el login
+		if (isMongoPersistence) {
+			await UserService.updateLastConnection(req.user._id, {
+				last_connection: new Date(),
+			});
+		}
 
 		req.session.user = req.user;
 		return res
